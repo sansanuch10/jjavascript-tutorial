@@ -1,0 +1,43 @@
+<main><page-content><nav-up><home- data-load_page="0" hover-style=""></home-><arrow-next></arrow-next><a data-load_page="1">Язык JavaScript</a><arrow-next></arrow-next><a data-load_page="74">ООП в прототипном стиле</a></nav-up><h1>Проверка класса: "instanceof"</h1><p>Оператор <code>instanceof</code> позволяет проверить, какому классу принадлежит объект, с учетом прототипного наследования.</p><h2><a name="0" href="#0">Алгоритм работы instanceof</a></h2><p>Вызов <code>obj instanceof Constructor</code> возвращает <code>true</code>, если объект принадлежит классу <code>Constructor</code> или классу, наследующему от него.</p><p>Пример использования:</p><code-example><script>`function Rabbit() {}
+
+MARK// создаём объект
+var rabbit = new Rabbit();
+
+// проверяем -- этот объект создан Rabbit?
+MARKalert( rabbit instanceof Rabbit ); // true, верно`</script><code-toolbar></code-toolbar></code-example><p>Массив <code>arr</code> принадлежит классу <code>Array</code>, но также и является объектом <code>Object</code>. Это верно, так как массивы наследуют от объектов:</p><code-example><script>`var arr = [];
+alert( arr instanceof Array ); // true
+alert( arr instanceof Object ); // true`</script><code-toolbar></code-toolbar></code-example><p>Как это часто бывает в JavaScript, здесь есть ряд тонкостей. Проверка происходит через сравнение прототипов, поэтому в некоторых ситуациях может даже ошибаться!</p><p><strong>Алгоритм проверки <code>obj instanceof Constructor</code>:</strong></p><ol><li>Получить <code>obj.__proto__</code></li><li>Сравнить <code>obj.__proto__</code> с <code>Constructor.prototype</code></li><li>Если не совпадает, тогда заменить <code>obj</code> на <code>obj.__proto__</code> и повторить проверку на шаге 2 до тех пор, пока либо не найдется совпадение (результат <code>true</code>), либо цепочка прототипов не закончится (результат <code>false</code>).</li></ol><p>В проверке <code>rabbit instanceof Rabbit</code> совпадение происходит на первом же шаге этого алгоритма, так как: <code>rabbit.__proto__ == Rabbit.prototype</code>.</p><p>А если рассмотреть <code>arr instanceof Object</code>, то совпадение будет найдено на следующем шаге, так как <code>arr.__proto__.__proto__ == Object.prototype</code>.</p><p>Забавно, что сама функция-конструктор не участвует в процессе проверки! Важна только цепочка прототипов для проверяемого объекта.</p><p>Это может приводить к забавному результату и даже ошибкам в проверке при изменении <code>prototype</code>, например:</p><code-example><script>`// Создаём объект rabbit, как обычно
+function Rabbit() {}
+var rabbit = new Rabbit();
+
+// изменили prototype...
+Rabbit.prototype = {};
+
+// ...instanceof перестал работать!
+MARKalert( rabbit instanceof Rabbit ); // false`</script><code-toolbar></code-toolbar></code-example><p>Стоит ли говорить, что это один из доводов для того, чтобы никогда не менять <code>prototype</code>? Так сказать, во избежание.</p><important-warn><h3>Не друзья: <code>instanceof</code> и фреймы</h3><p>Оператор <code>instanceof</code> не срабатывает, когда значение приходит из другого окна или фрейма.</p><p>Например, массив, который создан в ифрейме и передан родительскому окну – будет массивом <em>в том ифрейме</em>, но не в родительском окне. Проверка <code>instanceof Array</code> в родительском окне вернёт <code>false</code>.</p><p>Вообще, у каждого окна и фрейма – своя иерархия объектов и свой <code>window</code> .</p><p>Как правило, эта проблема возникает со встроенными объектами, в этом случае используется проверка внутреннего свойства <code>[[Class]]</code>, которое подробнее описано в главе <a data-load_page="64">Типы данных: [[Class]], instanceof и утки</a>.</p></important-warn><h2><a name="1" href="#1">Итого</a></h2><ul><li>Оператор <code>obj instanceof Func</code> проверяет тот факт, что <code>obj</code> является результатом вызова <code>new Func</code>. Он учитывает цепочку <code>__proto__</code>, поэтому наследование поддерживается.</li><li>Оператор <code>instanceof</code> не сможет проверить тип значения, если объект создан в одном окне/фрейме, а проверяется в другом. Это потому, что в каждом окне – своя иерархия объектов. Для точной проверки типов встроенных объектов можно использовать свойство <code>[[Class]]</code>.</li></ul><p>Оператор <code>instanceof</code> особенно востребован в случаях, когда мы работаем с иерархиями классов. Это наилучший способ проверить принадлежность тому или иному классу с учётом наследования.</p><h2 id="tasks"><a href="#2" name="2">Задачи (2)</a></h2><task-content><h3><a href="#5" name="5">Странное поведение instanceof</a><task-open hover-style="" data-show_task="" title="Открыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность: 5</span><p>Почему <code>instanceof</code> в коде ниже возвращает <code>true</code>, ведь объект <code>a</code> явно создан не <code>B()</code>?</p><code-example><script>`function A() {}
+
+function B() {}
+
+A.prototype = B.prototype = {};
+
+var a = new A();
+
+MARKalert( a instanceof B ); // true`</script><code-toolbar></code-toolbar></code-example><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><p>Да, это выглядит достаточно странно, поскольку объект <code>a</code> не создавался функцией <code>B</code>.</p><p>Но методу <code>instanceof</code> на самом деле вообще не важна функция. Он смотрит на её <code>prototype</code> и сверяет его с цепочкой <code>__proto__</code> объекта.</p><p>В данном случае <code>a.__proto__ == B.prototype</code>, поэтому <code>instanceof</code> возвращает <code>true</code>.</p><p>По логике <code>instanceof</code> именно прототип задаёт «тип объекта», поэтому <code>instanceof</code> работает именно так.</p></task-answer></task-content><task-content><h3><a href="#6" name="6">Что выведет instanceof?</a><task-open hover-style="" data-show_task="" title="Открыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность: 5</span><p>В коде ниже создаётся простейшая иерархия классов: <code>Animal -&gt; Rabbit</code>.</p><p>Что выведет <a href="#0">instanceof</a>?</p><p>Распознает ли он <code>rabbit</code> как <code>Animal</code>, <code>Rabbit</code> и к тому же <code>Object</code>?</p><code-example><script>`function Animal() {}
+
+function Rabbit() {}
+Rabbit.prototype = Object.create(Animal.prototype);
+
+var rabbit = new Rabbit();
+
+alert( rabbit instanceof Rabbit );
+alert( rabbit instanceof Animal );
+alert( rabbit instanceof Object );`</script></code-example><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><p>Да, распознает.</p><p>Он проверяет наследование с учётом цепочки прототипов.</p><code-example><script>`function Animal() {}
+
+function Rabbit() {}
+Rabbit.prototype = Object.create(Animal.prototype);
+
+var rabbit = new Rabbit();
+
+alert( rabbit instanceof Rabbit ); // true
+alert( rabbit instanceof Animal ); // true
+alert( rabbit instanceof Object ); // true`</script><code-toolbar></code-toolbar></code-example></task-answer></task-content><banner-bottom class="banner-bottom" style="display: block;"></banner-bottom><script>!function () { /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || screen.width < 1024 || "bannerBottomDisabled" in localStorage || (localStorage.bannerBottomShownCount || (localStorage.bannerBottomShownCount = 1), document.querySelector(".banner-bottom").style.display = "block") }();</script><nav-book data-tooltips="Наследование классов в JavaScript; Свои ошибки, наследование от Error"></nav-book><share-map><share-></share-><map-button hover-style="" data-load_page="l"></map-button></share-map><comments- id="comments"></comments-><div id="disqus_thread"></div><script>disqus_url = "https:\/\/learn.javascript.ru\/instanceof", disqus_identifier = "instanceof", disqus_title = "\u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u043a\u043b\u0430\u0441\u0441\u0430: \"instanceof\"";</script></page-content></main>

@@ -1,0 +1,97 @@
+<main>
+    <page-content>
+        <nav-up>
+            <home- data-load_page="0" hover-style=""></home->
+            <arrow-next></arrow-next>
+            <a data-load_page="1">Язык JavaScript</a>
+            <arrow-next></arrow-next>
+            <a data-load_page="83">Современные возможности ES-2015</a>
+        </nav-up>
+        <h1>ES-2015 сейчас</h1>
+        <p>
+            <a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm">Стандарт ES-2015</a> был принят в июне 2015. Пока что большинство браузеров реализуют его частично, текущее состояние
+            реализации различных возможностей можно посмотреть здесь:
+            <a href="https://kangax.github.io/compat-table/es6/">https://kangax.github.io/compat-table/es6/</a>.</p>
+        <p>Когда стандарт будет более-менее поддерживаться во всех браузерах, то весь учебник будет обновлён в соответствии
+            с ним. Пока же, как центральное место для «сбора» современных фич JavaScript, создан этот раздел.</p>
+        <p>Чтобы писать код на ES-2015 прямо сейчас, есть следующие варианты.</p>
+        <h2>
+            <a name="0" href="#0">Конкретный движок JS</a>
+        </h2>
+        <p>Самое простое – это когда нужен один конкретный движок JS, например V8 (Chrome).</p>
+        <p>Тогда можно использовать только то, что поддерживается именно в нём. Заметим, что в V8 большинство возможностей ES-2015
+            поддерживаются только при включённом
+            <code>use strict</code>.</p>
+        <p>При разработке на Node.JS обычно так и делают. Если же нужна кросс-браузерная поддержка, то этот вариант не подойдёт.</p>
+        <h2>
+            <a name="1" href="#1">Babel.JS</a>
+        </h2>
+        <p>
+            <a href="https://babeljs.io">Babel.JS</a> – это
+            <a href="https://en.wikipedia.org/wiki/Source-to-source_compiler">транспайлер</a>, переписывающий код на ES-2015 в код на предыдущем стандарте ES5.</p>
+        <p>Он состоит из двух частей:</p>
+        <ol>
+            <li>Собственно транспайлер, который переписывает код.</li>
+            <li>
+                <a data-load_page="107">Полифилл</a>, который добавляет методы
+                <code>Array.from</code>,
+                <code>String.prototype.repeat</code> и другие.</li>
+        </ol>
+        <p>На странице
+            <a href="https://babeljs.io/repl/">https://babeljs.io/repl/</a> можно поэкспериментировать с транспайлером: слева вводится код в ES-2015, а справа
+            появляется результат его преобразования в ES5.</p>
+        <p>Обычно Babel.JS работает на сервере в составе системы сборки JS-кода (например
+            <a href="http://webpack.github.io/">webpack</a> или
+            <a href="http://brunch.io/">brunch</a>) и автоматически переписывает весь код в ES5.</p>
+        <p>Настройка такой конвертации тривиальна, единственно – нужно поднять саму систему сборки, а добавить к ней Babel легко,
+            плагины есть к любой из них.</p>
+        <p>Если же хочется «поиграться», то можно использовать и браузерный вариант Babel.</p>
+        <p>Это выглядит так:</p>
+        <code-example>
+            <script>`MARK<!-- browser.js лежит на моём сервере, не надо брать с него -->\nMARK<script src="GREEN_https://js.cx/babel-core/browser.min.js_GREEN"><\/script>\n\n<script type="GREEN_text/babel_GREEN">\n  let arr = ["hello", 2]; // let\n\n  let [str, times] = arr; // деструктуризация\n\n  alert( str.repeat(times) ); // hellohello, метод repeat\n<\/script>`</script>
+            <code-toolbar><a title="показать" data-code_run="8"></a><a title="открыть в песочнице" data-code_edit=""></a></code-toolbar>
+        </code-example>
+        <p>Сверху подключается браузерный скрипт
+            <code>browser.min.js</code> из пакета Babel. Он включает в себя полифилл и транспайлер. Далее он автоматически транслирует и выполняет скрипты
+            с
+            <code>type="text/babel"</code>.</p>
+        <p>Размер
+            <code>browser.min.js</code> превышает 1 мегабайт, поэтому такое использование в production строго не рекомендуется.</p>
+        <h2>
+            <a class="main__anchor" name="примеры-на-этом-сайте" href="#примеры-на-этом-сайте">Примеры на этом сайте</a>
+        </h2>
+        <important-warn>
+            <h3>Только при поддержке браузера</h3>
+            <p>Запускаемые примеры с ES-2015 будут работать только если ваш браузер поддерживает соответствующую возможность
+                стандарта.</p>
+        </important-warn>
+        <p>Это означает, что при запуске примеров в браузере, который их не поддерживает, будет ошибка. Это не означает, что
+            пример неправильный! Просто пока нет поддержки…</p>
+        <p>Рекомендуется
+            <a href="https://www.google.com/chrome/browser/canary.html">Chrome Canary</a>, большинство примеров в нём работает.
+            <a href="https://www.mozilla.org/en-US/firefox/channel/#developer">Firefox Developer Edition</a> тоже неплох в поддержке современного стандарта, но на момент написания этого текста
+            переменные
+            <a href="/let-const">let</a> работают только при указании
+            <code>version=1.7</code> в типе скрипта:
+            <code>&lt;script type="application/javascript;version=1.7"&gt;</code>. Надеюсь, скоро это требование (
+            <code>version=1.7</code>) отменят.</p>
+        <p>Впрочем, если пример в браузере не работает (обычно проявляется как ошибка синтаксиса) – почти все примеры вы можете
+            запустить при помощи Babel, на странице
+            <a href="https://babeljs.io/repl/">Babel: try it out</a>. Там же увидите и преобразованный код.</p>
+        <p>На практике для кросс-браузерности всё равно используют Babel.</p>
+        <p>Ещё раз заметим, что самая актуальная ситуация по поддержке современного стандарта браузерами и транспайлерами отражена
+            на странице
+            <a href="https://kangax.github.io/compat-table/es6/">https://kangax.github.io/compat-table/es6/</a>.</p>
+        <p>Итак, поехали!</p>
+        <banner-bottom class="banner-bottom" style="display: block;"></banner-bottom>
+        <script>!function () { /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || screen.width < 1024 || "bannerBottomDisabled" in localStorage || (localStorage.bannerBottomShownCount || (localStorage.bannerBottomShownCount = 1), document.querySelector(".banner-bottom").style.display = "block") }();</script>
+        <nav-book data-tooltips="Современные возможности ES-2015; Переменные: let и const"></nav-book>
+        <share-map>
+            <share-></share->
+            <map-button hover-style="" data-load_page="l"></map-button>
+        </share-map>
+        <comments- id="comments"></comments->
+        <div id="disqus_thread"></div>
+        <script>disqus_url = "https:\/\/learn.javascript.ru\/es-modern-usage", disqus_identifier = "es-modern-usage", disqus_title = "ES-2015 \u0441\u0435\u0439\u0447\u0430\u0441";</script>
+    </page-content>
+</main>

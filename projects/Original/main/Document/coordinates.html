@@ -1,0 +1,176 @@
+<main> <script>function showRect(t){var e=t.getBoundingClientRect();alert("{top:"+e.top+", left:"+e.left+", right:"+e.right+", bottom:"+e.bottom+"}")}function showText(){var t=document.getElementById("coords-show-mark");var e,o,n,i=(e="Привет, мир!;how",o=t.getBoundingClientRect(),(n=document.createElement("div")).style.cssText="position:fixed;color:red",n.style.left=o.left+"px",n.style.top=o.bottom+"px",n.innerHTML=e,n);document.body.appendChild(i),setTimeout(function(){document.body.removeChild(i)},5e3);}</script><page-content><nav-up><home- data-load_page="0" hover-style=""></home-><arrow-next></arrow-next><a data-load_page="98">Документ, события, интерфейсы</a><arrow-next></arrow-next><a data-load_page="99">Документ и объекты страницы</a></nav-up><h1>Координаты в окне</h1><p>Для того, чтобы поместить один элемент рядом с другим на странице, а также двигать его произвольным образом, к примеру, рядом с указателем мыши – используются координаты.</p><p><em>Координатная система относительно окна браузера</em> начинается в левом-верхнем углу текущей видимой области окна.</p><p>Мы будем называть координаты в ней <code>clientX/clientY</code>.</p><h2><a name="0" href="#0">getBoundingClientRect()</a></h2><p>Метод <code>elem.getBoundingClientRect()</code> возвращает координаты элемента, под которыми понимаются размеры «воображаемого прямоугольника», который охватывает весь элемент.</p><p>Координаты возвращаются в виде объекта со свойствами:</p><ul><li><code>top</code> – Y-координата верхней границы элемента,</li><li><code>left</code> – X-координата левой границы,</li><li><code>right</code> – X-координата правой границы,</li><li><code>bottom</code> – Y-координата нижней границы.</li></ul><p>Например:</p><figure><img src="coords.png" alt="" width="100%" style="max-width:370px"></figure><p><strong>Координаты относительно окна не учитывают прокрутку, они высчитываются от границ текущей видимой области.</strong></p><p>Иначе говоря, если страницу прокрутить, то элемент поднимется выше или опустится ниже – его координаты относительно окна изменятся.</p><p>Например, кликните на кнопку, чтобы увидеть её координаты:</p><input id="brTest" type="button" value="Показать button.getBoundingClientRect() для этой кнопки" onclick="showRect(this)"><p>Если вы прокрутите эту страницу, то положение кнопки в окне изменится, и её координаты, соответственно, тоже.</p><ul><li>Координаты могут быть дробными – это нормально, так как они возвращаются из внутренних структур браузера.</li><li>Координаты могут быть и отрицательными, например если прокрутить страницу так, что верх элемента будет выходить за верхнуюю границу окна, то его <code>top</code>-координата будет меньше нуля.</li><li>Некоторые современные браузеры также добавляют к результату <code>getBoundingClientRect</code> свойства для ширины и высоты: <code>width/height</code>, но их можно получить и простым вычитанием: <code>height = bottom-top</code>, <code>width = right-left</code>.</li></ul><important-warn><h3>Координаты right/bottom отличаются от CSS-свойств</h3><p>Если рассмотреть позиционирование элементов при помощи CSS-свойства <code>position</code>, то там тоже указываются <code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>.</p><p>Однако, по CSS свойство <code>right</code> задаёт расстояние от правой границы, а <code>bottom</code> – от нижней.</p><p>Если вы взглянете на иллюстрацию выше, то увидите, что в JavaScript это не так. Все координаты отсчитываются слева/сверху, в том числе и эти.</p></important-warn><important-><h3>Метод <code>elem.getBoundingClientRect()</code> изнутри</h3><p>Браузер отображает любое содержимое, используя прямоугольники.</p><p>В случае с блочным элементом, таким как <code>DIV</code>, элемент сам по себе образует прямоугольник. Но если элемент строчный и содержит в себе длинный текст, то каждая строка будет отдельным прямоугольником, с одинаковой высотой но разной длиной (у каждой строки – своя длина).</p><p>Более подробно это описано в: <a href="http://www.w3.org/TR/CSS21/visuren.html#anonymous-block-level">спецификации</a>.</p><p>Если обобщить, содержимое элемента может отображаться в одном прямоугольнике или в нескольких.</p><p>Все эти прямоугольники можно получить с помощью <a href="https://developer.mozilla.org/en/DOM/element.getClientRects">elem.getClientRects()</a>. А метод <a href="https://developer.mozilla.org/en/DOM/element.getBoundingClientRect">elem.getBoundingClientRect()</a> возвращает один охватывающий прямоугольник для всех <code>getClientRects()</code>.</p></important-><h2><a name="1" href="#1">elementFromPoint(x, y)</a></h2><p>Возвращает элемент, который находится на координатах <code>(x, y)</code> относительно окна.</p><p>Синтаксис:</p><code-example><script>`var elem=document.elementFromPoint(x, y);`</script></code-example><p style="">Например, код ниже выделяет и выводит тег у элемента, который сейчас в середине окна:</p><code-example><script>`var centerX = document.documentElement.clientWidth / 2;\nvar centerY = document.documentElement.clientHeight / 2;\n\nvar elem = document.elementFromPoint(centerX, centerY);\n\nelem.style.background = "red";\nalert( elem.tagName );\nelem.style.background = "";`</script><code-toolbar iframe="none"></code-toolbar></code-example><p style="">Аналогично предыдущему методу, используются координаты относительно окна, так что, в зависимости от прокрутки страницы, в центре может быть разный элемент.</p><important-warn><h3>Для координат вне окна <code>elementFromPoint</code> возвращает <code>null</code></h3><p>Метод <code style="">document.elementFromPoint(x,y)</code> работает только если координаты <code>(x,y)</code> находятся в пределах окна.</p><p>Если одна из них отрицательна или больше чем ширина/высота окна – он возвращает <code>null</code>.</p><p>В большинстве случаев использования это не является проблемой, но нужно обязательно иметь такую возможность в виду.</p><p>Типичная ошибка, которая может возникнуть, если не проверять наличие <code>elem</code>:</p><code-example><script>`var elem = document.elementFromPoint(centerX, centerY);\n// если координаты вне окна, то elem = null\nMARKelem.style.background = '';// ошибка!`</script></code-example></important-warn><h2><a name="2" href="#2">Координаты для position:fixed</a></h2><p>Координаты обычно требуются не просто так, а, например, чтобы переместить элемент на них.</p><p>В CSS для позиционирования элемента относительно окна используется свойство <code>position:fixed</code>. Как правило, вместе с ним идут и координаты, например <code>left/top</code>.</p><p>Например, функция <code>createMessageUnder</code> из кода ниже покажет сообщение под элементом <code>elem</code>:</p><code-example><script>`var elem = document.getElementById("coords-show-mark");\n\nfunction createMessageUnder(elem, text) {\n  // получить координаты\n  var coords = elem.getBoundingClientRect();\n\n  // создать элемент для сообщения\n  var message = document.createElement('div');\n  // стиль лучше задавать классом\n  message.style.cssText = "position:fixed; color: red";\n\nMARK  // к координатам обязательно добавляем "px"!\nMARK  message.style.left = coords.left + "px";\nMARK  message.style.top = coords.bottom + "px";\n\n  message.innerHTML = text;\n\n  return message;\n}\n\n// Использование\n// добавить на 5 сек в документ\nvar message = createMessageUnder(elem, 'Привет, мир!');\ndocument.body.appendChild(message);\nsetTimeout(function() {\n  document.body.removeChild(message);\n}, 5000);`</script></code-example><p>Нажмите на кнопку, чтобы запустить его:</p><p><button onclick="showText()" id="coords-show-mark">кнопка с id = «coords-show-mark»</button></p><p>Этот код можно модифицировать, чтобы показывать сообщение слева, справа, сверху, делать это вместе с CSS-анимацией и так далее. Для этого нужно всего лишь понимать, как получить координаты.</p><p><strong>Заметим, однако, важную деталь:при прокрутке страницы сообщение будет визуально отдаляться от кнопки.</strong></p><p>Причина очевидна, ведь оно использует <code>position:fixed</code>, так что при прокрутке остаётся на месте, а страница скроллируется.</p><p>Как сделать, чтобы сообщение было именно на конкретном месте документа, а не окна, мы рассмотрим в следующей главе.</p><h2 id="tasks"><a href="#3" name="3">Задачи (2)</a></h2><task-content><h3><a href="#6" name="6">Найдите координаты точки в документе</a><task-open hover-style="" data-show_task="" title="Открыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность:5</span><p>В ифрейме ниже вы видите документ с зеленым «полем».</p><p>При помощи JavaScript найдите координаты указанных стрелками углов относительно окна браузера.</p><p>Для тестирования в документ добавлено удобство:клик в любом месте отображает координаты мыши относительно окна.</p><figure- style="padding:30px 0 0 30px"><code-toolbar-><div></div><a title="открыть в новом окне" data-new_window=""></a><a title="открыть в песочнице" data-code_edit=""></a></code-toolbar-><style> field-{display:block;overflow:hidden;width:200px;height:150px;border-top:10px solid black;border-right:10px solid gray;border-bottom:10px solid gray;border-left:10px solid black;background-color:#00FF00;font:10px/1.2 monospace;margin:20px;} triangle-right{display:block;position:relative;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:20px solid red;text-indent:-20px;font:12px/1 monospace;} coords-{color:red;}</style><script>document.onclick=function(e){document.querySelector('coords').innerHTML='координаты появятся тут: <coords- id="removable">'+e.clientX+':'+e.clientY+'</coords->'};</script> Кликните на любое место, чтобы получить координаты относительно окна. <br> Это для удобства тестирования, чтобы проверить результат, который вы получите из DOM. <br><coords>координаты появятся тут: </coords><field-> . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . </field-><triangle-right style="top:-196px">1</triangle-right><triangle-right style="left:10px;top:-198px">3</triangle-right><triangle-right style="left:210px;top:-60px">4</triangle-right><triangle-right style="left:220px;top:-62px">2</triangle-right><script> var field=document.querySelector('field-');// ваш код...</script></figure-><p>Ваш код должен при помощи DOM получить четыре пары координат:</p><ol><li>Левый-верхний угол снаружи, это просто.</li><li>Правый-нижний угол снаружи, это тоже просто.</li><li>Левый-верхний угол внутри, это чуть сложнее.</li><li>Правый-нижний угол внутри, это ещё сложнее, но можно сделать даже несколькими способами.</li></ol><p>Они должны совпадать с координатами, которые вы получите кликом по полю.</p><p>P.S. Код не должен быть как-то привязан к конкретным размерам элемента, стилям, наличию или отсутствию рамки.</p><p><a data-click="task_1">Открыть песочницу для задачи.</a></p><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer-ext><button-answer-ext data-toggle_answer_ext="" style="">Координаты внешних углов</button-answer-ext><task-answer><close- title="закрыть" data-close_answer=""></close-><h4>Координаты внешних углов</h4><p>Координаты элемента возвращаются функцией <a href="https://developer.mozilla.org/en-US/docs/DOM/element.getBoundingClientRect">elem.getBoundingClientRect</a>. Она возвращает все координаты относительно окна в виде объекта со свойствами <code>left</code>, <code>top</code>, <code>right</code>, <code>bottom</code>. Некоторые браузеры также добавляют <code>width</code>, <code>height</code>.</p><p>Так что координаты верхнего-левого <code>coords1</code> и правого-нижнего <code>coords2</code> внешних углов:</p><code-example><script>`var coords = elem.getBoundingClientRect();\n\nvar coords1 = [coords.left, coords.top];\nvar coords2 = [coords.right, coords.bottom];`</script></code-example></task-answer><button-answer-ext data-toggle_answer_ext="" style="">Левый-верхний угол внутри</button-answer-ext><task-answer><close- title="закрыть" data-close_answer=""></close-><h4 class="task__step-title">Левый-верхний угол внутри</h4><p>Этот угол отстоит от наружных границ на размер рамки, который доступен через <code>clientLeft/clientTop</code>:</p><code-example><script>`var coords3 = [coords.left + field.clientLeft, coords.top + field.clientTop];`</script></code-example></task-answer><button-answer-ext data-toggle_answer_ext="" style="">Правый-нижний угол внутри</button-answer-ext><task-answer><close- title="закрыть" data-close_answer=""></close-><h4 class="task__step-title">Правый-нижний угол внутри</h4><p>Этот угол отстоит от правой-нижней наружной границы на размер рамки. Так как нужная рамка находится справа-внизу, то специальных свойств для нее нет, но мы можем получить этот размер из CSS:</p><code-example><script>`var coords4 = [\n  coords.right - parseInt(getComputedStyle(field).borderRightWidth),\n  coords.bottom - parseInt(getComputedStyle(field).borderBottomWidth)\n]`</script></code-example><p>Можно получить их альтернативным путем, прибавив <code>clientWidth/clientHeight</code> к координатам левого-верхнего внутреннего угла. Получится то же самое, пожалуй даже быстрее и изящнее.</p><code-example><script>`<body onclick="coords.innerHTML = event.clientX + ':' + event.clientY">
+
+  <style>
+    GOLD_field-_GOLD {
+        display: block;
+        overflow: hidden;
+        width: 200px;
+        height: 150px;
+        BLUE_border-top_BLUE: 10px solid black;
+        BLUE_border-right_BLUE: 10px solid gray;
+        BLUE_border-bottom_BLUE: 10px solid gray;
+        BLUE_border-left_BLUE: 10px solid black;
+        background: #00FF00;
+        font: 10px/1.2 monospace;
+        margin: 20px;
+    }
+
+    GOLD_triangle-right_GOLD {
+        display: block;
+        position: relative;
+        width: 0;
+        height: 0;
+        BLUE_border-top_BLUE: 6px solid transparent;
+        BLUE_border-bottom_BLUE: 6px solid transparent;
+        BLUE_border-left_BLUE: 20px solid red;
+        BLUE_text-indent_BLUE: -20px;
+        font: 12px/1 monospace;
+    }
+  </style>
+  Кликните на любое место, чтобы получить координаты относительно окна.
+  Это для удобства тестирования, чтобы проверить результат,
+  который вы получите из DOM.
+  <div id="coords">(координаты появятся тут)</div>
+  <RED_field-_RED> . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  </RED_field-_RED>
+  <RED_triangle-right_RED style="top:-196px">1</RED_triangle-right_RED>
+  <RED_triangle-right_RED style="left:10px;top:-198px">3</RED_triangle-right_RED>
+  <RED_triangle-right_RED style="left:210px;top:-60px">4</RED_triangle-right_RED>
+  <RED_triangle-right_RED style="left:220px;top:-62px">2</RED_triangle-right_RED>
+  <script>
+    var field = document.querySelector('field-');
+
+    var fieldCoords = field.getBoundingClientRect();
+
+    var result = [
+      [ // 1
+        fieldCoords.left,
+        fieldCoords.top
+      ],
+      [ // 2
+        fieldCoords.right,
+        fieldCoords.bottom
+      ],
+      [ // 3
+        fieldCoords.left + field.clientLeft,
+        fieldCoords.top + field.clientTop
+      ],
+      [ // 4
+        fieldCoords.left + field.clientLeft + field.clientWidth,
+        fieldCoords.top + field.clientTop + field.clientHeight
+      ]
+    ];
+
+    alert(result.join('  '));
+  <\/script>
+</body>`</script><code-toolbar iframe="320"><a title="показать" data-code_run="0"></a><a id="task_1" data-code_edit="?" style="display:none"></a><a id="answer_1" title="открыть в песочнице" data-code_edit=""></a></code-toolbar></code-example><p><a data-click="answer_1">Открыть решение в песочнице.</a></p></task-answer></task-answer-ext></task-content><task-content><h3><a href="#7" name="7">Разместить заметку рядом с элементом</a><task-open hover-style="" data-show_task="" title="Открыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность:5</span><p>Создайте функцию <code>positionAt(anchor, position, elem)</code>, которая позиционирует элемент <code>elem</code>, в зависимости от <code>position</code>, сверху ( <code>"top"</code>), справа ( <code>"right"</code>) или снизу ( <code>"bottom"</code>) от элемента <code>anchor</code>.</p><p>Используйте её, чтобы сделать функцию <code>showNote(anchor, position, html)</code>, которая показывает элемент с классом <code>note</code> и текстом <code>html</code> на позиции <code>position</code> рядом с элементом <code>anchor</code>.</p><p>Выведите заметки как здесь:</p><figure- id="position_note"><code-toolbar-><div></div><a title="открыть в новом окне" data-new_window=""></a><a title="открыть в песочнице" data-code_edit=""></a></code-toolbar-><style> .note{position:fixed;z-index:1000;padding:5px;border:1px solid black;background:white;text-align:center;font:italic 14px Georgia;} #anchor{background:#f9f9f9;border-left:10px solid #ccc;margin:0 0 0 100px;padding:.5em 10px;/*quotes:"\201C""\201D""\2018""\2019";*/ display:inline-block;white-space:pre;} #anchor:before{content:url('left-quote.svg');/*color:#ccc;content:open-quote;font-size:4em;line-height:.1em;margin-right:.25em;vertical-align:-.4em;*/} </style><p></p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit sint atque dolorum fuga ad incidunt voluptatum error fugiat animi amet! Odio temporibus nulla id unde quaerat dignissimos enim nisi rem provident molestias sit tempore omnis recusandae esse sequi officia sapiente.</p><pre id="anchor"> 
+- Что на завтрак, Бэрримор? 
+- Овсянка, сэр. 
+- А на обед? 
+- Овсянка, сэр. 
+- Ну а на ужин? 
+- Котлеты, сэр. 
+- Уррра!!! 
+- Из овсянки, сэр!!!
+</pre><p style="margin-top:1em;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit sint atque dolorum fuga ad incidunt voluptatum error fugiat animi amet! Odio temporibus nulla id unde quaerat dignissimos enim nisi rem provident molestias sit tempore omnis recusandae esse sequi officia sapiente.</p><input onclick="newNote.show()" type="button" value="поставить заметки"><script>/** * Позиционирует элемент elem относительно элемента anchor,как указано в * в position. * * @param {Node} anchor Элемент-якорь,относительно которого задана позиция * @param {string} position Позиция:одно из (top/right/bottom) * @param {Node} elem Элемент,который будет позиционирован * * Оба элемента elem&&anchor должны быть видимы в документе. */ /* проверка работоспособности */function NewNote(){var anchor=document.body.querySelector('#anchor');var parent=anchor.parentElement;var anchorCoords;this.show=function(){anchorCoords=anchor.getBoundingClientRect();showNote(anchorCoords,"top","заметка сверху");showNote(anchorCoords,"right","заметка справа");showNote(anchorCoords,"bottom","заметка снизу");};/** * Показывает заметку с текстом html на позиции position * относительно элемента anchor */ function showNote(anchorCoords,position,html){var note=document.createElement('div');note.id='removable';note.className="note";note.innerHTML=html;parent.appendChild(note);switch (position){case "top":note.style.left=anchorCoords.left+"px";note.style.top=anchorCoords.top-note.offsetHeight+"px";break;case "right":note.style.left=anchorCoords.left+anchor.offsetWidth+"px";note.style.top=anchorCoords.top+"px";break;case "bottom":note.style.left=anchorCoords.left+"px";note.style.top=anchorCoords.top+anchor.offsetHeight+"px";break;}}}window.newNote=new NewNote();</script></figure-><p><a data-click="task_2">Открыть песочницу для задачи.</a></p><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><code-example><script>`<style>
+  GOLD_.note_GOLD {
+    position: fixed;
+    z-index: 1000;
+    padding: 5px;
+    border: 1px solid black;
+    background: white;
+    text-align: center;
+    font: italic 14px Georgia;
+  }
+  
+  GOLD_blockquote_GOLD {
+    background: #f9f9f9;
+    BLUE_border-left_BLUE: 10px solid #ccc;
+    margin: 0 0 0 100px;
+    padding: .5em 10px;
+    BLUE_quotes_BLUE: "\\201C" "\\201D" "\\2018" "\\2019";
+    display: inline-block;
+    white-space: pre;
+  }
+  
+  GOLD_blockquote:before_GOLD {
+    color: #ccc;
+    content: open-quote;
+    font-size: 4em;
+    line-height: .1em;
+    margin: 0 .25em 0 0;
+    vertical-align: -.4em;
+  }
+</style>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit sint atque dolorum fuga ad incidunt voluptatum error fugiat animi amet! Odio temporibus nulla id unde quaerat dignissimos enim nisi rem provident molestias sit tempore omnis recusandae esse sequi officia sapiente.
+</p>
+
+<RED_blockquote_RED>
+  - Что на завтрак, Бэрримор? 
+  - Овсянка, сэр. 
+  - А на обед? 
+  - Овсянка, сэр. 
+  - Ну а на ужин? 
+  - Котлеты, сэр. 
+  - Уррра!!! 
+  - Из овсянки, сэр!!!
+</RED_blockquote_RED>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit sint atque dolorum fuga ad incidunt voluptatum error fugiat animi amet! Odio temporibus nulla id unde quaerat dignissimos enim nisi rem provident molestias sit tempore omnis recusandae esse sequi officia sapiente.
+</p>
+
+<script>
+  /**
+COMMENT   * Позиционирует элемент elem относительно элемента anchor, как указано в
+COMMENT   * в position.
+COMMENT   *
+COMMENT   * @param {Node} anchor     Элемент-якорь, относительно которого задана позиция
+COMMENT   * @param {string} position Позиция: одно из (top/right/bottom)
+COMMENT   * @param {Node} elem       Элемент, который будет позиционирован
+COMMENT   *
+COMMENT   * Оба элемента elem && anchor должны быть видимы в документе.
+   */
+  function positionAt(anchor, position, elem) {
+
+    var anchorCoords = anchor.getBoundingClientRect();
+
+    switch (position) {
+      case "top":
+        elem.style.left = anchorCoords.left + "px";
+        elem.style.top = anchorCoords.top - elem.offsetHeight + "px";
+        break;
+
+      case "right":
+        elem.style.left = anchorCoords.left + anchor.offsetWidth + "px";
+        elem.style.top = anchorCoords.top + "px";
+        break;
+
+      case "bottom":
+        elem.style.left = anchorCoords.left + "px";
+        elem.style.top = anchorCoords.top + anchor.offsetHeight + "px";
+        break;
+    }
+  }
+
+  /** 
+COMMENT   * Показывает заметку с текстом html на позиции position
+COMMENT   * относительно элемента anchor
+   */
+  function showNote(anchor, position, html) {
+
+    var note = document.createElement('div');
+    note.className = "note";
+    note.innerHTML = html;
+    document.body.appendChild(note);
+
+    positionAt(anchor, position, note);
+  }
+
+  // проверка работоспособности
+  var blockquote = document.querySelector('blockquote');
+
+  showNote(blockquote, "top", "заметка сверху");
+  showNote(blockquote, "right", "заметка справа");
+  showNote(blockquote, "bottom", "заметка снизу");
+<\/script>`</script><code-toolbar iframe="430"><a title="показать" data-code_run="0"></a><a id="task_2" data-code_edit="?" style="display:none"></a><a id="answer_2" title="открыть в песочнице" data-code_edit=""></a></code-toolbar></code-example><p><a data-click="answer_2">Открыть решение в песочнице.</a></p></task-answer></task-content><banner-bottom class="banner-bottom" style="display:block;"></banner-bottom><script>! function(){/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)||screen.width<1024||"bannerBottomDisabled" in localStorage||(localStorage.bannerBottomShownCount||(localStorage.bannerBottomShownCount=1),document.querySelector(".banner-bottom").style.display="block")}();</script><nav-book data-tooltips="Размеры и прокрутка страницы;Координаты в документе"></nav-book><share-map><share-></share-><map-button hover-style="" data-load_page="l"></map-button></share-map><comments- id="comments"></comments-><div id="disqus_thread"></div><script>disqus_url="https:\/\/learn.javascript.ru\/coordinates",disqus_identifier="coordinates",disqus_title="\u041a\u043e\u043e\u0440\u0434\u0438\u043d\u0430\u0442\u044b \u0432 \u043e\u043a\u043d\u0435";</script></page-content></main>

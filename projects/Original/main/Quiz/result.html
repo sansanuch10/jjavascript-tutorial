@@ -1,0 +1,443 @@
+<main class="main main_width-limit">
+    <header class="main__header main__header_center">
+        <ol class="breadcrumbs">
+            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb" itemref="breadcrumb-1" class="breadcrumbs__item breadcrumbs__item_home"><a href="/" itemprop="url" class="breadcrumbs__link"><span itemprop="title" class="breadcrumbs__hidden-text">Учебник</span></a></li>
+            <li
+                id="breadcrumb-1" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb" itemprop="child" class="breadcrumbs__item"><a href="/quiz" itemprop="url" class="breadcrumbs__link"><span itemprop="title">Тесты</span></a></li>
+        </ol>
+        <h1 class="main__header-title">Язык JavaScript</h1>
+    </header>
+    <div class="content content_center">
+        <div class="quiz-result">
+            <div class="quiz-result__layout">
+                <div class="quiz-result__left">
+                    <div class="quiz-percents">
+                        <dl class="quiz-percents__result">
+                            <dt class="quiz-percents__text">Ваш результат:</dt>
+                            <dd>
+                                <p class="quiz-percents__percents">30%</p>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <style>
+                    .quiz-results-indicator__indicator:after {
+                        -webkit-transform: rotate(54deg);
+                        transform: rotate(54deg);
+                    }
+                </style>
+                <div class="quiz-result__center">
+                    <div class="quiz-results-indicator">
+                        <div class="quiz-results-indicator__indicator"></div>
+                        <div class="quiz-results-indicator__text">Ваш предположительный уровень&nbsp;—&nbsp;<span class="quiz-results-indicator__level quiz-results-indicator__level_junior">новичок</span></div>
+                    </div>
+                </div>
+                <div class="quiz-result__right">
+                    <div class="quiz-percents">
+                        <dl class="quiz-percents__result">
+                            <dt class="quiz-percents__text">Вы прошли тест лучше, чем</dt>
+                            <dd>
+                                <p class="quiz-percents__percents">14%</p>
+                                <p class="quiz-percents__text">респондентов</p>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="quiz-result__save-result">
+                <div class="quiz-result__bottom">
+                    <form data-quiz-result-retry-form="" action="/quiz/start/js-basic" method="POST" class="quiz-result__retry-form"><input type="hidden" name="_csrf"><button type="submit" class="button button_common quiz-result__retry-button"><span class="button__text">Пройти тест заново</span></button></form>
+                    <form
+                        data-quiz-result-save-form="" action="/quiz/save/js-basic" method="POST" class="quiz-result__save-form"><input type="hidden" name="_csrf"><button type="submit" class="button button_action quiz-result__save-button"><span class="button__text">Сохранить результат</span></button></form>
+                </div>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Яблоко стоит 1.15, апельсин стоит 2.30.</p>
+                <p>Сколько стоят они вместе – чему равна сумма <code>1.15 + 2.30</code> с точки зрения JavaScript?</p>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>345</code></span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="1" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>3.45</code></span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>3,45</code></span></label></li>
+                            <li
+                                class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="radio" value="3" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Ни один из вариантов выше.</span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Есть ли разница между выражениями?</p>
+                <div data-trusted="0" class="code-example" data-prism-done="1">
+                    <div class="codebox code-example__codebox">
+
+                        <div class="codebox__code" data-code="1">
+                            <pre class="line-numbers  language-javascript"><code class=" language-javascript"><span class="token operator">!</span><span class="token operator">!</span><span class="token punctuation">(</span> a <span class="token operator">&amp;&amp;</span> b <span class="token punctuation">)</span>
+<span class="token punctuation">(</span>a <span class="token operator">&amp;&amp;</span> b<span class="token punctuation">)</span></code><span class="line-numbers-rows"><span></span><span></span></span></pre>
+                        </div>
+                    </div>
+
+                </div>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Да.</span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="1" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text">Нет.</span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">В первом выражении ошибка, что еще за «!!» ??</span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Есть ли разница между вызовами <code>i++</code> и <code>++i</code>?</p>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Разница в значении, которое возвращает такой вызов.</span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="1" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text">Разница в значении <code>i</code> после вызова.</span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Нет никакой разницы.</span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="multi">
+            <div class="quiz-question__body">
+                <p>Каких операторов из этого списка нет в javascript?</p>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant"><label class="quiz-question__label"><input type="checkbox" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>*</code></span></label></li>
+                    <li
+                        class="quiz-question__variant"><label class="quiz-question__label"><input type="checkbox" value="1" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>^</code></span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="checkbox" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>%</code></span></label></li>
+                            <li
+                                class="quiz-question__variant quiz-question__variant_correct_true quiz-question__variant_selected"><label class="quiz-question__label"><input type="checkbox" value="3" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>#</code></span></label></li>
+                                <li
+                                    class="quiz-question__variant"><label class="quiz-question__label"><input type="checkbox" value="4" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>&amp;</code></span></label></li>
+                                    <li
+                                        class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="checkbox" value="5" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>&gt;&gt;</code></span></label></li>
+                                        <li
+                                            class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="checkbox" value="6" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>&gt;&gt;&gt;</code></span></label></li>
+                                            <li
+                                                class="quiz-question__variant"><label class="quiz-question__label"><input type="checkbox" value="7" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>!</code></span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Что выведет этот код?</p>
+                <div data-trusted="0" class="code-example" data-prism-done="1">
+                    <div class="codebox code-example__codebox">
+
+                        <div class="codebox__code" data-code="1">
+                            <pre class="line-numbers  language-javascript"><code class=" language-javascript"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> f<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code><span class="line-numbers-rows"><span></span><span></span><span></span></span></pre>
+                        </div>
+                    </div>
+
+                </div>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>undefined</code></span></label></li>
+                    <li
+                        class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="1" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>function</code></span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>null</code></span></label></li>
+                            <li
+                                class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="3" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>object</code></span></label></li>
+                                <li
+                                    class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="4" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">В коде ошибка.</span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_true"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Правда ли что <code>a == b</code>?</p>
+                <div data-trusted="0" class="code-example" data-prism-done="1">
+                    <div class="codebox code-example__codebox">
+
+                        <div class="codebox__code" data-code="1">
+                            <pre class="line-numbers  language-javascript"><code class=" language-javascript">a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+b <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span></code><span class="line-numbers-rows"><span></span><span></span></span></pre>
+                        </div>
+                    </div>
+
+                </div>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Правда.</span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_true quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="1" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text">Неправда.</span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Как повезёт.</span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_true"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Какое будет выведено значение?</p>
+                <div data-trusted="0" class="code-example" data-prism-done="1">
+                    <div class="codebox code-example__codebox">
+
+                        <div class="codebox__code" data-code="1">
+                            <pre class="line-numbers  language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> x <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+<span class="token function">alert</span><span class="token punctuation">(</span> x<span class="token operator">++</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></code><span class="line-numbers-rows"><span></span><span></span></span></pre>
+                        </div>
+                    </div>
+
+                </div>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant quiz-question__variant_correct_true quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="0" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>5</code></span></label></li>
+                    <li
+                        class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="1" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>6</code></span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Другое.</span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Что выведет этот код?</p>
+                <div data-trusted="0" class="code-example" data-prism-done="1">
+                    <div class="codebox code-example__codebox">
+
+                        <div class="codebox__code" data-code="1">
+                            <pre class="line-numbers  language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">5</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span></code><span class="line-numbers-rows"><span></span><span></span><span></span></span></pre>
+                        </div>
+                    </div>
+
+                </div>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>0.999999999</code></span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="1" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>1</code></span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>0.5</code></span></label></li>
+                            <li
+                                class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="radio" value="3" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>8</code></span></label></li>
+                                <li
+                                    class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="4" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>-0.5</code></span></label></li>
+                                    <li
+                                        class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="5" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>4</code></span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Существует ли такое значение <code>X</code>, что после присваивания <code>a = X</code> вызов <code>alert(a == X)</code>                    выдаст <code>false</code>?</p>
+                <div data-trusted="0" class="code-example" data-prism-done="1">
+                    <div class="codebox code-example__codebox">
+
+                        <div class="codebox__code" data-code="1">
+                            <pre class="line-numbers  language-javascript"><code class=" language-javascript"><span class="token keyword">var</span> a <span class="token operator">=</span> X<span class="token punctuation">;</span>
+<span class="token function">alert</span><span class="token punctuation">(</span> a <span class="token operator">==</span> X <span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// false</span></code><span class="line-numbers-rows"><span></span><span></span></span></pre>
+                        </div>
+                    </div>
+
+                </div>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="0" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text">Да, <code>X</code> – это <code>undefined</code>.</span></label></li>
+                    <li
+                        class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="1" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Да, <code>X</code> – это <code>null</code>.</span></label></li>
+                        <li
+                            class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Да, другое.</span></label></li>
+                            <li
+                                class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="3" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Нет, не бывает.</span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Чему равен <code>typeof null</code> в режиме <code>use strict</code>?</p>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>null</code></span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="1" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>undefined</code></span></label></li>
+                        <li
+                            class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>object</code></span></label></li>
+                            <li
+                                class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="3" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>string</code></span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Чему равно значение выражения <code>4 - "5" + 0xf - "1e1"</code>?</p>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Цифре.</span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="1" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text">Строке.</span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>NaN</code></span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="multi">
+            <div class="quiz-question__body">
+                <p>Какие варианты правильно объявляют функцию <code>f</code>, возвращающую сумму двух аргументов ?</p>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant quiz-question__variant_correct_true quiz-question__variant_selected"><label class="quiz-question__label"><input type="checkbox" value="0" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>var f = function(a,b) { return a+b }</code></span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="checkbox" value="1" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>var f = new Function("a,b", "return a+b")</code></span></label></li>
+                        <li
+                            class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="checkbox" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>var f = new Function("a", "b", "return a+b")</code></span></label></li>
+                            <li
+                                class="quiz-question__variant"><label class="quiz-question__label"><input type="checkbox" value="3" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Никакие.</span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_true"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Чему равно <code>0 || "" || 2 || undefined || true || falsе</code> ?</p>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>0</code></span></label></li>
+                    <li
+                        class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="1" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>""</code></span></label></li>
+                        <li
+                            class="quiz-question__variant quiz-question__variant_correct_true quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="2" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>2</code></span></label></li>
+                            <li
+                                class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="3" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>undefined</code></span></label></li>
+                                <li
+                                    class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="4" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>true</code></span></label></li>
+                                    <li
+                                        class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="5" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>false</code></span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_true"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Что делает оператор <code>===</code>?</p>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Сравнивает по ссылке, а не по значению.</span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_true quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="1" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text">Сравнивает без приведения типа.</span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Нет такого оператора.</span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Объявлена функция:</p>
+                <div data-trusted="0" class="code-example" data-prism-done="1">
+                    <div class="codebox code-example__codebox">
+
+                        <div class="codebox__code" data-code="1">
+                            <pre class="line-numbers  language-javascript"><code class=" language-javascript"><span class="token keyword">function</span> <span class="token function">F</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span></code><span class="line-numbers-rows"><span></span></span></pre>
+                        </div>
+                    </div>
+
+                </div>
+                <p>Верно ли, что <code>F instanceof Function</code>?</p>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Да.</span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="1" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text">Нет.</span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Что выведет этот код?</p>
+                <div data-trusted="0" class="code-example" data-prism-done="1">
+                    <div class="codebox code-example__codebox">
+
+                        <div class="codebox__code" data-code="1">
+                            <pre class="line-numbers  language-javascript"><code class=" language-javascript"><span class="token keyword">function</span> <span class="token function">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+User<span class="token punctuation">.</span>prototype <span class="token operator">=</span> <span class="token punctuation">{</span> admin<span class="token punctuation">:</span> <span class="token boolean">false</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> user <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+User<span class="token punctuation">.</span>prototype <span class="token operator">=</span> <span class="token punctuation">{</span> admin<span class="token punctuation">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span>admin<span class="token punctuation">)</span><span class="token punctuation">;</span></code><span class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre>
+                        </div>
+                    </div>
+
+                </div>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>false</code></span></label></li>
+                    <li
+                        class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="1" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>undefined</code></span></label></li>
+                        <li
+                            class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="2" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>true</code></span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Есть ли различия между проверками:</p>
+                <div data-trusted="0" class="code-example" data-prism-done="1">
+                    <div class="codebox code-example__codebox">
+
+                        <div class="codebox__code" data-code="1">
+                            <pre class="line-numbers  language-javascript"><code class=" language-javascript"><span class="token keyword">if</span><span class="token punctuation">(</span> x <span class="token operator">&lt;=</span> <span class="token number">100</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token operator">...</span><span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">// и</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token operator">!</span><span class="token punctuation">(</span>x <span class="token operator">&gt;</span> <span class="token number">100</span><span class="token punctuation">)</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token operator">...</span><span class="token punctuation">}</span></code><span class="line-numbers-rows"><span></span><span></span><span></span></span></pre>
+                        </div>
+                    </div>
+
+                </div>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Да, существует значение <code>x</code>, для которого они работают по-разному.</span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="1" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text">Нет, они полностью взаимозаменяемы.</span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Зависит от браузера.</span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_true"><input type="hidden" name="type" value="multi">
+            <div class="quiz-question__body">
+                <p>Какие варианты подключения скрипта являются корректными с точки зрения современного стандарта HTML?</p>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant quiz-question__variant_correct_true quiz-question__variant_selected"><label class="quiz-question__label"><input type="checkbox" value="0" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>&lt;script type="text/javascript" src="my.js"&gt;&lt;/script&gt;</code></span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_true quiz-question__variant_selected"><label class="quiz-question__label"><input type="checkbox" value="1" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>&lt;script src="my.js"&gt;&lt;/script&gt;</code></span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="checkbox" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>&lt;script src="my.js"/&gt;</code></span></label></li>
+                            <li
+                                class="quiz-question__variant"><label class="quiz-question__label"><input type="checkbox" value="3" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>&lt;хачу-javascript отсюда="my.js"&gt;</code></span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_false"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Что выведет код ниже?</p>
+                <div data-trusted="0" class="code-example" data-prism-done="1">
+                    <div class="codebox code-example__codebox">
+
+                        <div class="codebox__code" data-code="1">
+                            <pre class="line-numbers  language-javascript"><code class=" language-javascript"><span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">var</span> key <span class="token keyword">in</span>  <span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+ <span class="token function">alert</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code><span class="line-numbers-rows"><span></span><span></span><span></span></span></pre>
+                        </div>
+                    </div>
+
+                </div>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant quiz-question__variant_correct_false quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="0" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text"><code>1</code>, затем <code>0</code>.</span></label></li>
+                    <li
+                        class="quiz-question__variant quiz-question__variant_correct_true"><label class="quiz-question__label"><input type="radio" value="1" disabled="" class="quiz-question__input"><span class="quiz-question__input-text"><code>0</code>, затем <code>1</code>.</span></label></li>
+                        <li
+                            class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="2" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">В коде ошибка.</span></label></li>
+                            <li
+                                class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="3" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Зависит от браузера.</span></label></li>
+                </ul>
+            </div>
+        </div>
+        <div class="quiz-question quiz-question_correct_true"><input type="hidden" name="type" value="single">
+            <div class="quiz-question__body">
+                <p>Что такое ECMAScript?</p>
+                <ul class="quiz-question__variants">
+                    <li class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="0" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Новый язык программирования.</span></label></li>
+                    <li
+                        class="quiz-question__variant"><label class="quiz-question__label"><input type="radio" value="1" disabled="" class="quiz-question__input"><span class="quiz-question__input-text">Переработанная реализация Javascript.</span></label></li>
+                        <li
+                            class="quiz-question__variant quiz-question__variant_correct_true quiz-question__variant_selected"><label class="quiz-question__label"><input type="radio" value="2" disabled="" checked="checked" class="quiz-question__input"><span class="quiz-question__input-text">Спецификация языка Javascript.</span></label></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>

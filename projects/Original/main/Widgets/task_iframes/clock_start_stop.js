@@ -1,0 +1,1 @@
+function Clock(e){var n,t=e.elem;function a(){var e=new Date,n=e.getHours();n<10&&(n="0"+n),t.querySelector("hour-")[0].innerHTML=n;var a=e.getMinutes();a<10&&(a="0"+a),t.querySelector("min-")[0].innerHTML=a;var r=e.getSeconds();r<10&&(r="0"+r),t.querySelector("sec-")[0].innerHTML=r}this.stop=function(){clearInterval(n)},this.start=function(){a(),n=setInterval(a,1e3)}}

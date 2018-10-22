@@ -1,0 +1,73 @@
+<main><page-content><nav-up><home- data-load_page="0" hover-style=""></home-><arrow-next></arrow-next><a data-load_page="98">Документ, события, интерфейсы</a><arrow-next></arrow-next><a data-load_page="145">Создание графических компонентов</a></nav-up><h1>Вёрстка графических компонентов</h1><p>При создании графических компонентов («виджетов») в первую очередь придумывается их HTML/CSS-структура.</p><p>Как будет выглядеть виджет в обычном состоянии? Как будет меняться в процессе взаимодействия с посетителем?</p><p>Чтобы разработка виджета была удобной, при вёрстке полезно соблюдать несколько простых, но очень важных соглашений.</p><h2><a name="0" href="#0">Семантическая вёрстка</a></h2><p>HTML-разметка и названия CSS-классов должны отражать не оформление, а смысл.</p><p>Например, сообщение об ошибке можно сверстать так:</p><code-example><script>`<div HIGHstyle="color:red; border: 1px solid red"LIGHT>\n  Плохая вёрстка сообщения об ошибке: атрибут style!\n</div>`</script></code-example><p>…Или так:</p><code-example><script>`<div HIGHclass="red red-border"LIGHT>\n  Плохая вёрстка сообщения об ошибке: несемантический class!\n</div>`</script></code-example><p>В обоих случаях вёрстка не является семантической. В первом случае – стиль, а во втором – класс содержат информацию об <em>оформлении</em>.</p><p><strong>При семантической вёрстке классы описывают смысл («что это?» – меню, кнопка…) и состояние (открыто, закрыто, отключено…) компонента.</strong></p><p>Например:</p><code-example><script>`<div HIGHclass="error"LIGHT>\n  Сообщение об ошибке (error), правильная вёрстка!\n</div>`</script></code-example><p>У предупреждения будет класс <code>warning</code> и так далее, по смыслу.</p><code-example><script>`<div HIGHclass="warning"LIGHT>\n  Предупреждение  (warning), правильная вёрстка!\n</div>`</script></code-example><p>Семантическая верстка упрощает поддержку и развитие CSS, упрощает взаимодействие между членами команды.</p><p>Такая верстка удобна для организации JS-кода. В коде мы просто ставим нужный класс, остальное делает CSS.</p><h2><a name="1" href="#1">Состояние виджета – класс на элементе</a></h2><p>Зачастую компонент может иметь несколько состояний. Например, меню может быть открыто или закрыто.</p><p><strong>Состояние должно добавляться CSS-классом не на тот элемент, который нужно скрыть/показать/…, а на тот, к которому оно «по смыслу» относится, обычно – на корневой элемент.</strong></p><p>Например, меню в закрытом состоянии скрывает свой список элементов. Класс <code>open</code> нужно добавлять не к списку опций <code>&lt;ul&gt;</code>, который скрывается-показывается, а к <em>корневому элементу</em> виджета, поскольку это состояние касается всего меню:</p><code-example><script>`<div class="menu HIGHopenLIGHT">\n  <span class="title">Заголовок меню</span>\n  <ul>\n    <li>Список элементов</li>\n  </ul>\n</div>`</script></code-example><p>Или, к примеру, разметка для индикатора загрузки может выглядеть так:</p><code-example><script>`<div class="indicator HIGHloadingLIGHT">\n  <span class="progress">Тут показывается прогресс</span>\n</div>`</script></code-example><p>Состояние индикатора может быть «в процессе» (loading) или «загрузка завершена» (complete). С точки зрения оформления оно может влиять только на показ внутреннего <code>span</code>, но ставить его нужно всё равно на внешний элемент, ведь это – состояние всего компонента.</p><p>Из примеров выше можно подумать, что классы, описывающие состояние, всегда ставятся на корневой элемент. Но это не так.</p><p>Возможно и такое, что состояние относится к внутреннему элементу. Например, для дерева состояние открыт/закрыт относится к узлу, соответственно, класс должен быть на узле.</p><p>Например:</p><code-example><script>`<ul class="tree">\n  <li class="HIGHclosedLIGHT">\n    Закрытый узел дерева\n  </li>\n  <li class="HIGHopenLIGHT">\n    Открытый узел дерева\n  </li>\n  ...\n</ul>`</script></code-example><h2><a name="2" href="#2">Префиксы компонента у классов</a></h2><p>Рассмотрим пример вёрстки «диалогового окна»:</p><code-example><script>`<div class="dialog">\n  <h2 class="title">Заголовок</h2>\n  <div class="content">\n    HTML-содержимое.\n  </div>\n  <div class="close">Закрыть</div>\n</div>\n\n<style>\nGOLD_.dialog_GOLD {\n  background: lightgreen;\n  border: lime 2px solid;\n  border-radius: 10px;\n  padding: 4px;\n  position: relative;\n}\n\nGOLD_.dialog .title_GOLD {\nMARK  margin: 0;\nMARK  font-size: 24px;\nMARK  color: darkgreen;\n}\n\nGOLD_.dialog .content_GOLD {\n  padding: 10px 0 0 0;\n}\n\nGOLD_.dialog .close_GOLD {\n  position: absolute;\n  right: 4px;\n  top: 4px;\n  font-size: 10px;\n}\n</style>`</script><code-toolbar- iframe="100"><a onclick="this.parentElement.nextElementSibling.style.height='200px'" title="показать" data-code_run=""></a><div></div></code-toolbar-></code-example><p>Диалоговое окно может иметь любое HTML-содержимое.</p><p>А что будет, если в этом содержимом окажется меню – да-да, то самое, которое рассмотрели выше, со <code>&lt;span class="title"&gt;</code> ?</p><p>Правило <code>.dialog .title</code> применяется ко всем <code>.title</code> внутри <code>.dialog</code>, а значит – и к нашему меню тоже. Будет конфликт стилей с непредсказуемыми последствиями.</p><p>Конечно, можно попытаться бороться с этим. Например, жёстко задать вложенность – использовать класс <code>.dialog &gt; .title</code>. Это сработает в данном конкретном примере, но как быть в тех местах, где между <code>.dialog</code> и <code>.title</code> есть другие элементы? Длинные цепочки вида <code>.dialog &gt; ... &gt; .title</code> страшновато выглядят и делают вёрстку ужасно негибкой. К счастью, есть альтернативный путь.</p><p><strong>Чтобы избежать возможных проблем, все классы внутри виджета начинают с его имени.</strong></p><p>Здесь имя <code>dialog</code>, так что все, относящиеся к диалогу, будем начинать с <code>dialog__</code></p><p>Получится так:</p><code-example><script>`<div class="HIGHdialogLIGHT">\n  <h2 class="dialog__title">Заголовок</h2>\n  <div class="dialog__content">\n    HTML-содержимое.\n  </div>\n  <div class="dialog__close">Закрыть</div>\n</div>\n\n<style>\n  GOLD_.dialog_GOLD { ... }\n  GOLD_.dialog__title_GOLD { стиль заголовка }\n  GOLD_.dialog__content_GOLD { стиль содержимого  }\n  ...\n</style>`</script></code-example><p>Здесь двойное подчёркивание <code>__</code> служит «стандартным» разделителем. Можно выбрать и другой разделитель, но при этом стоит иметь в виду, что иногда имя класса может состоять из нескольких слов. Например <code>title-picture</code>. С двойным подчёркиванием: <code>dialog__title-picture</code>, очень наглядно видно где что.</p><p>Есть ещё одно полезное правило, которое заключается в том, что стили должны вешаться на класс, а не на тег. То есть, не <code>h2 { ... }</code>, а <code>.dialog__title { ... }</code>, где <code>.dialog__title</code> – класс на соответствующем заголовке.</p><p>Это позволяет и избежать конфликтов на вложенных <code>h2</code>, и использовать всегда те теги, которые имеют правильный смысл, не оглядываясь на встроенные стили (которые можно обнулить своими).</p><important-><h3>Без фанатизма</h3><p>На практике из этих правил зачастую делают исключения. Можно «вешать» стили на теги и использовать CSS-каскады без префиксов, если мы при этом твёрдо понимаем, что конфликты заведомо исключены.</p><p>Например, когда мы точно знаем, что никакого произвольного HTML внутри элемента (или внутри данного поддерева DOM) не будет.</p></important-><h2><a name="3" href="#3">БЭМ</a></h2><p>Описанное выше правило именования элементов является частью более общей концепции «БЭМ», которая разработана в Яндексе.</p><p>БЭМ предлагает способ организации HTML/CSS/JS в виде независимых «блоков» – компонентов, которые можно легко перемещать по файловой системе и между проектами.</p><p>Можно как взять часть идеологии, например систему именования классов, так и полностью перейти на инструментарий БЭМ, который даёт инструменты сборки для HTML/JS/CSS, описанных по БЭМ-методу.</p><p>Более подробное описание основ БЭМ можно почитать в статье <a href="https://ru.bem.info/articles/bem-for-small-projects/">https://ru.bem.info/articles/bem-for-small-projects/</a>, а о системе вообще – на сайте <a href="http://ru.bem.info">http://ru.bem.info</a>.</p><h2><a name="4" href="#4">Итого</a></h2><ul><li><p>Вёрстка должна быть семантической, использовать соответствующие смыслу информации теги и классы.</p></li><li><p>Класс, описывающий состояние всего компонента, нужно ставить на его корневом элементе, а не на том, который нужно «украсить» в этом состоянии. Если состояние относится не ко всему компоненту, а к его части – то на соответствующем «по смыслу» DOM-узле.</p></li><li><p>Классы внутри компонента должны начинаться с префикса – имени компонента.</p><p>Это не всегда строго необходимо, но позволяет избежать проблем в случаях, когда компонент может содержать произвольный DOM, как например диалоговое окно с произвольным HTML-текстом.</p><p>Использование <code>.dialog__title</code> вместо <code>.dialog .title</code> гарантирует, что CSS не применится по ошибке к какому-нибудь другому <code>.title</code> внутри диалога.</p></li></ul><h2 id="tasks"><a href="#5" name="5">Задачи (1)</a></h2><task-content><h3><a href="#8" name="8">Семантическое меню</a><task-open hover-style="" data-show_task="" title="Открыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность: 5</span><p>Посмотрите на вёрстку горизонтального меню.</p><code-example><script>`<style>
+  GOLD_.rounded-horizontal-blocks .item_GOLD {
+    float: left;
+    padding: 6px;
+    margin: 0 2px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 90%;
+    background: #FFF5EE;
+  }
+
+  GOLD_.vertical-splitter_GOLD {
+    float: left;
+    padding: 6px;
+    margin: 0 2px;
+  }
+
+  GOLD_.item:hover_GOLD {
+    BLUE_text-decoration_BLUE: underline;
+  }
+</style>
+
+<div class="rounded-horizontal-blocks">
+  <div class="item">Главная</div>
+  <div class="vertical-splitter">|</div>
+  <div class="item">Товары</div>
+  <div class="item">Фотографии</div>
+  <div class="item">Контакты</div>
+</div>`</script><code-toolbar iframe="100"><a id="run_1" title="показать" data-code_run="0"></a><a id="answer_1" title="открыть в песочнице" data-code_edit=""></a></code-toolbar></code-example><p>Что делает эту вёрстку несемантичной? Найдите 3 ошибки (или больше).</p><p>Как бы вы сверстали меню правильно?</p><p><a data-click="task_1">Открыть песочницу для задачи.</a></p><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><p>Несмотря на то, что меню более-менее прилично отображается, эта вёрстка совершенно не семантична.</p><p>Ошибки:</p><ol><li><p>Во-первых, меню представляет собой <em>список элементов</em>, а для списка существует тег <code>LI</code>.</p><p><strong>Семантический подход – это когда теги используются по назначению.</strong> Для элементов списка <code>&lt;li&gt;</code>, для адреса <code>&lt;address&gt;</code>, для заголовка таблицы <code>&lt;th&gt;</code> и т.п.</p></li><li><p>Во-вторых, класс <code>rounded-horizontal-blocks</code> показывает, что содержимое должно быть <em>оформлено</em> как скругленные горизонтальные блоки. Любой класс, отражающий оформление, несемантичен.</p><p><strong>Правильно – чтобы класс был <em>смысловым</em></strong>. Например, <code>&lt;ul class="menu"&gt;</code> будет говорить о том, что смысл элемента – «меню».</p></li><li><p>В-третьих, элемент <code>.vertical-splitter</code>. Здесь класс вполне семантичен, этот элемент списка является вертикальным разделителем, так что здесь всё в порядке. Но на этот раз несемантичность – в содержимом.</p><p><strong>Мы, по возможности, стараемся, чтобы HTML содержал именно информацию, а символ вертикальной черты<code>|</code> выполняет чисто оформительскую функцию.</strong></p><p>Поэтому от него следует либо вообще избавиться, либо переместить в CSS при помощи <code>::before</code>.</p></li></ol><p>И, наконец, это не обязательно и не ошибка, но обычно элементы, которые являются ссылками или кнопками, оформляют в <code>&lt;a&gt;</code> или <code>&lt;button&gt;</code>.</p><p>Вариант ниже – семантичен:</p><code-example><script>`<style>
+  GOLD_.menu_GOLD {
+    margin: 0;
+    padding: 0;
+  }
+
+  GOLD_.menu__item_GOLD {
+    list-style: none;
+    display: inline-block;
+    padding: 6px;
+    margin: 0 2px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 90%;
+    background: #FFF5EE;
+  }
+
+  GOLD_.menu__vertical-splitter_GOLD {
+    list-style: none;
+    display: inline-block;
+  }
+
+  GOLD_.menu__vertical-splitter:before_GOLD {
+    content: "|";
+  }
+
+  GOLD_.menu__item a_GOLD {
+    color: black;
+    text-decoration: none;
+  }
+
+  GOLD_.menu__item a:hover_GOLD {
+    text-decoration: underline;
+  }
+</style>
+
+<ul class="menu">
+  <li class="menu__item"><a href="#">Главная</a></li>
+  <li class="menu__vertical-splitter"></li>
+  <li class="menu__item"><a href="#">Товары</a></li>
+  <li class="menu__item"><a href="#">Фотографии</a></li>
+  <li class="menu__item"><a href="#">Контакты</a></li>
+</ul>`</script><code-toolbar- iframe="140"><a id="run_1" title="показать" data-code_run="0"></a><a data-new_window="code"></a><a id="answer_1" title="открыть в песочнице" data-code_edit=""></a></code-toolbar-></code-example><p>Дополнительно, классы помечены префиксом компонента, на тот случай, если в заголовках появится произвольный HTML.</p><p><a data-click="answer_1">Открыть решение в песочнице.</a></p></task-answer></task-content><banner-bottom class="banner-bottom" style="display: block;"></banner-bottom><script>! function(){/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)||screen.width<1024||"bannerBottomDisabled" in localStorage||(localStorage.bannerBottomShownCount||(localStorage.bannerBottomShownCount=1),document.querySelector(".banner-bottom").style.display="block")}();</script><nav-book data-tooltips="Графические компоненты; Шаблонизатор LoDash"></nav-book><share-map><share-></share-><map-button hover-style="" data-load_page="l"></map-button></share-map><comments- id="comments"></comments-><div id="disqus_thread"></div><script>disqus_url="https:\/\/learn.javascript.ru\/widgets-markup",disqus_identifier="widgets-markup",disqus_title="\u0412\u0451\u0440\u0441\u0442\u043a\u0430 \u0433\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043a\u0438\u0445 \u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u043e\u0432";</script></page-content></main>

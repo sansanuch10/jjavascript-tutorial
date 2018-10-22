@@ -1,0 +1,13 @@
+<!DOCTYPE html><meta charset=utf-8><link href=style_left.css rel=stylesheet><script src=animate.js></script><div id=path><div id=brick></div></div><script>
+    brick.onclick = function() {
+      animate({
+        duration: 1000,
+        timing: function(timeFraction) {
+          return Math.pow(timeFraction, 2);
+        },
+        draw: function(progress) {
+          brick.style.left = progress * 500 + 'px';
+        }
+      });
+    };
+  </script>

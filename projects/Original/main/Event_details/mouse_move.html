@@ -1,0 +1,231 @@
+<main> <page-content><nav-up><home- data-load_page="0" hover-style=""></home-><arrow-next></arrow-next><a data-load_page="98">Документ, события, интерфейсы</a><arrow-next></arrow-next><a data-load_page="128">События в деталях</a></nav-up><h1>Мышь: движение mouseover/out, mouseenter/leave</h1><p>В этой главе мы рассмотрим события, возникающие при движении мыши над элементами.</p><h2><a name="0" href="#0">События mouseover/mouseout, свойство relatedTarget</a></h2><p>Событие <code>mouseover</code> происходит, когда мышь появляется над элементом, а <code>mouseout</code> – когда уходит из него.</p><figure><img src="mouseover-mouseout.png" alt="" width="100%" style="max-width:277px"></figure><p>При этом мы можем узнать, с какого элемента пришла (или на какой ушла) мышь, используя дополнительное свойство объекта события <code>relatedTarget</code>.</p><p>Например, в обработчике события <code>mouseover</code>:</p><ul><li><code>event.target</code> – элемент, на который пришла мышь, то есть на котором возникло событие.</li><li><code>event.relatedTarget</code> – элемент, с которого пришла мышь.</li></ul><p>Для <code>mouseout</code> всё наоборот:</p><ul><li><code>event.target</code> – элемент, с которого ушла мышь, то есть на котором возникло событие.</li><li><code>event.relatedTarget</code> – элемент, на который перешла мышь.</li></ul><p>В примере ниже, если у вас есть мышь, вы можете наглядно посмотреть события <code>mouseover/out</code>, возникающие на всех элементах.</p><code-tabs data-code_switch=""><tools-><button-0 class="current">index.html</button-0><button-1>script.js</button-1></tools-><code-example style="display: block;"><script>`<!DOCTYPE HTML>\n<html>\n<head>\n  <meta charset="utf-8">\n  <style>\n    GOLD_smiley-green, GOLD_smiley-yellow_GOLD, GOLD_smiley-red_GOLD {\n      display: inline-block;\n      width: 70px;\n      height: 70px;\n      border-radius: 50%;\n      margin: 5px 20px 0 0;\n      border: 5px solid white;\n      position: relative;\n    }\n    \n    GOLD_smiley-green_GOLD {\n      background: #a9db7a;\n      BLUE_border-color_BLUE: #92c563;\n    }\n    \n    GOLD_left-eye_GOLD, GOLD_right-eye_GOLD {\n      display: block;\n      width: 18%;\n      height: 18%;\n      position: absolute;\n      top: 29%;\n      left: 22%;\n      border-radius: 50%;\n    }\n    \n    GOLD_right-eye_GOLD {\n      left: 62%;\n    }\n    \n    GOLD_smiley-green left-eye_GOLD, GOLD_smiley-green right-eye_GOLD {\n      background: #84b458;\n    }\n    \n    GOLD_smile-_GOLD {\n      display: block;\n      position: absolute;\n      width: 70%;\n      height: 20%;\n      top: 67%;\n      left: 16.5%;\n      overflow: hidden;\n    }\n    \n    GOLD_smiley-green smile-:after_GOLD, GOLD_smiley-green smile-:before_GOLD {\n      content: "";\n      position: absolute;\n      top: -50%;\n      left: 0%;\n      border-radius: 50%;\n      background: #84b458;\n      height: 100%;\n      width: 97%;\n    }\n    \n    GOLD_smiley-green smile-:after_GOLD {\n      height: 80%;\n      top: -40%;\n    }\n    \n    GOLD_smiley-yellow_GOLD {\n      background: #eed16a;\n      BLUE_border-color_BLUE: #dbae51;\n    }\n    \n    GOLD_smiley-yellow left-eye_GOLD, GOLD_smiley-yellow right-eye_GOLD {\n      background: #dba652;\n    }\n    \n    GOLD_smiley-yellow smile-_GOLD {\n      left: 19%;\n      width: 65%;\n      height: 14%;\n      background: #dba652;\n      border-radius: 8px;\n    }\n    \n    GOLD_smiley-red_GOLD {\n      background: #ee9295;\n      BLUE_border-color_BLUE: #e27378;\n    }\n    \n    GOLD_smiley-red left-eye_GOLD, GOLD_smiley-red right-eye_GOLD {\n      background: #d96065;\n    }\n    \n    GOLD_smiley-red smile-:after_GOLD, GOLD_smiley-red smile-:before_GOLD {\n      content: "";\n      position: absolute;\n      top: 50%;\n      left: 0%;\n      border-radius: 50%;\n      background: #d96065;\n      height: 100%;\n      width: 97%;\n    }\n    \n    GOLD_smiley-red smile-:after_GOLD {\n      height: 80%;\n      top: 60%;\n    }\n  </style>\n</head>\n\n<body>\n\n  <RED_smiley-green_RED>\n    <RED_left-eye_RED></RED_left-eye_RED>\n    <RED_right-eye_RED></RED_right-eye_RED>\n    <RED_smile-_RED></RED_smile-_RED>\n  </RED_smiley-green_RED>\n  \n  <RED_smiley-yellow_RED>\n    <RED_left-eye_RED></RED_left-eye_RED>\n    <RED_right-eye_RED></RED_right-eye_RED>\n    <RED_smile-_RED></RED_smile-_RED>\n  </RED_smiley-yellow_RED>\n  \n  <RED_smiley-red_RED>\n    <RED_left-eye_RED></RED_left-eye_RED>\n    <RED_right-eye_RED></RED_right-eye_RED>\n    <RED_smile-_RED style="top: 57%;"></RED_smile-_RED>\n  </RED_smiley-red_RED>\n\n  <textarea id="log" style="width:100%;max-width:400px;height:100px">Здесь будут события и relatedTarget\n  </textarea>\n\n  <script>\n    document.body.onmouseover = document.body.onmouseout = handler;\n  \n    function handler(event) {\n      t = event.target;\n      log.value += event.type + ':&nbsp' + 'target =&nbsp' + t.tagName +\n        ', relatedTarget =&nbsp' + event.relatedTarget.tagName + '\\n';\n      log.scrollTop = log.scrollHeight;\n      if (event.type === 'mouseover') {\n        t.background = t.style.background;\n        t.style.background = 'pink';\n      }\n      if (event.type === 'mouseout') {\n        t.style.background = t.background;\n        if (t.getAttribute('style') === '') t.removeAttribute('style');\n      }\n    }\n  <\/script>\n</body>\n</html>`</script><code-toolbar iframe="220"><a title="показать" data-code_run="0"></a><a data-code_edit="" title="редактировать в песочнице"></a></code-toolbar></code-example><code-example><script>`document.body.onmouseover = document.body.onmouseout = handler;\n\nfunction handler(event) {\n  t = event.target;\n  log.value += event.type + ':&nbsp' + 'target =&nbsp' + t.tagName +\n    ', relatedTarget =&nbsp' + event.relatedTarget.tagName + '\\n';\n  log.scrollTop = log.scrollHeight;\n  if (event.type === 'mouseover') {\n    t.background = t.style.background;\n    t.style.background = 'pink';\n  }\n  if (event.type === 'mouseout') {\n    t.style.background = t.background;\n    if (t.getAttribute('style') === '') t.removeAttribute('style');\n  }\n}`</script></code-example></code-tabs><important-warn><h3><code>relatedTarget</code> может быть <code>null</code></h3><p>Свойство <code>relatedTarget</code> может быть равно <code>null</code>.</p><p>Это вполне нормально и означает, что мышь пришла не с другого элемента, а из-за пределов окна (или ушла за окно). Мы обязательно должны иметь в виду такую возможность, когда пишем код, который обращается к свойствам <code>event.relatedTarget</code>.</p></important-warn><h2><a name="1" href="#1">Частота событий</a></h2><p>Событие <code>mousemove</code> срабатывает при передвижении мыши. Но это не значит, что каждый пиксель экрана порождает отдельное событие!</p><p>События <code>mousemove</code> и <code>mouseover/mouseout</code> срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.</p><p>Это означает, что если посетитель двигает мышью быстро, то DOM-элементы, через которые мышь проходит на большой скорости, могут быть пропущены.</p><figure><img src="mouseover-mouseout-over-elems.png" alt="" width="100%" style="max-width:507px"></figure><p>При быстром движении с элемента <code>#FROM</code> до элемента <code>#TO</code>, как изображено на картинке выше – промежуточные <code>&lt;DIV&gt;</code> будут пропущены. Сработает только событие <code>mouseout</code> на <code>#FROM</code> и <code>mouseover</code> на <code>#TO</code>.</p><p>На практике это полезно, потому что таких промежуточных элементов может быть много, и если обрабатывать заход и уход с каждого, будут дополнительные вычислительные затраты.</p><p>С другой стороны, мы должны это понимать и не рассчитывать на то, что мышь аккуратно пройдёт с одного элемента на другой и так далее. Нет, она «прыгает».</p><p>В частности, возможна ситуация, когда курсор прыгает в середину страницы, и при этом <code>relatedTarget=null</code>, то есть он пришёл «ниоткуда» (на самом деле извне окна):</p><figure><img src="mouseover-mouseout-from-outside.png" alt="" width="100%" style="max-width:440px"></figure><p>Обратим внимание ещё на такую деталь. При быстром движении курсор окажется над <code>#TO</code> сразу, даже если этот элемент глубоко в DOM. Его родители при движении сквозь них события не поймают.</p><p>Попробуйте увидеть это «вживую» на тестовом стенде ниже.</p><p>Его HTML представляет собой два вложенных <code>div'а</code>.</p><p>Молниеносно проведите мышью над вложенными элементами. При этом может не быть ни одного события или их получит только красный <code>div</code>, а может быть только зеленый.</p><p>А еще попробуйте зайти курсором мыши на красный <code>div</code> и потом быстро вывести мышь из него куда-нибудь сквозь зеленый. Если движение мыши достаточно быстрое, то родительский элемент будет проигнорирован.</p><code-tabs data-code_switch=""><tools-><button-0 class="current">Результат</button-0><button-1>script.js</button-1><button-2>style.css</button-2><button-3>index.html</button-3></tools-><code-example code_no="" style="display: block;"><code-toolbar-><div></div><a title="open new window" data-new_window=""></a><a title="редактировать в песочнице" data-code_edit=""></a></code-toolbar-><figure-><style>#green{height:50px;width:160px;background:green;}#red{height:20px;width:110px;background:red;color:white;font-weight:bold;padding:5px;text-align:center;margin:20px;}#text{font-size:12px;height:200px;width:100%;max-width:360px;display:block;}</style><div id="green"><div id="red">Тест</div></div><input onclick="clearText()" value="Очистить" type="button"><textarea id="text"></textarea><script> green.onmouseover=green.onmouseout=green.onmousemove=handler;function handler(event){var type=event.type;while (type<11) type += ' ';log(type+" target="+event.target.id);return false;}function clearText(){text.value="";lastMessage="";}var lastMessageTime=0;var lastMessage="";var repeatCounter=1;function log(message){if (lastMessageTime == 0) lastMessageTime=new Date();var time=new Date();if (time-lastMessageTime>500){message='------------------------------\n'+message;}if (message===lastMessage){repeatCounter++;if (repeatCounter == 2){text.value=text.value.trim()+' x 2\n';}else{text.value=text.value.slice(0,text.value.lastIndexOf('x')+1)+repeatCounter+"\n";}} else{repeatCounter=1;text.value += message+"\n";}text.scrollTop=text.scrollHeight;lastMessageTime=time;lastMessage=message;}</script></figure-></code-example><code-example><script>`green.onmouseover = green.onmouseout = green.onmousemove = handler;\n\nfunction handler(event) {\n  var type = event.type;\n  while (type < 11) type += ' ';\n\n  log(type + " target =&nbsp" + event.target.id)\n  return false;\n}\n\n\nfunction clearText() {\n  text.value = "";\n  lastMessage = "";\n}\n\nvar lastMessageTime = 0;\nvar lastMessage = "";\nvar repeatCounter = 1;\n\nfunction log(message) {\n  if (lastMessageTime == 0) lastMessageTime = new Date();\n\n  var time = new Date();\n\n  if (time - lastMessageTime > 500) {\n    message = '------------------------------\\n' + message;\n  }\n\n  if (message === lastMessage) {\n    repeatCounter++;\n    if (repeatCounter == 2) {\n      text.value = text.value.trim() + ' x 2\\n';\n    } else {\n      text.value = text.value.slice(0, text.value.lastIndexOf('x') + 1) + repeatCounter + "\\n";\n    }\n\n  } else {\n    repeatCounter = 1;\n    text.value += message + "\\n";\n  }\n\n  text.scrollTop = text.scrollHeight;\n\n  lastMessageTime = time;\n  lastMessage = message;\n}`</script></code-example><code-example><script>`GOLD_#green_GOLD {\n  height: 50px;\n  width: 160px;\n  background: green;\n}\n\nGOLD_#red_GOLD {\n  height: 20px;\n  width: 110px;\n  background: red;\n  color: white;\n  font-weight: bold;\n  padding: 5px;\n  text-align: center;\n  margin: 20px;\n}\n\nGOLD_#text_GOLD {\n  font-size: 12px;\n  height: 200px;\n  width: 360px;\n  display: block;\n}`</script></code-example><code-example style=""><script>`<!DOCTYPE html>\n<html BLUE_lang_BLUE="en">\n\n<head>\n  <meta charset="UTF-8">\n  <link rel="stylesheet" href="style.css">\n</head>\n\n<body>\n\n  <div id="green">\n    <div id="red">Тест</div>\n  </div>\n\n  <input onclick="clearText()" value="Очистить" type="button">\n\n  <textarea id="text"></textarea>\n\n  <script src="script.js"><\/script>\n\n</body>\n\n</html>`</script></code-example></code-tabs><p>Важно иметь в виду эту особенность событий, чтобы не написать код, который рассчитан на последовательный проход над элементами. В остальном это вполне удобно.</p><h2><a name="2" href="#2">«Лишний» mouseout при уходе на потомка</a></h2><p>Представьте ситуацию – курсор зашёл на элемент. Сработал <code>mouseover</code> на нём. Потом курсор идёт на дочерний… И, оказывается, на элементе-родителе при этом происходит <code>mouseout</code>! Как будто курсор с него ушёл, хотя он всего лишь перешёл на потомка.</p><p><strong>При переходе на потомка срабатывает <code>mouseout</code> на родителе.</strong></p><figure><img src="mouseover-to-child.png" alt="" width="100%" style="max-width:232px"></figure><p>Это кажется странным, но легко объяснимо.</p><p><strong>Согласно браузерной логике, курсор мыши может быть только над <em>одним</em> элементом – самым глубоким в DOM (и верхним по z-index).</strong></p><p>Так что если он перешел куда-нибудь, то автоматически ушёл с предыдущего элемента. Всё просто.</p><p>Самое забавное начинается чуть позже.</p><p>Ведь события <code>mouseover</code> и <code>mouseout</code> всплывают.</p><p>Получается, что если поставить обработчики <code>mouseover</code> и <code>mouseout</code> на <code>#FROM</code> и <code>#TO</code>, то последовательность срабатывания при переходе <code>#FROM</code> → <code>#TO</code> будет следующей:</p><ol><li><code>mouseout</code> на <code>#FROM</code> (с <code>event.target=#FROM</code>, <code>event.relatedTarget=#TO</code>).</li><li><code>mouseover</code> на <code>#TO</code> (с <code>event.target=#TO</code>, <code>event.relatedTarget=#FROM</code>).</li><li>Событие <code>mouseover</code> после срабатывания на <code>#TO</code> всплывает выше, запуская обработчики <code>mouseover</code> на родителях. Ближайший родитель – как раз <code>#FROM</code>, то есть сработает обработчик <code>mouseover</code> на нём, с теми же значениями <code>target/relatedTarget</code>.</li></ol><p>Если посмотреть на <code>1)</code> и <code>3)</code>, то видно, что на <code>#FROM</code> сработает сначала <code>mouseout</code>, а затем с <code>#TO</code> всплывёт <code>mouseover</code>.</p><p>Если по <code>mouseover</code> мы что-то показываем, а по <code>mouseout</code> – скрываем, то получится «мигание».</p><p><strong>У обработчиков создаётся впечатление, что курсор ушёл <code>mouseout</code> с родителя, а затем тут же перешёл <code>mouseover</code> на него (за счёт всплытия <code>mouseover</code> с потомка).</strong></p><p>Это можно увидеть в примере ниже. В нём красный <code>div</code> вложен в синий. На синем стоит обработчик, который записывает его <code>mouseover/mouseout</code>.</p><p>Зайдите на синий элемент, а потом переведите мышь на красный – и наблюдайте за событиями:</p><code-tabs data-code_switch=""><tools- style="box-shadow: none;"><button-0 class="current">Результат</button-0><button-1>script.js</button-1><button-2>style.css</button-2><button-3>index.html</button-3></tools-><code-example code_no="" style="display: block;"><code-toolbar-><div></div><a title="open new window" data-new_window=""></a><a title="редактировать в песочнице" data-code_edit=""></a></code-toolbar-><iframe id="over_out" src="mouse_event.html" style="height:300px"></iframe><script>frameAddScript('over_out',on);function on(){blue.onmouseout=blue.onmouseover=mouselog;function mouselog(event){text.value += event.type+' [target: '+event.target.id+']\n';text.scrollTop=text.scrollHeight;}}</script></code-example><code-example style=""><script>`blue.onmouseout = blue.onmouseover = mouselog;
+
+function mouselog(event) {
+  text.value += event.type + ' [target:&nbsp' + event.target.id + ']\\n';
+  text.scrollTop = text.scrollHeight;
+}`</script></code-example><code-example><script>`GOLD_#blue_GOLD {\n  background: blue;\n  width: 160px;\n  height: 160px;\n  position: relative;\n}\n\nGOLD_#red_GOLD {\n  background: red;\n  width: 100px;\n  height: 100px;\n  position: absolute;\n  left: 30px;\n  top: 30px;\n}\n\nGOLD_textarea_GOLD {\n  height: 100px;\n  width: 400px;\n  display: block;\n}`</script></code-example><code-example><script>`<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="blue">
+    <div id="red"></div>
+  </div>
+
+  <textarea id="text"></textarea>
+  <input type="button" onclick="text.value=''" value="Очистить">
+
+  <script src="script.js"><\/script>
+
+</body>
+
+</html>`</script></code-example></code-tabs><ol><li>При заходе на синий – на нём сработает <code>mouseover [target: blue]</code>.</li><li>При переходе с синего на красный – будет <code>mouseout [target: blue]</code> – уход с родителя.</li><li>…И тут же <code>mouseover [target: red]</code> – как ни странно, «обратный переход» на родителя.</li></ol><p>На самом деле, обратного перехода нет. Событие <code>mouseover</code> сработало на потомке (видно по <code>target: red</code>), а затем всплыло.</p><p>Если действия при наведении и уходе курсора с родителя простые, например скрытие/показ подсказки, то можно вообще ничего не заметить. Ведь события происходят сразу одно за другим, подсказка будет скрыта по <code>mouseout</code> и тут же показана по <code>mouseover</code>.</p><p>Если же происходит что-то более сложное, то бывает важно отследить момент «настоящего» ухода, то есть понять, когда элемент зашёл на родителя, а когда ушёл – без учёта переходов по дочерним элементам.</p><p>Для этого можно использовать события <code>mouseenter/mouseleave</code>, которые мы рассмотрим далее.</p><h2><a name="3" href="#3">События mouseenter и mouseleave</a></h2><p>События <code>mouseenter/mouseleave</code> похожи на <code>mouseover/mouseout</code>. Они тоже срабатывают, когда курсор заходит на элемент и уходит с него, но с двумя отличиями.</p><ol><li>Не учитываются переходы внутри элемента.</li><li>События <code>mouseenter/mouseleave</code> не всплывают.</li></ol><p>Эти события более интуитивно понятны.</p><p>Курсор заходит на элемент – срабатывает <code>mouseenter</code>, а затем – неважно, куда он внутри него переходит, <code>mouseleave</code> будет, когда курсор окажется за пределами элемента.</p><p>Вы можете увидеть, как они работают проведя курсором над голубым <code>DIV'ом</code> ниже. Обработчик стоит только на внешнем, синем элементе. Обратите внимание – лишних событий при переходе на красного потомка нет!</p><code-tabs data-code_switch=""><tools- style="box-shadow: none;"><button-0 class="current">Результат</button-0><button-1>script.js</button-1><button-2>style.css</button-2><button-3>index.html</button-3></tools-><code-example code_no="" style="display: block;"><code-toolbar-><div></div><a title="open new window" data-new_window=""></a><a title="редактировать в песочнице" data-code_edit=""></a></code-toolbar-><iframe id="enter_leave" src="mouse_event.html" style="height:300px"></iframe><script>frameAddScript('enter_leave',on);function on(){blue.onmouseenter=blue.onmouseleave=mouselog;function mouselog(event){text.value += event.type+' [target: '+event.target.id+']\n';text.scrollTop=text.scrollHeight;}}</script></code-example><code-example><script>`blue.HIGHonmouseenterLIGHT = blue.HIGHonmouseleaveLIGHT = mouselog;
+
+function mouselog(event) {
+  text.value += event.type + ' [target:&nbsp' + event.target.id + ']\\n';
+  text.scrollTop = text.scrollHeight;
+}`</script></code-example><code-example><script>`GOLD_#blue_GOLD {\n  background: blue;\n  width: 160px;\n  height: 160px;\n  position: relative;\n}\n\nGOLD_#red_GOLD {\n  background: red;\n  width: 100px;\n  height: 100px;\n  position: absolute;\n  left: 30px;\n  top: 30px;\n}\n\nGOLD_textarea_GOLD {\n  height: 100px;\n  width: 400px;\n  display: block;\n}`</script></code-example><code-example><script>`<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="blue">
+    <div id="red"></div>
+  </div>
+
+  <textarea id="text"></textarea>
+  <input type="button" onclick="text.value=''" value="Очистить">
+
+  <script src="script.js"><\/script>
+
+</body>
+
+</html>`</script></code-example></code-tabs><h2><a name="4" href="#4">Делегирование</a></h2><p>События <code>mouseenter/leave</code> более наглядны и понятны, но они не всплывают, а значит с ними нельзя использовать делегирование.</p><p>Представим, что нам нужно обработать вход/выход мыши для ячеек таблицы. А в таблице таких ячеек тысяча.</p><p>Естественное решение – поставить обработчик на верхний элемент <code>&lt;table&gt;</code> и ловить все события в нём. Но события <code>mouseenter/leave</code> не всплывают, они срабатывают именно на том элементе, на котором стоит обработчик и только на нём.</p><p>Если обработчики <code>mouseenter/leave</code> стоят на <code>&lt;table&gt;</code>, то они сработают при входе-выходе из таблицы, но получить из них какую-то информацию о переходах по её ячейкам невозможно.</p><p>Не беда – воспользуемся <code>mouseover/mouseout</code>.</p><p>Простейший вариант обработчиков выглядит так:</p><code-example><script>`table.onmouseover = function(event) {\n  var target = event.target;\n  target.style.background = 'pink';\n};\n\ntable.onmouseout = function(event) {\n  var target = event.target;\n  target.style.background = '';\n};`</script></code-example><code-tabs data-code_switch=""><tools- style="box-shadow: none;"><button-0 class="current">Результат</button-0><button-1>script.js</button-1><button-2>style.css</button-2><button-3>index.html</button-3></tools-><code-example code_no="" style="display: block;"><figure style="margin:0"><code-toolbar-><div></div><a title="открыть в новом окне" data-new_window=""></a><a title="открыть в песочнице" data-code_edit=""></a></code-toolbar-><iframe style="height: 460px;" src="bagua.html" id="bagua"></iframe><script>frameAddScript('bagua',on,`<textarea id="text"></textarea><input type="button" onclick="text.value=''" value="Clear">`);function on() { document.querySelector('table').onmouseover=function(event){var target=event.target;target.background=target.style.background;target.style.background='pink';text.value += "mouseover "+target.tagName+"\n";text.scrollTop=text.scrollHeight;};document.querySelector('table').onmouseout=function(event){var target=event.target;target.style.background=target.background;text.value += "mouseout "+target.tagName+"\n";text.scrollTop=text.scrollHeight;if (target.getAttribute('style')==='') target.removeAttribute('style');};}</script></figure></code-example><code-example><script>`document.querySelector('table').onmouseover = function (event) {\n  var target = event.target;\n  target.background = target.style.background;\n  target.style.background = 'pink';\n  text.value += "mouseover&nbsp" + target.tagName + '\\n';\n  text.scrollTop = text.scrollHeight;\n};\n\ndocument.querySelector('table').onmouseout = function (event) {\n  var target = event.target;\n  target.style.background = target.background;\n  text.value += "mouseout&nbsp" + target.tagName + '\\n';\n  text.scrollTop = text.scrollHeight;\n  if (t.getAttribute('style') === '') t.removeAttribute('style');\n};`</script></code-example><code-example><script>`GOLD_#bagua td_GOLD {\n  width: 150px;\n  white-space: nowrap;\n  text-align: center;\n  vertical-align: bottom;\n  padding: 5px 0 12px;\n  color: #fff;\n}\n\nGOLD_#text_GOLD {
+  display: block;
+  height: 100px;
+  width: 100%;
+  BLUE_max-width_BLUE: 300px;
+}`</script></code-example><code-example><script>`<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="bagua" style="margin:10px;">
+    <table>
+      <tr>
+        <th colspan="3" style="text-align: center; font-weight: 700;">
+          <em>Bagua</em> Chart: Direction, Element, Color, Meaning
+        </th>
+      </tr>
+      <tr>
+        <td style="background: #999; color: #000">
+          <strong>Northwest</strong>
+          <div>Metal</div>
+          <div>Silver</div>
+          <div>Elders</div>
+        </td>
+        <td style="background: #03f">
+          <strong>North</strong>
+          <div>Water</div>
+          <div>Blue</div>
+          <div>Change</div>
+        </td>
+        <td style="background: #ffff66; color: #000);">
+          <strong>Northeast</strong>
+          <div>Earth</div>
+          <div>Yellow</div>
+          <div>Direction</div>
+        </td>
+      </tr>
+      <tr>
+        <td style="background: #ff0; color: #000">
+          <strong>West</strong>
+          <div>Metal</div>
+          <div>Gold</div>
+          <div>Youth</div>
+        </td>
+        <td style="background: #6600cc">
+          <strong>Center</strong>
+          <div>All</div>
+          <div>Purple</div>
+          <div>Harmony</div>
+        </td>
+        <td style="background: #0099ff">
+          <strong>East</strong>
+          <div>Wood</div>
+          <div>Blue</div>
+          <div>Future</div>
+        </td>
+      </tr>
+      <tr>
+        <td style="background: #963;">
+          <strong>Southwest</strong>
+          <div>Earth</div>
+          <div>Brown</div>
+          <div>Tranquility</div>
+        </td>
+        <td style="background: #ff6600;">
+          <strong>South</strong>
+          <div>Fire</div>
+          <div>Orange</div>
+          <div>Fame</div>
+        </td>
+        <td style="background: #0c3;">
+          <strong>Southeast</strong>
+          <div>Wood</div>
+          <div>Green</div>
+          <div>Romance</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <textarea id="text"></textarea>
+  <input type="button" onclick="text.value=''" value="Очистить">
+  
+  <script src="script.js"><\/script>
+  
+</body>
+</html>`</script></code-example></code-tabs><p>В таком виде они срабатывают при переходе с любого элемента на любой. Нас же интересуют переходы строго с одной ячейки <code>&lt;td&gt;</code> на другую.</p><p>Нужно фильтровать события.</p><p>Один из вариантов:</p><ul><li>Запоминать текущий подсвеченный <code>&lt;td&gt;</code> в переменной.</li><li>При <code>mouseover</code> проверять, остались ли мы внутри того же <code>&lt;td&gt;</code>, если да – игнорировать.</li><li>При <code>mouseout</code> проверять, если мы ушли с текущего <code>&lt;td&gt;</code>, а не перешли куда-то внутрь него, то игнорировать.</li></ul><p>Детали кода вы можете посмотреть в примере ниже, который демонстрирует этот подход:</p><code-tabs data-code_switch=""><tools- style="box-shadow: none;"><button-0 class="current">Результат</button-0><button-1>script.js</button-1><button-2>style.css</button-2><button-3>index.html</button-3></tools-><code-example code_no="" style="display: block;"><code-toolbar-><div></div><a title="открыть в новом окне" data-new_window=""></a><a title="открыть в песочнице" data-code_edit=""></a></code-toolbar-><iframe style="height: 350px;" src="bagua.html" id="bagua_1"></iframe><script>frameAddScript('bagua_1',on);function on(){/* элемент TD,внутри которого сейчас курсор */ var currentElem=null;t=document.querySelector('table');t.onmouseover=function(event){if (currentElem){/* перед тем,как зайти в новый элемент,курсор всегда выходит из предыдущего если мы еще не вышли,значит это переход внутри элемента,отфильтруем его */ return;}/* посмотрим,куда пришёл курсор */ var target=event.target;while (target != this){/* уж не на TD ли? */ if (target.tagName == 'TD') break;target=target.parentNode;}if (target == this) return;currentElem=target;/* да,элемент перешёл внутрь TD! */ target.background=target.style.background;target.style.background='pink';};t.onmouseout=function(event){/* если курсор и так снаружи-игнорируем это событие */ if (!currentElem) return;/* произошёл уход с элемента-проверим,куда,может быть на потомка? */ var relatedTarget=event.relatedTarget;if (relatedTarget){/* может быть relatedTarget=null */ while (relatedTarget){/* идём по цепочке родителей и проверяем,если переход внутрь currentElem-игнорируем это событие */ if (relatedTarget == currentElem) return;relatedTarget=relatedTarget.parentNode;}} /* произошло событие mouseout,курсор ушёл */ currentElem.style.background=currentElem.background;if (currentElem.style.background==='') currentElem.removeAttribute('style');currentElem=null;};}</script></code-example><code-example><script>`/* элемент TD, внутри которого сейчас курсор */\nvar currentElem = null;\n\ntable.onmouseover = function(event) {\n  if (currentElem) {\n    /* перед тем, как зайти в новый элемент, курсор всегда выходит из предыдущего     \nCOMMENT    если мы еще не вышли, значит это переход внутри элемента, отфильтруем его */\n    return;\n  }\n\n  /* посмотрим, куда пришёл курсор */\n  var target = event.target;\n\n \n  while (target != this) {  /* уж не на TD ли? */\n    if (target.tagName == 'TD') break;\n    target = target.parentNode;\n  }\n  if (target == this) return;\n  \n  currentElem = target; /* да, элемент перешёл внутрь TD! */\n  target.background = target.style.background;\n  target.style.background = 'pink';\n};\n\n\ntable.onmouseout = function(event) {\n  /* если курсор и так снаружи - игнорируем это событие */\n  if (!currentElem) return;\n\n  /* произошёл уход с элемента - проверим, куда, может быть на потомка? */\n  var relatedTarget = event.relatedTarget;\n  if (relatedTarget) { /* может быть relatedTarget = null */\n    while (relatedTarget) {\n      /* идём по цепочке родителей и проверяем, \nCOMMENT       если переход внутрь currentElem - игнорируем это событие */\n      if (relatedTarget == currentElem) return;\n      relatedTarget = relatedTarget.parentNode;\n    }\n  }\n\n  /* произошло событие mouseout, курсор ушёл */\n  currentElem.style.background = target.background ;\n  if(currentElem.style === '') currentElem.removeAttribute('style');\n  currentElem = null;\n};`</script></code-example><code-example><script>`GOLD_#bagua td_GOLD {\n  width: 150px;\n  white-space: nowrap;\n  text-align: center;\n  vertical-align: bottom;\n  padding: 5px 0 12px;\n  color: #fff;\n}\n\nGOLD_#text_GOLD {
+  display: block;
+  height: 100px;
+  width: 100%;
+  BLUE_max-width_BLUE: 300px;
+}`</script></code-example><code-example><script>`<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="bagua" style="margin:10px;">
+    <table>
+      <tr>
+        <th colspan="3" style="text-align: center; font-weight: 700;">
+          <em>Bagua</em> Chart: Direction, Element, Color, Meaning
+        </th>
+      </tr>
+      <tr>
+        <td style="background: #999; color: #000">
+          <strong>Northwest</strong>
+          <div>Metal</div>
+          <div>Silver</div>
+          <div>Elders</div>
+        </td>
+        <td style="background: #03f">
+          <strong>North</strong>
+          <div>Water</div>
+          <div>Blue</div>
+          <div>Change</div>
+        </td>
+        <td style="background: #ffff66; color: #000);">
+          <strong>Northeast</strong>
+          <div>Earth</div>
+          <div>Yellow</div>
+          <div>Direction</div>
+        </td>
+      </tr>
+      <tr>
+        <td style="background: #ff0; color: #000">
+          <strong>West</strong>
+          <div>Metal</div>
+          <div>Gold</div>
+          <div>Youth</div>
+        </td>
+        <td style="background: #6600cc">
+          <strong>Center</strong>
+          <div>All</div>
+          <div>Purple</div>
+          <div>Harmony</div>
+        </td>
+        <td style="background: #0099ff">
+          <strong>East</strong>
+          <div>Wood</div>
+          <div>Blue</div>
+          <div>Future</div>
+        </td>
+      </tr>
+      <tr>
+        <td style="background: #963;">
+          <strong>Southwest</strong>
+          <div>Earth</div>
+          <div>Brown</div>
+          <div>Tranquility</div>
+        </td>
+        <td style="background: #ff6600;">
+          <strong>South</strong>
+          <div>Fire</div>
+          <div>Orange</div>
+          <div>Fame</div>
+        </td>
+        <td style="background: #0c3;">
+          <strong>Southeast</strong>
+          <div>Wood</div>
+          <div>Green</div>
+          <div>Romance</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <textarea id="text"></textarea>
+  <input type="button" onclick="text.value=''" value="Очистить">
+  
+  <script src="script.js"><\/script>
+  
+</body>
+</html>`</script></code-example></code-tabs><p>Попробуйте по-разному, быстро или медленно заходить и выходить в ячейки таблицы. Обработчики <code>mouseover/mouseout</code> стоят на <code>table</code>, но при помощи делегирования корректно обрабатывают вход-выход.</p><h2><a name="5" href="#5">Особенности IE8-</a></h2><p>В IE8- нет свойства <code>relatedTarget</code>. Вместо него используется <code>fromElement</code> для <code>mouseover</code> и <code>toElement</code> для <code>mouseout</code>.</p><p>Можно «исправить» несовместимость с <code>relatedTarget</code> так:</p><code-example><script>`function fixRelatedTarget(e) {\n if (e.relatedTarget === undefined) {\n if (e.type == 'mouseover') e.relatedTarget = e.fromElement;\n if (e.type == 'mouseout') e.relatedTarget = e.toElement;\n }\n}`</script></code-example><h2><a name="6" href="#6">Итого</a></h2><p>У <code>mouseover, mousemove, mouseout</code> есть следующие особенности:</p><ul><li>При быстром движении мыши события <code>mouseover, mousemove, mouseout</code> могут пропускать промежуточные элементы.</li><li>События <code>mouseover</code> и <code>mouseout</code> – единственные, у которых есть вторая цель: <code>relatedTarget</code> ( <code>toElement/fromElement</code> в IE).</li><li>События <code>mouseover/mouseout</code> подразумевают, что курсор находится над одним, самым глубоким элементом. Они срабатывают при переходе с родительского элемента на дочерний.</li></ul><p>События <code>mouseenter/mouseleave</code> не всплывают и не учитывают переходы внутри элемента.</p><h2 id="tasks"><a href="#7" name="7">Задачи (3)</a></h2><task-content><h3><a href="#10" name="10">Поведение "вложенная подсказка"</a><task-open hover-style="" data-show_task="" title="Открыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность: 5</span><p>Напишите JS-код, который будет показывать всплывающую подсказку над элементом, если у него есть атрибут <code>data-tooltip</code>.</p><p>Условие аналогично задаче <a data-load_page="125-1">Поведение "подсказка"</a>, но здесь необходима поддержка вложенных элементов. При наведении показывается самая вложенная подсказка.</p><p>Например:</p><code-example><script>`<div BLUE_data-tooltip_BLUE="Это – внутренность дома" id="house">\n <div BLUE_data-tooltip_BLUE="Это – крыша" id="roof"></div>\n ...\n <a href="http://ru.wikipedia.org/wiki/Три_поросёнка" BLUE_data-tooltip_BLUE="Читать дальше">Наведи на меня</a>\n</div>`</script></code-example><p>Результат в ифрейме с документом:</p><figure- id="tooltips"><code-toolbar-><a id="answer_1" style="display:none" data-code_edit=""></a><a id="task_1" title="открыть в песочнице" data-code_edit="?"></a></code-toolbar-><style> #tooltips{height:300px;overflow:auto;display:block;}#tooltips>div{height:2000px;/* подсказка должна работать независимо от прокрутки */}.tooltip{position:fixed;z-index:100;/* подсказка должна перекрывать другие элементы */ padding:10px 20px;/* красивости... */ border:1px solid #b3c9ce;border-radius:4px;text-align:center;font:italic 14px/1.3 arial,sans-serif;color:#333;background:#fff;box-shadow:3px 3px 3px rgba(0,0,0,.3);}#house{margin-top:50px;width:400px;border:1px solid brown;}#roof{width:0;height:0;border-left:200px solid transparent;border-right:200px solid transparent;border-bottom:20px solid brown;margin-top:-20px;}#tooltips p{text-align:justify;margin:10px 3px;}</style><div><div id="house" data-tool_tip="Это – внутренность дома"><div id="roof" data-tool_tip="Это – крыша"></div><p>Жили-были на свете три поросёнка. Три брата.</p><p>Все одинакового роста, кругленькие, розовые, с одинаковыми весёлыми хвостиками.</p><p>Даже имена у них были похожи. Звали поросят Ниф-Ниф, Нуф-Нуф и Наф-Наф. Всё лето они кувыркались в зелёной траве, грелись на солнышке, нежились в лужах.</p><p>Но вот наступила осень. <a href="http://ru.wikipedia.org/wiki/Три_поросёнка" data-tool_tip="Читать дальше…">Наведи на меня</a></p></div></div><script> var showingTooltip,tooltip;document.onmouseover=function(e){var target=e.target;/* ВАЖНО:mouseover может сработать сразу на потомке минуя родителя (при быстром движении мышью) пройти вверх до первого элемента с data-tooltip */ while (target&&(target !== this)){tooltip=target.getAttribute('data-tool_tip');if (tooltip) break;target=target.parentNode;}if (!tooltip) return;/* показать и запомнить подсказку */ showingTooltip=showTooltip(tooltip,target);};document.onmouseout=function(){/* возможно такое,что mouseout сработал,а мы все еще внутри элемента (всплытие) но в этом случае сразу же будет и mouseover,то есть подсказка будет уничтожена и тут же показана заново,это лишние расходы,их можно избежать дополнительными проверками */ if (showingTooltip){document.body.removeChild(showingTooltip);showingTooltip=false;}};function showTooltip(text,elem){var tooltipElem=document.createElement('div');tooltipElem.className='tooltip';tooltipElem.innerHTML=text;document.body.appendChild(tooltipElem);var coords=elem.getBoundingClientRect();var left=coords.left+(elem.offsetWidth-tooltipElem.offsetWidth)/2;if (left<tooltips.getBoundingClientRect().top) left=0;/* не вылезать за левую границу */ var top=coords.top-tooltipElem.offsetHeight-5;/*не вылезать за верхнюю границу */ if (top<tooltips.getBoundingClientRect().top){top=coords.top+elem.offsetHeight+5;}tooltipElem.style.left=left+'px';tooltipElem.style.top=top+'px';return tooltipElem;}</script></figure-><p>Вы можете использовать как заготовку решение задачи <a data-load_page="125-1">Поведение "подсказка"</a>.</p><p><a data-click="task_1">Открыть песочницу для задачи.</a></p><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><p><a data-click="answer_1">Открыть решение в песочнице.</a></p></task-answer></task-content><task-content><h3><a href="#11" name="11">Подсказка при замедлении над элементом</a><task-open hover-style="" data-show_task="" title="Закрыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность: 5</span><p>Нужно написать функцию, которая показывает подсказку при <em>наведении</em> на элемент, но не при <em>быстром проходе</em> над ним.</p><p>То есть, если посетитель именно навёл курсор мыши на элемент и почти остановился – подсказку показать, а если быстро провёл над ним, то не надо, зачем излишнее мигание?</p><p>Технически – можно измерять скорость движения мыши над элементом, если она маленькая, то считаем, что это «наведение на элемент» (показать подсказку), если большая – «быстрый проход мимо элемента» (не показывать).</p><p>Реализуйте это через универсальный объект <code>new HoverIntent(options)</code>, с параметрами <code>options</code>:</p><ul><li><code>elem</code> – элемент, наведение на который нужно отслеживать.</li><li><code>over</code> – функция-обработчик наведения на элемент.</li><li><code>out</code> – функция-обработчик ухода с элемента (если было наведение).</li></ul><p>Пример использования такого объекта для подсказки:</p><code-example><script>`// образец подсказки\nvar tooltip = document.createElement('div');\ntooltip.className = "tooltip";\ntooltip.innerHTML = "Подсказка";\n\n// при "наведении на элемент" показать подсказку\nnew HoverIntent({\n elem: elem,\n over: function() {\n tooltip.style.left = this.getBoundingClientRect().left + 'px';\n tooltip.style.top = this.getBoundingClientRect().bottom + 5 + 'px';\n document.body.appendChild(tooltip);\n },\n out: function() {\n document.body.removeChild(tooltip);\n }\n});`</script></code-example><p>Демо этого кода:</p><code-result><code-toolbar-><a id="answer_2" data-code_edit="tooltip_delay.html" style="display:none"></a></code-toolbar-><div></div><iframe style="height:200px" src="tooltip_delay.html"></iframe></code-result><p>Если провести мышкой над «часиками» быстро, то ничего не будет, а если медленно или остановиться на них, то появится подсказка.</p><p>Обратите внимание – подсказка не «мигает» при проходе мыши внутри «часиков», по подэлементам.</p><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><p>Будем замерять скорость движения курсора.</p><p>Для этого можно запустить <code>setInterval</code>, который каждые 100 мс (или другой интервал) будет сравнивать текущие координаты курсора с предыдущими и, если расстояние пройдено маленькое, считаем, что посетитель «навёл указатель на элемент», вызвать <code>options.over</code>.</p><p>В браузере нет способа «просто получить» текущие координаты. Это может сделать обработчик события, в данном случае <code>mousemove</code>. Поэтому нужно будет поставить обработчик на <code>mousemove</code> и при каждом движении запоминать текущие координаты, чтобы <code>setInterval</code> мог раз в 100 мс сравнивать их.</p><p>Имеет смысл начинать анализ координат и отслеживание <code>mousemove</code> при заходе на элемент, а заканчивать – при выходе с него.</p><p>Чтобы точно отловить момент входа и выхода, без учёта подэлементов (во избежание мигания), можно использовать <code>mouseenter/mouseleave</code>.</p><p>В решении, предложенном ниже, однако, используется <code>mouseover/mouseout</code>, так как это позволит легко «прикрутить» к такому объекту делегирование, если потребуется. А, чтобы не было лишних срабатываний, лишние переходы отфильтровываются.</p><p>При этом при обнаружении «наведения на элемент» это запоминается в переменной <code>isHover</code> и вызывается <code>options.over</code>, а затем, при выходе с элемента, если было «наведение», вызывается <code>options.out</code>.</p><p><a data-click="answer_2">Открыть решение с тестами в песочнице.</a></p></task-answer></task-content><task-content><h3><a href="#12" name="12">Дерево: проверка клика на заголовке(!)</a><task-open hover-style="" data-show_task="" title="Закрыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность: 3</span><p>Решите подобную задачу <a data-load_page="129-2">Дерево: проверка клика на заголовке</a> используя <code>mouseenter/mouseleave</code> и временный <code>span</code>, без координат.</p><p>Демо:</p><iframe- changeable="" style="height: 340px;" src="tree.html"><script> function on(){lis=tree.querySelectorAll('li');for (let i=0,l=lis.length;i<l;i++){lis[i].onmouseenter=function(e){if (this.children.length){var span=document.createElement('span');span.appendChild(this.firstChild);this.insertBefore(span,this.firstChild);}};lis[i].onmouseleave=function(e){if (this.children.length){this.firstChild.outerHTML=this.firstChild.innerHTML;}}};tree.onclick=function(e){var target=e.target||e.srcElement;if (target.tagName !== 'SPAN') return;var node=target.parentElement.getElementsByTagName('ul')[0];node.style.display=node.style.display ? '' :'none';/* раскрыть-закрыть детей */}}</script><style id="tree_style"> #tree span:hover{font-weight:bold;}#tree span{cursor:pointer;}</style><code-toolbar-><a id="answer_3" data-code_edit="" style="display:none"></a><a id="task_3" title="открыть в песочнице" data-code_edit="?"></a></code-toolbar-></iframe-><p><a data-click="task_3">Открыть песочницу для задачи.</a></p><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><p><a data-click="answer_3">Открыть решение в песочнице.</a></p></task-answer></task-content><banner-bottom class="banner-bottom" style="display: block;"></banner-bottom><script>! function(){/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)||screen.width<1024||"bannerBottomDisabled" in localStorage||(localStorage.bannerBottomShownCount||(localStorage.bannerBottomShownCount=1),document.querySelector(".banner-bottom").style.display="block")}();</script><nav-book data-tooltips="Мышь: отмена выделения, невыделяемые элементы; Мышь: Drag'n'Drop"></nav-book><share-map><share-></share-><map-button hover-style="" data-load_page="l"></map-button></share-map><comments- id="comments"></comments-><div id="disqus_thread"></div><script>disqus_url="https:\/\/learn.javascript.ru\/mousemove-mouseover-mouseout-mouseenter-mouseleave",disqus_identifier="mousemove-mouseover-mouseout-mouseenter-mouseleave",disqus_title="\u041c\u044b\u0448\u044c: \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435 mouseover\/out, mouseenter\/leave";</script></page-content></main>

@@ -1,0 +1,12 @@
+node_modules
+.ntvs_analysis.dat
+node_modules
+debug.log
+favicon.ico
+Web.config
+codemirror.css
+FileSaver.js
+jszip.js 
+jszip.min.js
+w_p_a_min.js
+butifyJS.html

@@ -1,0 +1,1 @@
+sweeties- ul{margin:0;list-style:none;padding-left:20px;display:none;} sweeties- title-1{font-size:18px;cursor:pointer;} sweeties- title-1::before{content:'▶ ';font-size:80%;color:green;} sweeties-.open title-1::before{content:'▼ ';} sweeties-.open ul{display:block;}

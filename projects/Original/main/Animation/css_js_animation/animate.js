@@ -1,0 +1,1 @@
+function animate(n){var a=performance.now();requestAnimationFrame(function r(i){var e=(i-a)/n.duration;e>1&&(e=1);var t=n.timing(e);n.draw(t),e<1&&requestAnimationFrame(r)})}
