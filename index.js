@@ -586,7 +586,7 @@ function server() {
       else {
         p = pathName.split(SLASH);
         file = p[p.length - 1];
-        console.log('file: ' + file + ', p1: ' + p[1] + ', p2: ' + p[2] + ', p3: ' + p[3])
+        // console.log('file: ' + file + ', p1: ' + p[1] + ', p2: ' + p[2] + ', p3: ' + p[3])
         if (p[1] && p[1] === 'projects') {
           projectName = p[2];
         } else {
@@ -598,8 +598,8 @@ function server() {
         }
         pathname = pathName.substring(1, pathName.length);
       }
-      console.log('--- Получен запрос - __dirname: ' + __dirname + '; req.url: ' + req.url + '; url.pathname: ' + url.pathname + '; file: ' + file + ' method: ' + req.method + '; ');
-      console.log('*** project: ' + projectName);
+      // console.log('--- Получен запрос - __dirname: ' + __dirname + '; req.url: ' + req.url + '; url.pathname: ' + url.pathname + '; file: ' + file + ' method: ' + req.method + '; ');
+      // console.log('*** project: ' + projectName);
 
       switch (req.method) {
         case 'GET':

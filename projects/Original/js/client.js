@@ -420,9 +420,22 @@ switch (attr) {
             if (el2.hasAttribute('changeable')) {
               el2.setAttribute('src', el2.getAttribute('src'));
               setTimeout(() => {
+                temp = el2.contentWindow.document.documentElement.getElementsByTagName('img');
+                for(let i = 0, l = temp.length; i < l; i++){
+                  temp[i].src = temp[i].src;
+                }
+                temp = el2.contentWindow.document.documentElement.getElementsByTagName('script');
+                for(let i = 0, l = temp.length; i < l; i++){
+                  if(temp[i].src)
+                   temp[i].src = temp[i].src;
+                }
+                temp = el2.contentWindow.document.documentElement.getElementsByTagName('link');
+                for(let i = 0, l = temp.length; i < l; i++){
+                  temp[i].href = temp[i].href;
+                }
                 textarea.value = DOCTYPE + '\n' + html_beautify(el2.contentWindow.document.documentElement.outerHTML);
                 submit();
-              }, 200);
+              }, 300);
               // xhttp = httpSend("GET", el2.getAttribute('src'));
               // xhttp.onreadystatechange = function () {
               //   if (xhttp.readyState != 4)
