@@ -245,7 +245,7 @@ function server() {
                       if (stats.isFile()) {
                         if (item === file) {
                           f = path.join(dir_, file);
-                          console.log('fl: ' + f);
+                          // console.log('fl: ' + f);
                           streamRead = fs.createReadStream(f);
                           streamRead.on('error', (err) => {
                             if ('ENOENT' == err.code) {

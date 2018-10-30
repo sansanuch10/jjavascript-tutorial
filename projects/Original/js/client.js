@@ -375,7 +375,8 @@ switch (attr) {
         form.appendChild(el1);
         textarea = document.createElement('textarea');
         textarea.name = "files[index.html]";
-        el2 = el.parentElement.nextElementSibling;
+        el2 = el.parentElement.parentElement.querySelector('iframe');
+        // console.log('el2: ', el2.tagName);
         parent = el.parentElement.parentElement;
 
         if (parent.tagName === 'IFRAME-') {
@@ -403,6 +404,13 @@ switch (attr) {
             el2.src = el2.getAttribute('src');
             setTimeout(() => {
               el2 = el.parentElement.nextElementSibling;
+              arr = el2.contentWindow.document.documentElement.querySelectorAll('script');
+              console.log('arr: ', arr);
+              for (let i = 0, l = arr.length; i < l; i++) {
+                if (arr[i].hasAttribute('src')) {
+                  arr[i].src = arr[i].src;
+                }
+              }
               temp = el2.contentWindow.document.body;
               if (temp.attributes[0])
                 temp.removeAttribute(temp.attributes[0].name);
@@ -415,7 +423,14 @@ switch (attr) {
             }, 1000);
           } else {
             temp = el2.contentWindow.document.body;
-            if (temp.attributes[0])
+            arr = el2.contentWindow.document.documentElement.querySelectorAll('script');
+            console.log('arr: ', arr);
+            for (let i = 0, l = arr.length; i < l; i++) {
+              if (arr[i].hasAttribute('src')) {
+                arr[i].src = arr[i].src;
+              }
+            }
+          if (temp && temp.attributes[0])
               temp.removeAttribute(temp.attributes[0].name);
             if (el2.hasAttribute('changeable')) {
               el2.setAttribute('src', el2.getAttribute('src'));
@@ -522,6 +537,20 @@ switch (attr) {
           el2 = window.location.toString().split('#')[0] + 'iframe.html';
           httpSend('PUT', el2, getHTML(parent, val));
           el1.contentWindow.document.location.href = el2;
+          if (val === 'edit') {
+            // el1.contentWindow.window.onload = function () {
+            setTimeout(() => {
+              arr = el1.contentWindow.document.documentElement.querySelectorAll('script');
+              console.log('arr: ', arr);
+              for (let i = 0, l = arr.length; i < l; i++) {
+                if (arr[i].hasAttribute('src')) {
+                  arr[i].src = arr[i].src;
+                }
+              }
+              _data_(el, 'data-code_edit');
+            }, 200)
+            // }
+          }
           return el1;
         }
         break;
@@ -2977,7 +3006,7 @@ switch (attr) {
         default:
           {
             localStorage.setItem('pageYOffset_' + projectName + '_' + pageNumber, el1 || document.documentElement.scrollTop);
-            console.log('localStorage.set');
+            //console.log('localStorage.set');
           }
       }
       // ************* HEADER, MAIN ******************************************

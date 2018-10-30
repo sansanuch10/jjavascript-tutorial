@@ -6,10 +6,21 @@
 
 <body>
 
+  <p>Подключим библиотеку</p>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.3.0/lodash.js"></script>
+  <p>Функция <code>_.defaults()</code> добавляет отсутствующие свойства.</p>
   <script>
-
-    alert( document.cookie );
-
+    var user = {
+      name: 'Вася'
+    };
+    _.defaults(user, {
+      name: 'Не указано',
+      employer: 'Не указан'
+    });
+    alert( user.name ); // Вася
+    alert( user.employer ); // Не указан
+    alert( _.size(user) ); // 2
   </script>
+
 </body>
 </html>
