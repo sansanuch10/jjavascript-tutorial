@@ -225,6 +225,7 @@ let mapList;client();function client() {
     if (!el) return;
     val = el.getAttribute(attr);
     attr = attr.split('-')[1];
+    console.log('attr: ', attr);
     function submit() {
       form.appendChild(textarea);
       form.submit();
@@ -313,6 +314,60 @@ let mapList;client();function client() {
       window.open('iframe.html');
     }
 
+    function setHost(el) {
+      if (el.tagName === 'IFRAME') {
+        arr = el.contentWindow.document.documentElement.querySelectorAll('script');
+        for (let i = 0, l = arr.length; i < l; i++) {
+          if (arr[i].hasAttribute('src')) {
+            arr[i].src = arr[i].src;
+          }
+        }
+        arr = el.contentWindow.document.documentElement.querySelectorAll('link');
+        for (let i = 0, l = arr.length; i < l; i++) {
+          if (arr[i].hasAttribute('href')) {
+            arr[i].setAttribute('href', arr[i].href);
+          }
+        }
+        arr = el.contentWindow.document.documentElement.querySelectorAll('img');
+        for (let i = 0, l = arr.length; i < l; i++) {
+          if (arr[i].hasAttribute('src')) {
+            arr[i].src = arr[i].src;
+          }
+        }
+        arr = el.contentWindow.document.documentElement.querySelectorAll('a');
+        for (let i = 0, l = arr.length; i < l; i++) {
+          if (arr[i].hasAttribute('href')) {
+            arr[i].setAttribute('href', arr[i].href);
+          }
+        }
+      } else {
+        arr = el.querySelectorAll('script');
+        for (let i = 0, l = arr.length; i < l; i++) {
+          if (arr[i].hasAttribute('src')) {
+            arr[i].src = arr[i].src;
+          }
+        }
+        arr = el.querySelectorAll('link');
+        for (let i = 0, l = arr.length; i < l; i++) {
+          if (arr[i].hasAttribute('href')) {
+            arr[i].setAttribute('href', arr[i].href);
+          }
+        }
+        arr = el.querySelectorAll('img');
+        for (let i = 0, l = arr.length; i < l; i++) {
+          if (arr[i].hasAttribute('src')) {
+            arr[i].src = arr[i].src;
+          }
+        }
+        arr = el.querySelectorAll('a');
+        for (let i = 0, l = arr.length; i < l; i++) {
+          if (arr[i].hasAttribute('href')) {
+            arr[i].setAttribute('href', arr[i].href);
+          }
+        }
+      }
+    }
+
 switch (attr) {
       case 'beautify': {
         // getBy('main').innerHTML = html_beautify(getBy('main').innerHTML);
@@ -380,11 +435,13 @@ switch (attr) {
         parent = el.parentElement.parentElement;
 
         if (parent.tagName === 'IFRAME-') {
+          setHost(parent);
           if (parent.hasAttribute('changeable'))
             loadFrame(parent, forFrame_);
           else
             forFrame_();
         } else if (parent.tagName === 'FIGURE-') {
+          setHost(parent);
           if (val) {
             if (parent.id)
               t1 = parent.outerHTML.split('<script>')[0] + '<script>\n// .. ваш код ..\n</script>' + parent.outerHTML.split('</script>')[1];
@@ -404,13 +461,7 @@ switch (attr) {
             el2.src = el2.getAttribute('src');
             setTimeout(() => {
               el2 = el.parentElement.nextElementSibling;
-              arr = el2.contentWindow.document.documentElement.querySelectorAll('script');
-              console.log('arr: ', arr);
-              for (let i = 0, l = arr.length; i < l; i++) {
-                if (arr[i].hasAttribute('src')) {
-                  arr[i].src = arr[i].src;
-                }
-              }
+              setHost(el2);
               temp = el2.contentWindow.document.body;
               if (temp.attributes[0])
                 temp.removeAttribute(temp.attributes[0].name);
@@ -423,14 +474,8 @@ switch (attr) {
             }, 1000);
           } else {
             temp = el2.contentWindow.document.body;
-            arr = el2.contentWindow.document.documentElement.querySelectorAll('script');
-            console.log('arr: ', arr);
-            for (let i = 0, l = arr.length; i < l; i++) {
-              if (arr[i].hasAttribute('src')) {
-                arr[i].src = arr[i].src;
-              }
-            }
-          if (temp && temp.attributes[0])
+            setHost(el2);
+            if (temp && temp.attributes[0])
               temp.removeAttribute(temp.attributes[0].name);
             if (el2.hasAttribute('changeable')) {
               el2.setAttribute('src', el2.getAttribute('src'));
@@ -468,6 +513,7 @@ switch (attr) {
             }
           }
         } else if (el2 && (el2.tagName === 'FIGURE')) {
+          setHost(el2);
           textarea.value = DOCTYPE_FULL + html_beautify(el2.outerHTML) + HTML_END;
           console.log('el2.outerHTML: ', el2.outerHTML);
           submit();
@@ -503,6 +549,14 @@ switch (attr) {
           }
           submit();
         }
+        break;
+      }
+      case 'code_edit_run': {
+        el.parentElement.firstElementChild.click();
+        setTimeout(() => {
+          _data_(el, 'data-code_edit');
+          window.scrollBy(0, 5);
+        }, 250);
         break;
       }
       case 'code_run': {

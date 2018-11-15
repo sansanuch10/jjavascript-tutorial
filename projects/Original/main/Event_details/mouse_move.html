@@ -228,4 +228,221 @@ function mouselog(event) {
   <script src="script.js"><\/script>
   
 </body>
-</html>`</script></code-example></code-tabs><p>Попробуйте по-разному, быстро или медленно заходить и выходить в ячейки таблицы. Обработчики <code>mouseover/mouseout</code> стоят на <code>table</code>, но при помощи делегирования корректно обрабатывают вход-выход.</p><h2><a name="5" href="#5">Особенности IE8-</a></h2><p>В IE8- нет свойства <code>relatedTarget</code>. Вместо него используется <code>fromElement</code> для <code>mouseover</code> и <code>toElement</code> для <code>mouseout</code>.</p><p>Можно «исправить» несовместимость с <code>relatedTarget</code> так:</p><code-example><script>`function fixRelatedTarget(e) {\n if (e.relatedTarget === undefined) {\n if (e.type == 'mouseover') e.relatedTarget = e.fromElement;\n if (e.type == 'mouseout') e.relatedTarget = e.toElement;\n }\n}`</script></code-example><h2><a name="6" href="#6">Итого</a></h2><p>У <code>mouseover, mousemove, mouseout</code> есть следующие особенности:</p><ul><li>При быстром движении мыши события <code>mouseover, mousemove, mouseout</code> могут пропускать промежуточные элементы.</li><li>События <code>mouseover</code> и <code>mouseout</code> – единственные, у которых есть вторая цель: <code>relatedTarget</code> ( <code>toElement/fromElement</code> в IE).</li><li>События <code>mouseover/mouseout</code> подразумевают, что курсор находится над одним, самым глубоким элементом. Они срабатывают при переходе с родительского элемента на дочерний.</li></ul><p>События <code>mouseenter/mouseleave</code> не всплывают и не учитывают переходы внутри элемента.</p><h2 id="tasks"><a href="#7" name="7">Задачи (3)</a></h2><task-content><h3><a href="#10" name="10">Поведение "вложенная подсказка"</a><task-open hover-style="" data-show_task="" title="Открыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность: 5</span><p>Напишите JS-код, который будет показывать всплывающую подсказку над элементом, если у него есть атрибут <code>data-tooltip</code>.</p><p>Условие аналогично задаче <a data-load_page="125-1">Поведение "подсказка"</a>, но здесь необходима поддержка вложенных элементов. При наведении показывается самая вложенная подсказка.</p><p>Например:</p><code-example><script>`<div BLUE_data-tooltip_BLUE="Это – внутренность дома" id="house">\n <div BLUE_data-tooltip_BLUE="Это – крыша" id="roof"></div>\n ...\n <a href="http://ru.wikipedia.org/wiki/Три_поросёнка" BLUE_data-tooltip_BLUE="Читать дальше">Наведи на меня</a>\n</div>`</script></code-example><p>Результат в ифрейме с документом:</p><figure- id="tooltips"><code-toolbar-><a id="answer_1" style="display:none" data-code_edit=""></a><a id="task_1" title="открыть в песочнице" data-code_edit="?"></a></code-toolbar-><style> #tooltips{height:300px;overflow:auto;display:block;}#tooltips>div{height:2000px;/* подсказка должна работать независимо от прокрутки */}.tooltip{position:fixed;z-index:100;/* подсказка должна перекрывать другие элементы */ padding:10px 20px;/* красивости... */ border:1px solid #b3c9ce;border-radius:4px;text-align:center;font:italic 14px/1.3 arial,sans-serif;color:#333;background:#fff;box-shadow:3px 3px 3px rgba(0,0,0,.3);}#house{margin-top:50px;width:400px;border:1px solid brown;}#roof{width:0;height:0;border-left:200px solid transparent;border-right:200px solid transparent;border-bottom:20px solid brown;margin-top:-20px;}#tooltips p{text-align:justify;margin:10px 3px;}</style><div><div id="house" data-tool_tip="Это – внутренность дома"><div id="roof" data-tool_tip="Это – крыша"></div><p>Жили-были на свете три поросёнка. Три брата.</p><p>Все одинакового роста, кругленькие, розовые, с одинаковыми весёлыми хвостиками.</p><p>Даже имена у них были похожи. Звали поросят Ниф-Ниф, Нуф-Нуф и Наф-Наф. Всё лето они кувыркались в зелёной траве, грелись на солнышке, нежились в лужах.</p><p>Но вот наступила осень. <a href="http://ru.wikipedia.org/wiki/Три_поросёнка" data-tool_tip="Читать дальше…">Наведи на меня</a></p></div></div><script> var showingTooltip,tooltip;document.onmouseover=function(e){var target=e.target;/* ВАЖНО:mouseover может сработать сразу на потомке минуя родителя (при быстром движении мышью) пройти вверх до первого элемента с data-tooltip */ while (target&&(target !== this)){tooltip=target.getAttribute('data-tool_tip');if (tooltip) break;target=target.parentNode;}if (!tooltip) return;/* показать и запомнить подсказку */ showingTooltip=showTooltip(tooltip,target);};document.onmouseout=function(){/* возможно такое,что mouseout сработал,а мы все еще внутри элемента (всплытие) но в этом случае сразу же будет и mouseover,то есть подсказка будет уничтожена и тут же показана заново,это лишние расходы,их можно избежать дополнительными проверками */ if (showingTooltip){document.body.removeChild(showingTooltip);showingTooltip=false;}};function showTooltip(text,elem){var tooltipElem=document.createElement('div');tooltipElem.className='tooltip';tooltipElem.innerHTML=text;document.body.appendChild(tooltipElem);var coords=elem.getBoundingClientRect();var left=coords.left+(elem.offsetWidth-tooltipElem.offsetWidth)/2;if (left<tooltips.getBoundingClientRect().top) left=0;/* не вылезать за левую границу */ var top=coords.top-tooltipElem.offsetHeight-5;/*не вылезать за верхнюю границу */ if (top<tooltips.getBoundingClientRect().top){top=coords.top+elem.offsetHeight+5;}tooltipElem.style.left=left+'px';tooltipElem.style.top=top+'px';return tooltipElem;}</script></figure-><p>Вы можете использовать как заготовку решение задачи <a data-load_page="125-1">Поведение "подсказка"</a>.</p><p><a data-click="task_1">Открыть песочницу для задачи.</a></p><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><p><a data-click="answer_1">Открыть решение в песочнице.</a></p></task-answer></task-content><task-content><h3><a href="#11" name="11">Подсказка при замедлении над элементом</a><task-open hover-style="" data-show_task="" title="Закрыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность: 5</span><p>Нужно написать функцию, которая показывает подсказку при <em>наведении</em> на элемент, но не при <em>быстром проходе</em> над ним.</p><p>То есть, если посетитель именно навёл курсор мыши на элемент и почти остановился – подсказку показать, а если быстро провёл над ним, то не надо, зачем излишнее мигание?</p><p>Технически – можно измерять скорость движения мыши над элементом, если она маленькая, то считаем, что это «наведение на элемент» (показать подсказку), если большая – «быстрый проход мимо элемента» (не показывать).</p><p>Реализуйте это через универсальный объект <code>new HoverIntent(options)</code>, с параметрами <code>options</code>:</p><ul><li><code>elem</code> – элемент, наведение на который нужно отслеживать.</li><li><code>over</code> – функция-обработчик наведения на элемент.</li><li><code>out</code> – функция-обработчик ухода с элемента (если было наведение).</li></ul><p>Пример использования такого объекта для подсказки:</p><code-example><script>`// образец подсказки\nvar tooltip = document.createElement('div');\ntooltip.className = "tooltip";\ntooltip.innerHTML = "Подсказка";\n\n// при "наведении на элемент" показать подсказку\nnew HoverIntent({\n elem: elem,\n over: function() {\n tooltip.style.left = this.getBoundingClientRect().left + 'px';\n tooltip.style.top = this.getBoundingClientRect().bottom + 5 + 'px';\n document.body.appendChild(tooltip);\n },\n out: function() {\n document.body.removeChild(tooltip);\n }\n});`</script></code-example><p>Демо этого кода:</p><code-result><code-toolbar-><a id="answer_2" data-code_edit="tooltip_delay.html" style="display:none"></a></code-toolbar-><div></div><iframe style="height:200px" src="tooltip_delay.html"></iframe></code-result><p>Если провести мышкой над «часиками» быстро, то ничего не будет, а если медленно или остановиться на них, то появится подсказка.</p><p>Обратите внимание – подсказка не «мигает» при проходе мыши внутри «часиков», по подэлементам.</p><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><p>Будем замерять скорость движения курсора.</p><p>Для этого можно запустить <code>setInterval</code>, который каждые 100 мс (или другой интервал) будет сравнивать текущие координаты курсора с предыдущими и, если расстояние пройдено маленькое, считаем, что посетитель «навёл указатель на элемент», вызвать <code>options.over</code>.</p><p>В браузере нет способа «просто получить» текущие координаты. Это может сделать обработчик события, в данном случае <code>mousemove</code>. Поэтому нужно будет поставить обработчик на <code>mousemove</code> и при каждом движении запоминать текущие координаты, чтобы <code>setInterval</code> мог раз в 100 мс сравнивать их.</p><p>Имеет смысл начинать анализ координат и отслеживание <code>mousemove</code> при заходе на элемент, а заканчивать – при выходе с него.</p><p>Чтобы точно отловить момент входа и выхода, без учёта подэлементов (во избежание мигания), можно использовать <code>mouseenter/mouseleave</code>.</p><p>В решении, предложенном ниже, однако, используется <code>mouseover/mouseout</code>, так как это позволит легко «прикрутить» к такому объекту делегирование, если потребуется. А, чтобы не было лишних срабатываний, лишние переходы отфильтровываются.</p><p>При этом при обнаружении «наведения на элемент» это запоминается в переменной <code>isHover</code> и вызывается <code>options.over</code>, а затем, при выходе с элемента, если было «наведение», вызывается <code>options.out</code>.</p><p><a data-click="answer_2">Открыть решение с тестами в песочнице.</a></p></task-answer></task-content><task-content><h3><a href="#12" name="12">Дерево: проверка клика на заголовке(!)</a><task-open hover-style="" data-show_task="" title="Закрыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность: 3</span><p>Решите подобную задачу <a data-load_page="129-2">Дерево: проверка клика на заголовке</a> используя <code>mouseenter/mouseleave</code> и временный <code>span</code>, без координат.</p><p>Демо:</p><iframe- changeable="" style="height: 340px;" src="tree.html"><script> function on(){lis=tree.querySelectorAll('li');for (let i=0,l=lis.length;i<l;i++){lis[i].onmouseenter=function(e){if (this.children.length){var span=document.createElement('span');span.appendChild(this.firstChild);this.insertBefore(span,this.firstChild);}};lis[i].onmouseleave=function(e){if (this.children.length){this.firstChild.outerHTML=this.firstChild.innerHTML;}}};tree.onclick=function(e){var target=e.target||e.srcElement;if (target.tagName !== 'SPAN') return;var node=target.parentElement.getElementsByTagName('ul')[0];node.style.display=node.style.display ? '' :'none';/* раскрыть-закрыть детей */}}</script><style id="tree_style"> #tree span:hover{font-weight:bold;}#tree span{cursor:pointer;}</style><code-toolbar-><a id="answer_3" data-code_edit="" style="display:none"></a><a id="task_3" title="открыть в песочнице" data-code_edit="?"></a></code-toolbar-></iframe-><p><a data-click="task_3">Открыть песочницу для задачи.</a></p><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><p><a data-click="answer_3">Открыть решение в песочнице.</a></p></task-answer></task-content><banner-bottom class="banner-bottom" style="display: block;"></banner-bottom><script>! function(){/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)||screen.width<1024||"bannerBottomDisabled" in localStorage||(localStorage.bannerBottomShownCount||(localStorage.bannerBottomShownCount=1),document.querySelector(".banner-bottom").style.display="block")}();</script><nav-book data-tooltips="Мышь: отмена выделения, невыделяемые элементы; Мышь: Drag'n'Drop"></nav-book><share-map><share-></share-><map-button hover-style="" data-load_page="l"></map-button></share-map><comments- id="comments"></comments-><div id="disqus_thread"></div><script>disqus_url="https:\/\/learn.javascript.ru\/mousemove-mouseover-mouseout-mouseenter-mouseleave",disqus_identifier="mousemove-mouseover-mouseout-mouseenter-mouseleave",disqus_title="\u041c\u044b\u0448\u044c: \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435 mouseover\/out, mouseenter\/leave";</script></page-content></main>
+</html>`</script></code-example></code-tabs><p>Попробуйте по-разному, быстро или медленно заходить и выходить в ячейки таблицы. Обработчики <code>mouseover/mouseout</code> стоят на <code>table</code>, но при помощи делегирования корректно обрабатывают вход-выход.</p><h2><a name="5" href="#5">Особенности IE8-</a></h2><p>В IE8- нет свойства <code>relatedTarget</code>. Вместо него используется <code>fromElement</code> для <code>mouseover</code> и <code>toElement</code> для <code>mouseout</code>.</p><p>Можно «исправить» несовместимость с <code>relatedTarget</code> так:</p><code-example><script>`function fixRelatedTarget(e) {\n if (e.relatedTarget === undefined) {\n if (e.type == 'mouseover') e.relatedTarget = e.fromElement;\n if (e.type == 'mouseout') e.relatedTarget = e.toElement;\n }\n}`</script></code-example><h2><a name="6" href="#6">Итого</a></h2><p>У <code>mouseover, mousemove, mouseout</code> есть следующие особенности:</p><ul><li>При быстром движении мыши события <code>mouseover, mousemove, mouseout</code> могут пропускать промежуточные элементы.</li><li>События <code>mouseover</code> и <code>mouseout</code> – единственные, у которых есть вторая цель: <code>relatedTarget</code> ( <code>toElement/fromElement</code> в IE).</li><li>События <code>mouseover/mouseout</code> подразумевают, что курсор находится над одним, самым глубоким элементом. Они срабатывают при переходе с родительского элемента на дочерний.</li></ul><p>События <code>mouseenter/mouseleave</code> не всплывают и не учитывают переходы внутри элемента.</p><h2 id="tasks"><a href="#7" name="7">Задачи (3)</a></h2><task-content><h3><a href="#10" name="10">Поведение "вложенная подсказка"</a><task-open hover-style="" data-show_task="" title="Открыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность: 5</span><p>Напишите JS-код, который будет показывать всплывающую подсказку над элементом, если у него есть атрибут <code>data-tooltip</code>.</p><p>Условие аналогично задаче <a data-load_page="125-1">Поведение "подсказка"</a>, но здесь необходима поддержка вложенных элементов. При наведении показывается самая вложенная подсказка.</p><p>Например:</p><code-example><script>`<div BLUE_data-tooltip_BLUE="Это – внутренность дома" id="house">\n <div BLUE_data-tooltip_BLUE="Это – крыша" id="roof"></div>\n ...\n <a href="http://ru.wikipedia.org/wiki/Три_поросёнка" BLUE_data-tooltip_BLUE="Читать дальше">Наведи на меня</a>\n</div>`</script></code-example><p>Результат в ифрейме с документом:</p><figure- id="tooltips"><code-toolbar-><a id="answer_1" style="display:none" data-code_edit=""></a><a id="task_1" title="открыть в песочнице" data-code_edit="?"></a></code-toolbar-><style> #tooltips{height:300px;overflow:auto;display:block;}#tooltips>div{height:2000px;/* подсказка должна работать независимо от прокрутки */}.tooltip{position:fixed;z-index:100;/* подсказка должна перекрывать другие элементы */ padding:10px 20px;/* красивости... */ border:1px solid #b3c9ce;border-radius:4px;text-align:center;font:italic 14px/1.3 arial,sans-serif;color:#333;background:#fff;box-shadow:3px 3px 3px rgba(0,0,0,.3);}#house{margin-top:50px;width:400px;border:1px solid brown;}#roof{width:0;height:0;border-left:200px solid transparent;border-right:200px solid transparent;border-bottom:20px solid brown;margin-top:-20px;}#tooltips p{text-align:justify;margin:10px 3px;}</style><div><div id="house" data-tool_tip="Это – внутренность дома"><div id="roof" data-tool_tip="Это – крыша"></div><p>Жили-были на свете три поросёнка. Три брата.</p><p>Все одинакового роста, кругленькие, розовые, с одинаковыми весёлыми хвостиками.</p><p>Даже имена у них были похожи. Звали поросят Ниф-Ниф, Нуф-Нуф и Наф-Наф. Всё лето они кувыркались в зелёной траве, грелись на солнышке, нежились в лужах.</p><p>Но вот наступила осень. <a href="http://ru.wikipedia.org/wiki/Три_поросёнка" data-tool_tip="Читать дальше…">Наведи на меня</a></p></div></div><script> var showingTooltip,tooltip;document.onmouseover=function(e){var target=e.target;/* ВАЖНО:mouseover может сработать сразу на потомке минуя родителя (при быстром движении мышью) пройти вверх до первого элемента с data-tooltip */ while (target&&(target !== this)){tooltip=target.getAttribute('data-tool_tip');if (tooltip) break;target=target.parentNode;}if (!tooltip) return;/* показать и запомнить подсказку */ showingTooltip=showTooltip(tooltip,target);};document.onmouseout=function(){/* возможно такое,что mouseout сработал,а мы все еще внутри элемента (всплытие) но в этом случае сразу же будет и mouseover,то есть подсказка будет уничтожена и тут же показана заново,это лишние расходы,их можно избежать дополнительными проверками */ if (showingTooltip){document.body.removeChild(showingTooltip);showingTooltip=false;}};function showTooltip(text,elem){var tooltipElem=document.createElement('div');tooltipElem.className='tooltip';tooltipElem.innerHTML=text;document.body.appendChild(tooltipElem);var coords=elem.getBoundingClientRect();var left=coords.left+(elem.offsetWidth-tooltipElem.offsetWidth)/2;if (left<tooltips.getBoundingClientRect().top) left=0;/* не вылезать за левую границу */ var top=coords.top-tooltipElem.offsetHeight-5;/*не вылезать за верхнюю границу */ if (top<tooltips.getBoundingClientRect().top){top=coords.top+elem.offsetHeight+5;}tooltipElem.style.left=left+'px';tooltipElem.style.top=top+'px';return tooltipElem;}</script></figure-><p>Вы можете использовать как заготовку решение задачи <a data-load_page="125-1">Поведение "подсказка"</a>.</p><p><a data-click="task_1">Открыть песочницу для задачи.</a></p><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><p><a data-click="answer_1">Открыть решение в песочнице.</a></p></task-answer></task-content><task-content><h3><a href="#11" name="11">Подсказка при замедлении над элементом</a><task-open hover-style="" data-show_task="" title="Закрыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность: 5</span><p>Нужно написать функцию, которая показывает подсказку при <em>наведении</em> на элемент, но не при <em>быстром проходе</em> над ним.</p><p>То есть, если посетитель именно навёл курсор мыши на элемент и почти остановился – подсказку показать, а если быстро провёл над ним, то не надо, зачем излишнее мигание?</p><p>Технически – можно измерять скорость движения мыши над элементом, если она маленькая, то считаем, что это «наведение на элемент» (показать подсказку), если большая – «быстрый проход мимо элемента» (не показывать).</p><p>Реализуйте это через универсальный объект <code>new HoverIntent(options)</code>, с параметрами <code>options</code>:</p><ul><li><code>elem</code> – элемент, наведение на который нужно отслеживать.</li><li><code>over</code> – функция-обработчик наведения на элемент.</li><li><code>out</code> – функция-обработчик ухода с элемента (если было наведение).</li></ul><p>Пример использования такого объекта для подсказки:</p><code-example><script>`// образец подсказки\nvar tooltip = document.createElement('div');\ntooltip.className = "tooltip";\ntooltip.innerHTML = "Подсказка";\n\n// при "наведении на элемент" показать подсказку\nnew HoverIntent({\n elem: elem,\n over: function() {\n tooltip.style.left = this.getBoundingClientRect().left + 'px';\n tooltip.style.top = this.getBoundingClientRect().bottom + 5 + 'px';\n document.body.appendChild(tooltip);\n },\n out: function() {\n document.body.removeChild(tooltip);\n }\n});`</script></code-example><p>Демо этого кода:</p><code-example id="demo_2"><style>#demo_2{height:250px;overflow:hidden;}#demo_2 code-{display:none}</style><script>`<!DOCTYPE html>\n<html>\n\n<head>\n  <meta charset="utf-8">\n  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.css">\n  <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.js"><\/script>\n  <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.js"><\/script>\n  <script src="http://localhost:3000/sinon.js"><\/script>\n  <script>var assert = chai.assert; mocha.setup("bdd");<\/script>\n  <style>
+    .hours {
+      color: red;
+    }
+    
+    .minutes {
+      color: green;
+    }
+    
+    .seconds {
+      color: blue;
+    }
+    
+    .clock {
+      border: 1px dashed black;
+      padding: 5px;
+      display: inline-block;
+      background: yellow;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    
+    .tooltip {
+      position: absolute;
+      background: #eee;
+      border: 1px brown solid;
+      padding: 3px;
+    }
+  </style>\n</head>\n\n<body id="mocha">\n  <div id="elem" class="clock">
+    <span class="hours">12</span> :
+    <span class="minutes">30</span> :
+    <span class="seconds">00</span>
+  </div>
+
+  <div id="tooltip" hidden>Tooltip</div>\n  <script>\n    describe("hoverIntent", function() {
+      function mouse(eventType, x, y, options) {
+        let eventOptions = Object.assign({ 
+          bubbles: true,
+          clientX: x,
+          clientY: y,
+          pageX: x,
+          pageY: y,
+          target: elem
+        }, options || {});    
+        elem.dispatchEvent(new MouseEvent(eventType, eventOptions));
+      }
+      let isOver;
+      let hoverIntent;  
+      before(function() {
+        this.clock = sinon.useFakeTimers();
+      });
+      after(function() {
+        this.clock.restore();
+      });  
+      beforeEach(function() {
+        isOver = false;    
+        hoverIntent = new HoverIntent({
+          elem: elem,
+          over: function() {
+            isOver = true;
+          },
+          out: function() {
+            isOver = false;
+          }
+        });
+      })
+      afterEach(function() {
+        if (hoverIntent) {
+          hoverIntent.destroy();
+        }
+      })
+      it("mouseover -> immediately no tooltip", function() {
+        mouse('mouseover', 10, 10);
+        assert.isFalse(isOver);
+      });  
+      it("mouseover -> pause shows tooltip", function() {
+        mouse('mouseover', 10, 10);
+        this.clock.tick(100);
+        assert.isTrue(isOver);
+      });
+      it("mouseover -> fast mouseout no tooltip", function() {
+        mouse('mouseover', 10, 10);
+        setTimeout(
+          () => mouse('mouseout', 300, 300, { relatedTarget: document.body}),
+          30
+        );
+        this.clock.tick(100);
+        assert.isFalse(isOver);
+      });
+      it("mouseover -> slow move -> tooltips", function() {
+        mouse('mouseover', 10, 10);
+        for(let i=10; i<200; i+= 10) {
+          setTimeout(
+            () => mouse('mousemove', i/5, 10),
+            i
+          );
+        }
+        this.clock.tick(200);
+        assert.isTrue(isOver);
+      });
+      it("mouseover -> fast move -> no tooltip", function() {
+        mouse('mouseover', 10, 10);
+        for(let i=10; i<200; i+= 10) {
+          setTimeout(
+            () => mouse('mousemove', i, 10),
+            i
+          );
+        }
+        this.clock.tick(200);
+        assert.isFalse(isOver);
+      });  
+    });\n  <\/script>\n  <script>
+  // for the demo
+  setTimeout(function() {
+    new HoverIntent({
+      elem: elem,
+      over: function() {
+        tooltip.hidden = false;
+      },
+      out: function() {
+        tooltip.hidden = true;
+      }
+    });
+  }, 2000);
+
+  function HoverIntent(options) {  
+    options = Object.create(options); // not to modify the object
+    options.interval = options.interval || 100;
+  
+    // скорость меньше 1px/ms  считается остановкой над элементом
+    options.sensitivity = options.sensitivity || 0.1;
+    var elem = options.elem;
+  
+    // instantiate variables
+    // cX, cY = current X and Y position of mouse, updated by mousemove event
+    // pX, pY = previous X and Y position of mouse, set by mouseover and polling interval
+    var cX, cY, pX, pY, cTime, pTime;
+    var checkSpeedInterval;
+    var isOverElement;
+    var isHover;
+  
+    // A private function for handling mouse 'hovering'
+    elem.addEventListener("mouseover", onMouseOver);
+  
+    elem.addEventListener("mouseout", onMouseOut);
+  
+    function onMouseOver(event) {
+      if (isOverElement) {
+        // если мы и так над элементом, то это всплывший переход внутри него
+        // мы и так уже замеряем скорость, поэтому этот переход лишний
+        return;
+      }
+  
+      isOverElement = true;
+  
+      // при каждом движении мыши mousemove мы будем вычислять расстояние между
+      // предыдущими и текущими координатами курсора
+      // если оно меньше sensivity, то скорость маленькая и это наведение на элемент
+      // pX, pY - "предыдущие" координаты
+      pX = event.pageX;
+      pY = event.pageY;
+      pTime = Date.now();
+  
+      elem.addEventListener('mousemove', onMouseMove);
+      checkSpeedInterval = setInterval(trackSpeed, options.interval);
+    }
+    
+    function onMouseOut(event) {
+      // если ушли вовне элемента
+      if (!event.relatedTarget || !elem.contains(event.relatedTarget)) {
+        isOverElement = false;
+        elem.removeEventListener('mousemove', onMouseMove);
+        clearInterval(checkSpeedInterval);
+        if (isHover) {
+          // если была остановка над элементом
+          options.out.call(elem, event);
+          isHover = false;
+        }
+      }
+    }
+  
+    function onMouseMove(event) {
+      cX = event.pageX;
+      cY = event.pageY;
+      cTime = Date.now();
+    }
+    
+    function trackSpeed(event) {
+      let speed;
+      if (!cTime || cTime == pTime) {
+        // нет измерений скорости (событий mousemove)
+        // значит курсор не двигался
+        speed = 0;
+      } else {
+        speed = Math.sqrt(Math.pow(pX - cX, 2) + Math.pow(pY - cY, 2)) / (cTime - pTime);
+      }
+  
+      if (speed < options.sensitivity) {
+        // если с предыдущей позиции меньше sensivity дистанция, то "остановка на элементе"
+        clearInterval(checkSpeedInterval);
+        isHover = true;
+        options.over.call(elem, event);
+      } else {
+        // следующее измерение с текущей точки
+        pX = cX;
+        pY = cY;
+        pTime = cTime;
+      }
+    }
+    
+    this.destroy = function() {
+      elem.removeEventListener('mousemove', onMouseMove);
+      elem.removeEventListener('mouseover', onMouseOver);
+      elem.removeEventListener('mouseout', onMouseOut);
+    };
+  }
+  <\/script>\n  <script>mocha.run();<\/script>\n</body>\n\n</html>`</script><code-toolbar- iframe="248"><a onclick="setTimeout(()=>{demo_2.querySelector('iframe').focus},100)" title="показать" data-code_run="0"></a><a id="answer_2" data-code_edit="" style="display: none;"></a></code-toolbar-></code-example><p>Если провести мышкой над «часиками» быстро, то ничего не будет, а если медленно или остановиться на них, то появится подсказка.</p><p>Обратите внимание – подсказка не «мигает» при проходе мыши внутри «часиков», по подэлементам.</p><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><p>Будем замерять скорость движения курсора.</p><p>Для этого можно запустить <code>setInterval</code>, который каждые 100 мс (или другой интервал) будет сравнивать текущие координаты курсора с предыдущими и, если расстояние пройдено маленькое, считаем, что посетитель «навёл указатель на элемент», вызвать <code>options.over</code>.</p><p>В браузере нет способа «просто получить» текущие координаты. Это может сделать обработчик события, в данном случае <code>mousemove</code>. Поэтому нужно будет поставить обработчик на <code>mousemove</code> и при каждом движении запоминать текущие координаты, чтобы <code>setInterval</code> мог раз в 100 мс сравнивать их.</p><p>Имеет смысл начинать анализ координат и отслеживание <code>mousemove</code> при заходе на элемент, а заканчивать – при выходе с него.</p><p>Чтобы точно отловить момент входа и выхода, без учёта подэлементов (во избежание мигания), можно использовать <code>mouseenter/mouseleave</code>.</p><p>В решении, предложенном ниже, однако, используется <code>mouseover/mouseout</code>, так как это позволит легко «прикрутить» к такому объекту делегирование, если потребуется. А, чтобы не было лишних срабатываний, лишние переходы отфильтровываются.</p><p>При этом при обнаружении «наведения на элемент» это запоминается в переменной <code>isHover</code> и вызывается <code>options.over</code>, а затем, при выходе с элемента, если было «наведение», вызывается <code>options.out</code>.</p><p><a data-click="answer_2">Открыть решение с тестами в песочнице.</a></p></task-answer></task-content><task-content><h3><a href="#12" name="12">Дерево: проверка клика на заголовке(!)</a><task-open hover-style="" data-show_task="" title="Закрыть задачу"></task-open></h3><span title="Насколько эта задача важна для освоения материала, от 1 до 5">важность: 3</span><p>Решите подобную задачу <a data-load_page="129-2">Дерево: проверка клика на заголовке</a> используя <code>mouseenter/mouseleave</code> и временный <code>span</code>, без координат.</p><p>Демо:</p><iframe- changeable="" style="height: 340px;" src="tree.html"><script> function on(){lis=tree.querySelectorAll('li');for (let i=0,l=lis.length;i<l;i++){lis[i].onmouseenter=function(e){if (this.children.length){var span=document.createElement('span');span.appendChild(this.firstChild);this.insertBefore(span,this.firstChild);}};lis[i].onmouseleave=function(e){if (this.children.length){this.firstChild.outerHTML=this.firstChild.innerHTML;}}};tree.onclick=function(e){var target=e.target||e.srcElement;if (target.tagName !== 'SPAN') return;var node=target.parentElement.getElementsByTagName('ul')[0];node.style.display=node.style.display ? '' :'none';/* раскрыть-закрыть детей */}}</script><style id="tree_style"> #tree span:hover{font-weight:bold;}#tree span{cursor:pointer;}</style><code-toolbar-><a id="answer_3" data-code_edit="" style="display:none"></a><a id="task_3" title="открыть в песочнице" data-code_edit="?"></a></code-toolbar-></iframe-><p><a data-click="task_3">Открыть песочницу для задачи.</a></p><button-answer data-toggle_answer="" style="">решение</button-answer><task-answer><close- title="закрыть" data-close_answer=""></close-><p><a data-click="answer_3">Открыть решение в песочнице.</a></p></task-answer></task-content><banner-bottom class="banner-bottom" style="display: block;"></banner-bottom><script>! function(){/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)||screen.width<1024||"bannerBottomDisabled" in localStorage||(localStorage.bannerBottomShownCount||(localStorage.bannerBottomShownCount=1),document.querySelector(".banner-bottom").style.display="block")}();</script><nav-book data-tooltips="Мышь: отмена выделения, невыделяемые элементы; Мышь: Drag'n'Drop"></nav-book><share-map><share-></share-><map-button hover-style="" data-load_page="l"></map-button></share-map><comments- id="comments"></comments-><div id="disqus_thread"></div><script>disqus_url="https:\/\/learn.javascript.ru\/mousemove-mouseover-mouseout-mouseenter-mouseleave",disqus_identifier="mousemove-mouseover-mouseout-mouseenter-mouseleave",disqus_title="\u041c\u044b\u0448\u044c: \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435 mouseover\/out, mouseenter\/leave";</script></page-content></main>

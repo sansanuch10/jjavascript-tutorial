@@ -1,26 +1,30 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
-  <meta charset="utf-8">
-</head>
-
-<body>
-
-  <p>Подключим библиотеку</p>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.3.0/lodash.js"></script>
-  <p>Функция <code>_.defaults()</code> добавляет отсутствующие свойства.</p>
+  <meta charset="UTF-8">
+  <script src="DragManager.js"></script>
+  <link rel="stylesheet" href="dragDemo.css">
   <script>
-    var user = {
-      name: 'Вася'
+    DragManager.onDragCancel = function(dragObject) {
+      dragObject.avatar.rollback();
     };
-    _.defaults(user, {
-      name: 'Не указано',
-      employer: 'Не указан'
-    });
-    alert( user.name ); // Вася
-    alert( user.employer ); // Не указан
-    alert( _.size(user) ); // 2
+    DragManager.onDragEnd = function(dragObject, dropElem) {
+      dragObject.elem.style.display = 'none';
+      dropElem.id = 'computer-smile';
+      setTimeout(function() {
+        dropElem.id = '';
+      }, 200);
+    };
   </script>
-
+</head>
+<body style="padding:20px">
+  
+  <img src="chrome.svg">
+  <img src="firefox.svg">
+  <img src="ie.svg">
+  <img src="opera.svg">
+  <img src="safari.svg">
+  <p>Браузер переносить сюда:</p>
+  <drop-able></drop-able>
 </body>
 </html>
