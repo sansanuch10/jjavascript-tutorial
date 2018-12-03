@@ -1,30 +1,67 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <script src="DragManager.js"></script>
-  <link rel="stylesheet" href="dragDemo.css">
-  <script>
-    DragManager.onDragCancel = function(dragObject) {
-      dragObject.avatar.rollback();
-    };
-    DragManager.onDragEnd = function(dragObject, dropElem) {
-      dragObject.elem.style.display = 'none';
-      dropElem.id = 'computer-smile';
-      setTimeout(function() {
-        dropElem.id = '';
-      }, 200);
-    };
-  </script>
+  <meta charset="utf-8">
 </head>
-<body style="padding:20px">
-  
-  <img src="chrome.svg">
-  <img src="firefox.svg">
-  <img src="ie.svg">
-  <img src="opera.svg">
-  <img src="safari.svg">
-  <p>Браузер переносить сюда:</p>
-  <drop-able></drop-able>
+
+<body>
+
+  <style>
+    clock- {
+      display: flex;
+      margin: 0 auto;
+    }
+    hour- {
+      color: red;
+    }
+    min- {
+      color: green;
+    }
+    sec- {
+      color: #00f;
+    }
+  </style>
+  <clock->
+    <hour->00</hour->:
+    <min->00</min->:
+    <sec->00</sec->
+  </clock->
+  <input type="button" onclick="pageClock.start()" value="Старт">
+  <input type="button" onclick="pageClock.stop()" value="Стоп">
+  <input type="button" onclick="alert('Часы должны останавливаться во время alert,\nи продолжать корректно работать после нажатия на ОК')" value="alert для проверки корректного возобновления">
+  <script>
+    var pageClock = new Clock({
+      elem: document.querySelector('clock-')
+    });
+    
+    function Clock(options) {
+      var elem = options.elem;
+      var timer;
+    
+      function render() {
+        var date = new Date();
+        var hours = date.getHours();
+        if (hours < 10) hours = '0' + hours;
+        elem.querySelector('hour-').innerHTML = hours;
+    
+        var min = date.getMinutes();
+        if (min < 10) min = '0' + min;
+        elem.querySelector('min-').innerHTML = min;
+    
+        var sec = date.getSeconds();
+        if (sec < 10) sec = '0' + sec;
+        elem.querySelector('sec-').innerHTML = sec;
+      }
+    
+      this.stop = function() {
+        clearInterval(timer);
+      };
+      this.start = function() {
+        render();
+        timer = setInterval(render, 1000);
+      };
+    }
+  </script>
+
 </body>
 </html>

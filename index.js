@@ -162,7 +162,7 @@ function server() {
     '.svg': 'image/svg+xml',
     '.pdf': 'application/pdf'
   };
-  let folder = 'projects;css;img;js;json;html;main;courses;favicon;logos;pay_methods;promise;manage;chrome;generator;dom_console;metrics;object;array;memory;prototype;coordinates;webcomponents;regexp;range;paid_courses;analyzer;gallery;Quality_code;testing;Document;ES_modern;modules;Event_basics;bubble;Event_details;mouse;mousewheel;keyboard;Widgets;task_iframes;Webcomponent;Ajax;bezier;browsers;animation;Animation;css_js_animation;optimization;Optimize;leak;Frame_window;clickjacking;css_for_js;CSS_for_js;float;winnie;carousel;position;center;margin;img_problem;height_percent;selectors;sprite;extensions;Extra;setImmediate;range_selection;drag;';
+  let folder = 'projects;css;js;json;html;main;img;analyzer;animation;array;bezier;carousel;chrome;coordinates;courses;css_for_js;dom_console;drag_heroes_files;event;browsers;mouse;mousewheel;extensions;favicon;gallery;generator;logos;manage;memory;metrics;object;optimization;paid_courses;pay_methods;promise;prototype;regexp;range;webcomponents;Quality_code;testing;Document;ES_modern;modules;Event_basics;bubble;Event_details;keyboard;Widgets;task_iframes;Webcomponent;Ajax;Animation;css_js_animation;Optimize;leak;Frame_window;clickjacking;CSS_for_js;float;winnie;position;center;margin;img_problem;height_percent;selectors;sprite;Extra;setImmediate;range_selection;drag;';
   let filesForInit = [0,1,2,7,29,34,46,54,63,69,74,83,98,99,119,128,140,145,152,160,176,180,190,197,215,219,233,];
   function getListDir(dir, res, cb) {
     fs.readdir(dir, function (err, dirs) {

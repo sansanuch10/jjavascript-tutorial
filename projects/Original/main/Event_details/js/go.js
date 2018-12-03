@@ -1,1 +1,1 @@
-alert('go.js - ok');
+function go(){alert('go.js -- ok');}

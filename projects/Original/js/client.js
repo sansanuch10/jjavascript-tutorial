@@ -1,5 +1,6 @@
-let mapList;client();function client() {
+let mapList,host;client();function client() {
   console.log('Original client.js');
+  host = window.location.href.split('#')[0];
   let getBy = (function getByTagOrID() {
     let t;
     return function (tag, id) {
@@ -221,153 +222,182 @@ let mapList;client();function client() {
   const DOCTYPE_FULL = '<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n</head>\n\n<body>\n\n';
   const HTML = "html";
   const HTML_END = '\n</body>\n</html>';
-  let _data_ = function (el, attr) {
+  function submit() {
+    form.appendChild(textarea);
+    form.submit();
+    form.remove();
+  }
+
+  function setValue(t) {
+    if (parent.id)
+      t = t || parent.outerHTML;
+    else
+      t = t || parent.innerHTML;
+      // console.log('parent.innerHTML: ', parent.innerHTML);
+    if (el.id === 'row_red_task' || el.id === 'row_red_answer') {
+      t = t.split('style="background: red;"').join('');
+    }
+    t = t.split(':url(').join(':url(' + host).split(' url(').join(' url(' + host);
+    textarea.value = html_beautify(DOCTYPE_FULL + t.split('<code-toolbar->')[0] + t.split('</code-toolbar->')[1] + HTML_END);
+    // console.log('textarea.value: ', textarea.value);
+  }
+
+  function styleAndScript(parent, res, i_) {
+    temp = parent.getElementsByTagName('style');
+    if (temp[1]) {
+      style = '<style>' + temp[0].innerHTML + temp[1].innerHTML + '</style>';
+      res = res.split('<style>')[0] + res.split('</style>')[1];
+      console.log('res: ', res);
+    } else {
+      if (i_) {
+        t1 = getBy(0, i_.split('.')[0] + '_style');
+      } else {
+        t1 = getBy(0, parent.getAttribute('src').split('.')[0] + '_style');
+      }
+      if (t1) {
+        style = '<style>' + t1.innerHTML + '</style>';
+      } else
+        style = '';
+    }
+
+    if (val === '?') {
+      script = '<script>\n// .. ваш код ..\n</script>';
+    } else if (val) {
+      script = '<script>+' + parent.querySelector('script').innerHTML + '()</script>';
+    } else {
+      temp = parent.querySelector('script');
+      if (temp) {
+        if (temp.innerHTML) {
+          t = temp.innerHTML;
+          if(t.indexOf(' on() {') !== -1){
+            t = t.slice((t.indexOf('{') + 1), t.lastIndexOf('}'));
+          }
+          if (parent.id)
+            script = '<script>' + t.split(parent.id).join('document') + '</script>';
+          else
+            script = '<script>' + t + '</script>';
+        } else {
+          script = temp.outerHTML;
+        }
+      } else script = '';
+    }
+    return res;
+  }
+
+  function forFrame_(parent, res) {
+    res = styleAndScript(parent, res, 0);
+    // styleAndScript();
+    if (res) {
+      if (res.indexOf('<div>') === 0) {
+        res = res.slice(6, -6);
+        // console.log('res: ', res);
+      }
+      textarea.value = html_beautify(DOCTYPE_FULL + style + res + script + HTML_END);
+    } else {
+      t1 = parent.firstElementChild.outerHTML;
+      if (t1.indexOf('<div>') === 0) {
+        t1 = t1.slice(5, -6);
+        // console.log('t1: ', t1);
+      }
+      textarea.value = html_beautify(DOCTYPE_FULL + style + t1 + script + HTML_END);
+    }
+    submit();
+  }
+
+  function for_Frame_(parent, res, i_) {
+    styleAndScript(parent, res, i_);
+    temp = html_beautify(DOCTYPE_FULL + style + res + script + HTML_END);
+    el2 = host + 'iframe.html';
+    console.log('el2:======= ', el2);
+    httpSend('PUT', el2, temp);
+    window.open('iframe.html');
+  }
+
+  function setHost(el) {
+    if (el.tagName === 'IFRAME') {
+      arr = el.contentWindow.document.documentElement.querySelectorAll('script');
+      for (let i = 0, l = arr.length; i < l; i++) {
+        if (arr[i].hasAttribute('src')) {
+          arr[i].src = arr[i].src;
+        }
+      }
+      arr = el.contentWindow.document.documentElement.querySelectorAll('link');
+      for (let i = 0, l = arr.length; i < l; i++) {
+        if (arr[i].hasAttribute('href')) {
+          arr[i].setAttribute('href', arr[i].href);
+        }
+      }
+      arr = el.contentWindow.document.documentElement.querySelectorAll('img');
+      for (let i = 0, l = arr.length; i < l; i++) {
+        if (arr[i].hasAttribute('src')) {
+          arr[i].src = arr[i].src;
+        }
+        if (arr[i].hasAttribute('realsrc')) {
+          arr[i].setAttribute('realsrc', host + arr[i].getAttribute('realsrc'));
+        }
+        if (arr[i].hasAttribute('data-src')) {
+          arr[i].setAttribute('data-src', host + arr[i].getAttribute('data-src'));
+        }
+      }
+      arr = el.contentWindow.document.documentElement.querySelectorAll('img-');
+      for (let i = 0, l = arr.length; i < l; i++) {
+        if (arr[i].hasAttribute('data-src')) {
+          arr[i].setAttribute('data-src', host + arr[i].getAttribute('data-src'));
+        }
+      }
+      arr = el.contentWindow.document.documentElement.querySelectorAll('a');
+      for (let i = 0, l = arr.length; i < l; i++) {
+        if (arr[i].hasAttribute('href')) {
+          arr[i].setAttribute('href', arr[i].href);
+        }
+      }
+      arr = el.contentWindow.document.documentElement.querySelectorAll('iframe');
+      for (let i = 0, l = arr.length; i < l; i++) {
+        if (arr[i].hasAttribute('src')) {
+          arr[i].src = arr[i].src;
+        }
+      }
+    } else {
+      arr = el.querySelectorAll('script');
+      for (let i = 0, l = arr.length; i < l; i++) {
+        if (arr[i].hasAttribute('src')) {
+          arr[i].src = arr[i].src;
+        }
+      }
+      arr = el.querySelectorAll('link');
+      for (let i = 0, l = arr.length; i < l; i++) {
+        if (arr[i].hasAttribute('href')) {
+          arr[i].setAttribute('href', arr[i].href);
+        }
+      }
+      arr = el.querySelectorAll('img');
+      for (let i = 0, l = arr.length; i < l; i++) {
+        if (arr[i].hasAttribute('src')) {
+          arr[i].src = arr[i].src;
+        }
+        if (arr[i].hasAttribute('realsrc')) {
+          arr[i].setAttribute('realsrc', host + arr[i].getAttribute('realsrc'));
+        }
+      }
+      arr = el.querySelectorAll('img-');
+      for (let i = 0, l = arr.length; i < l; i++) {
+        if (arr[i].hasAttribute('data-src')) {
+          arr[i].setAttribute('data-src', host + arr[i].getAttribute('data-src'));
+        }
+      }
+      arr = el.querySelectorAll('a');
+      for (let i = 0, l = arr.length; i < l; i++) {
+        if (arr[i].hasAttribute('href')) {
+          arr[i].setAttribute('href', arr[i].href);
+        }
+      }
+    }
+  }
+let _data_ = function (el, attr, v) {
     if (!el) return;
-    val = el.getAttribute(attr);
+    val = v || el.getAttribute(attr);
     attr = attr.split('-')[1];
     console.log('attr: ', attr);
-    function submit() {
-      form.appendChild(textarea);
-      form.submit();
-      form.remove();
-    }
-
-    function setValue(t) {
-      if (parent.id)
-        t = t || parent.outerHTML;
-      else
-        t = t || parent.innerHTML;
-        // console.log('parent.innerHTML: ', parent.innerHTML);
-      if (el.id === 'row_red_task' || el.id === 'row_red_answer') {
-        t = t.split('style="background: red;"').join('');
-      }
-      textarea.value = html_beautify(DOCTYPE_FULL + t.split('<code-toolbar->')[0] + t.split('</code-toolbar->')[1] + HTML_END);
-      // console.log('textarea.value: ', textarea.value);
-    }
-
-    function styleAndScript(i_) {
-      parent = el.parentElement.parentElement;
-      temp = parent.querySelectorAll('style');
-      if (temp[1]) {
-        style = '<style>' + temp[0].innerHTML + temp[1].innerHTML + '</style>';
-        res = res.split('<style>')[0] + res.split('</style>')[1];
-      } else {
-        if (i_) {
-          t1 = getBy(0, i_.split('.')[0] + '_style');
-        } else
-          t1 = getBy(0, parent.getAttribute('src').split('.')[0] + '_style');
-        if (t1) {
-          style = '<style>' + t1.innerHTML + '</style>';
-        } else
-          style = '';
-      }
-
-      if (val === '?') {
-        script = '<script>\n// .. ваш код ..\n</script>';
-      } else if (val) {
-        script = '<script>+' + parent.querySelector('script').innerHTML + '()</script>';
-      } else {
-        temp = parent.querySelector('script');
-        if (temp) {
-          if (temp.innerHTML) {
-            t = temp.innerHTML;
-            if(t.indexOf(' on() {') !== -1){
-              t = t.slice((t.indexOf('{') + 1), t.lastIndexOf('}'));
-            }
-            if (parent.id)
-              script = '<script>' + t.split(parent.id).join('document') + '</script>';
-            else
-              script = '<script>' + t + '</script>';
-          } else {
-            script = temp.outerHTML;
-          }
-        } else script = '';
-      }
-    }
-
-    function forFrame_(res) {
-      styleAndScript();
-      styleAndScript();
-      if (res) {
-        if (res.indexOf('<div>') === 0) {
-          res = res.slice(6, -6);
-          // console.log('res: ', res);
-        }
-        textarea.value = html_beautify(DOCTYPE_FULL + style + res + script + HTML_END);
-      } else {
-        t1 = parent.firstElementChild.outerHTML;
-        if (t1.indexOf('<div>') === 0) {
-          t1 = t1.slice(5, -6);
-          // console.log('t1: ', t1);
-        }
-        textarea.value = html_beautify(DOCTYPE_FULL + style + t1 + script + HTML_END);
-      }
-      submit();
-    }
-
-    function for_Frame_(res, i_) {
-      styleAndScript(i_);
-      temp = html_beautify(DOCTYPE_FULL + style + res + script + HTML_END);
-      el2 = window.location.toString().split('#')[0] + 'iframe.html';
-      console.log('el2:======= ', el2);
-      httpSend('PUT', el2, temp);
-      window.open('iframe.html');
-    }
-
-    function setHost(el) {
-      if (el.tagName === 'IFRAME') {
-        arr = el.contentWindow.document.documentElement.querySelectorAll('script');
-        for (let i = 0, l = arr.length; i < l; i++) {
-          if (arr[i].hasAttribute('src')) {
-            arr[i].src = arr[i].src;
-          }
-        }
-        arr = el.contentWindow.document.documentElement.querySelectorAll('link');
-        for (let i = 0, l = arr.length; i < l; i++) {
-          if (arr[i].hasAttribute('href')) {
-            arr[i].setAttribute('href', arr[i].href);
-          }
-        }
-        arr = el.contentWindow.document.documentElement.querySelectorAll('img');
-        for (let i = 0, l = arr.length; i < l; i++) {
-          if (arr[i].hasAttribute('src')) {
-            arr[i].src = arr[i].src;
-          }
-        }
-        arr = el.contentWindow.document.documentElement.querySelectorAll('a');
-        for (let i = 0, l = arr.length; i < l; i++) {
-          if (arr[i].hasAttribute('href')) {
-            arr[i].setAttribute('href', arr[i].href);
-          }
-        }
-      } else {
-        arr = el.querySelectorAll('script');
-        for (let i = 0, l = arr.length; i < l; i++) {
-          if (arr[i].hasAttribute('src')) {
-            arr[i].src = arr[i].src;
-          }
-        }
-        arr = el.querySelectorAll('link');
-        for (let i = 0, l = arr.length; i < l; i++) {
-          if (arr[i].hasAttribute('href')) {
-            arr[i].setAttribute('href', arr[i].href);
-          }
-        }
-        arr = el.querySelectorAll('img');
-        for (let i = 0, l = arr.length; i < l; i++) {
-          if (arr[i].hasAttribute('src')) {
-            arr[i].src = arr[i].src;
-          }
-        }
-        arr = el.querySelectorAll('a');
-        for (let i = 0, l = arr.length; i < l; i++) {
-          if (arr[i].hasAttribute('href')) {
-            arr[i].setAttribute('href', arr[i].href);
-          }
-        }
-      }
-    }
-
 switch (attr) {
       case 'beautify': {
         // getBy('main').innerHTML = html_beautify(getBy('main').innerHTML);
@@ -425,7 +455,8 @@ switch (attr) {
         form.target = "_blank";
         document.body.appendChild(form);
         el1 = document.createElement('input');
-        el1.value = "Fork from " + window.location;
+        el1.value = "Fork from " + host;
+        // console.log(' window.location edit: ',  host);
         el1.name = 'description';
         form.appendChild(el1);
         textarea = document.createElement('textarea');
@@ -436,8 +467,9 @@ switch (attr) {
 
         if (parent.tagName === 'IFRAME-') {
           setHost(parent);
+          console.log('el-w: ', el.tagName);
           if (parent.hasAttribute('changeable'))
-            loadFrame(parent, forFrame_);
+            loadFrame(parent, forFrame_, 0);
           else
             forFrame_();
         } else if (parent.tagName === 'FIGURE-') {
@@ -450,63 +482,47 @@ switch (attr) {
             setValue(t1);
             // console.log('t1:****** ', t1);
             submit();
-            // }
           } else {
             setValue();
             submit();
           }
         } else if (el2 && (el2.tagName === 'IFRAME')) {
-          if (val) {
+          setHost(el2);
+          if (val === '?') {
             // el2.src = el2.getAttribute('src') + "?cache=" + new Date().getTime();
-            el2.src = el2.getAttribute('src');
-            setTimeout(() => {
-              el2 = el.parentElement.nextElementSibling;
-              setHost(el2);
-              temp = el2.contentWindow.document.body;
-              if (temp.attributes[0])
-                temp.removeAttribute(temp.attributes[0].name);
+            temp = el2.contentWindow.document.body;
+            if (temp.attributes[0])
+              temp.removeAttribute(temp.attributes[0].name);
+            if (el2.hasAttribute('changeable')) {
+              el2.setAttribute('src', el2.getAttribute('src'));
+              setTimeout(() => {
+                setHost(el2);
+                temp = el2.contentWindow.document.documentElement.outerHTML;
+                temp = temp.split('<script>');
+                textarea.value = html_beautify(DOCTYPE + '\n' + temp[0] + '<script>\n// .. ваш код ..\n</script>' + temp[1].split('</script>')[1]);
+                submit();
+              }, 300);
+            } else {
               temp = el2.contentWindow.document.documentElement.outerHTML;
               temp = temp.split('<script>');
               textarea.value = html_beautify(DOCTYPE + '\n' + temp[0] + '<script>\n// .. ваш код ..\n</script>' + temp[1].split('</script>')[1]);
               // console.log('textarea.value: ', textarea.value);
               submit();
-              // loadPage(currentPage);
-            }, 1000);
+            }
           } else {
+            temp = el2.contentWindow.document.querySelector('style');
+            if(temp)
+              temp.innerHTML = temp.innerHTML.split(':url(').join(':url(' + host);
             temp = el2.contentWindow.document.body;
-            setHost(el2);
             if (temp && temp.attributes[0])
               temp.removeAttribute(temp.attributes[0].name);
             if (el2.hasAttribute('changeable')) {
               el2.setAttribute('src', el2.getAttribute('src'));
               setTimeout(() => {
-                temp = el2.contentWindow.document.documentElement.getElementsByTagName('img');
-                for(let i = 0, l = temp.length; i < l; i++){
-                  temp[i].src = temp[i].src;
-                }
-                temp = el2.contentWindow.document.documentElement.getElementsByTagName('script');
-                for(let i = 0, l = temp.length; i < l; i++){
-                  if(temp[i].src)
-                   temp[i].src = temp[i].src;
-                }
-                temp = el2.contentWindow.document.documentElement.getElementsByTagName('link');
-                for(let i = 0, l = temp.length; i < l; i++){
-                  temp[i].href = temp[i].href;
-                }
+                setHost(el2);
                 textarea.value = DOCTYPE + '\n' + html_beautify(el2.contentWindow.document.documentElement.outerHTML);
                 submit();
               }, 300);
-              // xhttp = httpSend("GET", el2.getAttribute('src'));
-              // xhttp.onreadystatechange = function () {
-              //   if (xhttp.readyState != 4)
-              //     return;
-              //   if (xhttp.status == 200) {
-              //     console.log('load OK iframe: ' + projectName + '/' + el2.getAttribute('src'));
-              //     textarea.value = html_beautify(xhttp.responseText);
-              //     // console.log('textarea.value: ', textarea.value);
-              //   }
-                // submit();
-              // }
             } else {
               textarea.value = DOCTYPE + '\n' + html_beautify(el2.contentWindow.document.documentElement.outerHTML);
               submit();
@@ -515,7 +531,7 @@ switch (attr) {
         } else if (el2 && (el2.tagName === 'FIGURE')) {
           setHost(el2);
           textarea.value = DOCTYPE_FULL + html_beautify(el2.outerHTML) + HTML_END;
-          console.log('el2.outerHTML: ', el2.outerHTML);
+          // console.log('el2.outerHTML: ', el2.outerHTML);
           submit();
         } else if (val) {
           if (val === '?') {
@@ -554,7 +570,8 @@ switch (attr) {
       case 'code_edit_run': {
         el.parentElement.firstElementChild.click();
         setTimeout(() => {
-          _data_(el, 'data-code_edit');
+          // console.log('val3: ', el.getAttribute('data-code_edit_run'));
+          _data_(el, 'data-code_edit', el.getAttribute('data-code_edit_run'));
           window.scrollBy(0, 5);
         }, 250);
         break;
@@ -588,7 +605,7 @@ switch (attr) {
             el1.style.height = temp1 + 'px';
           el1.id = 'removable';
           parent.appendChild(el1);
-          el2 = window.location.toString().split('#')[0] + 'iframe.html';
+          el2 = host + 'iframe.html';
           httpSend('PUT', el2, getHTML(parent, val));
           el1.contentWindow.document.location.href = el2;
           if (val === 'edit') {
@@ -646,7 +663,7 @@ switch (attr) {
           else {
             el2 = el.value;
             if (el1 !== el2) {
-              el2.match('//') ? window.location.href = el2 :
+              el2.match('//') ? location.href = el2 :
                 (temp = getBy('tool-bar'), loadPage(el2), temp.click(), _h_.h(event, temp, 'mouseout'));
             }
           }
@@ -714,12 +731,12 @@ switch (attr) {
             } else
               temp = DOCTYPE + temp1.contentWindow.document.documentElement.outerHTML + HTML_END;
           } else if (parent.tagName === 'IFRAME-') {
-            loadFrame(parent, for_Frame_, true);
+            loadFrame(parent, for_Frame_, 0);
             break;
           } else
             temp = DOCTYPE_FULL + html_beautify(parent.innerHTML.split('/code-toolbar->')[1]) + HTML_END;
         }
-        el2 = window.location.toString().split('#')[0] + 'iframe.html';
+        el2 = host + 'iframe.html';
         console.log('el2******** : ', el2 );
         httpSend('PUT', el2, temp);
         window.open('iframe.html');
@@ -790,7 +807,7 @@ switch (attr) {
       }
       case 'save_js': {
         console.log('save js: ');
-        temp = 'let mapList;client();' + client.toString();
+        temp = 'let mapList,host;client();' + client.toString();
         //temp1 = minifyJS(temp1);
         httpSend('PUT', '/projects/' + projectName + '/js/client.js', temp);
         temp = 'let HOME, TASKOPEN, BANNERBOTTOM, COMMENT, TOOLBAR, NAVBOOK, STAR, CLOSE, CODETOOLBAR, OPENLINK, DOWNLOAD;icon();' + icon.toString();
@@ -1919,17 +1936,17 @@ switch (attr) {
       arr[0] && arr[0].remove();
     }
   }
-  function loadFrame(el, cb, i_) {
-    if (el) {
+  function loadFrame(parent, cb, i_) {
+    if (parent) {
       // el.firstElementChild.remove();
-      xhttp = httpSend("GET", el.getAttribute('src'));
+      xhttp = httpSend("GET", parent.getAttribute('src'));
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState != 4)
           return;
         if (xhttp.status == 200) {
-          console.log('load OK _frame: ' + projectName + '/' + el.getAttribute('src'));
+          console.log('load OK _frame: ' + projectName + '/' + parent.getAttribute('src'));
           // el.innerHTML = css_beautify(xhttp.responseText + el.innerHTML);
-          if (cb) cb(html_beautify(xhttp.responseText), i_);
+          if (cb) cb(parent, html_beautify(xhttp.responseText), i_);
         }
       }
     } else {
