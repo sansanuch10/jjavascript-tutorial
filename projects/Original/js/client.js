@@ -471,7 +471,7 @@ switch (attr) {
           if (parent.hasAttribute('changeable'))
             loadFrame(parent, forFrame_, 0);
           else
-            forFrame_();
+            forFrame_(parent);
         } else if (parent.tagName === 'FIGURE-') {
           setHost(parent);
           if (val) {
@@ -581,6 +581,7 @@ switch (attr) {
         t1 = el.parentElement.nextElementSibling;
         if (!isNaN(val) && t1)
           t1.style.height = val + 'px';
+          // console.log('t1.style.height: ', t1.style.height);
         parent = el.parentElement.parentElement;
         if (temp = parent.querySelector('iframe')) temp.remove();
         el1 = document.createElement('iframe');
@@ -608,20 +609,20 @@ switch (attr) {
           el2 = host + 'iframe.html';
           httpSend('PUT', el2, getHTML(parent, val));
           el1.contentWindow.document.location.href = el2;
-          if (val === 'edit') {
-            // el1.contentWindow.window.onload = function () {
-            setTimeout(() => {
-              arr = el1.contentWindow.document.documentElement.querySelectorAll('script');
-              console.log('arr: ', arr);
-              for (let i = 0, l = arr.length; i < l; i++) {
-                if (arr[i].hasAttribute('src')) {
-                  arr[i].src = arr[i].src;
-                }
-              }
-              _data_(el, 'data-code_edit');
-            }, 200)
-            // }
-          }
+          // if (val === 'edit') {
+          //   // el1.contentWindow.window.onload = function () {
+          //   setTimeout(() => {
+          //     arr = el1.contentWindow.document.documentElement.querySelectorAll('script');
+          //     console.log('arr: ', arr);
+          //     for (let i = 0, l = arr.length; i < l; i++) {
+          //       if (arr[i].hasAttribute('src')) {
+          //         arr[i].src = arr[i].src;
+          //       }
+          //     }
+          //     _data_(el, 'data-code_edit');
+          //   }, 200)
+          //   // }
+          // }
           return el1;
         }
         break;
@@ -898,7 +899,12 @@ switch (attr) {
           t1.id = 'task-show';
           t1.onscroll = function name(t) {
             t = document.body.querySelector('#removable');
-            t && t.remove();
+            if(t){
+              temp = t.previousElementSibling;
+              temp && temp.tagName === 'CODE-' && temp.removeAttribute('style');
+              t.remove();
+              t1.scrollTo(0,5);
+            }
           }
           temp = t1.getElementsByTagName('button-answer')[0];
           // if (temp.toggle) temp.click();

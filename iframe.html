@@ -2,66 +2,28 @@
 <html>
 <head>
   <meta charset="utf-8">
-</head>
-
-<body>
-
   <style>
-    clock- {
-      display: flex;
-      margin: 0 auto;
+    body {
+      font: 14px/1.5 Georgia, serif;
     }
-    hour- {
-      color: red;
+    ul {
+      margin: 0;
     }
-    min- {
-      color: green;
-    }
-    sec- {
-      color: #00f;
+    li:nth-child(odd):not(:first-child) {
+      margin-top: 1.5em;
     }
   </style>
-  <clock->
-    <hour->00</hour->:
-    <min->00</min->:
-    <sec->00</sec->
-  </clock->
-  <input type="button" onclick="pageClock.start()" value="Старт">
-  <input type="button" onclick="pageClock.stop()" value="Стоп">
-  <input type="button" onclick="alert('Часы должны останавливаться во время alert,\nи продолжать корректно работать после нажатия на ОК')" value="alert для проверки корректного возобновления">
-  <script>
-    var pageClock = new Clock({
-      elem: document.querySelector('clock-')
-    });
-    
-    function Clock(options) {
-      var elem = options.elem;
-      var timer;
-    
-      function render() {
-        var date = new Date();
-        var hours = date.getHours();
-        if (hours < 10) hours = '0' + hours;
-        elem.querySelector('hour-').innerHTML = hours;
-    
-        var min = date.getMinutes();
-        if (min < 10) min = '0' + min;
-        elem.querySelector('min-').innerHTML = min;
-    
-        var sec = date.getSeconds();
-        if (sec < 10) sec = '0' + sec;
-        elem.querySelector('sec-').innerHTML = sec;
-      }
-    
-      this.stop = function() {
-        clearInterval(timer);
-      };
-      this.start = function() {
-        render();
-        timer = setInterval(render, 1000);
-      };
-    }
-  </script>
-
+</head>
+<body>
+  Текст вверху без отступа от списка.
+  <ul>
+    <li>Маша</li>
+    <li>Паша</li>
+    <li>Даша</li>
+    <li>Женя</li>
+    <li>Саша</li>
+    <li>Гоша</li>
+  </ul>
+  Текст внизу без отступа от списка.
 </body>
 </html>
