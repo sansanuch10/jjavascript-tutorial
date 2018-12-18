@@ -15,7 +15,7 @@ function server() {
   const HTML = '.html';
   const SLASH = '/';
 
-  let projectName = ORIGINAL, temp, url, pathName, pathname, p, file, extname, source, stream, streamRead, f, vote = 0;
+  let projectName = ORIGINAL, temp, url, url_pathname, pathname, p, file, extname, source, stream, streamRead, f, vote = 0;
   let files = [], tableList = {}, tablesLinks = [], javascript = {}, mapList = {}, pathFor_addScript, el, el1, arr, m, t;
   let sideBarsList = [], sideBarList = {}, addition = [], add = {}, lengthSum, lengthSection;
   initServer();
@@ -168,19 +168,19 @@ function server() {
     fs.readdir(dir, function (err, dirs) {
       if (err && res) {
         res.statusCode = 404;
+        console.log('get_list_projects: ' + err);
         res.end();
-        //console.log('get_list_projects: ' + err);
       } else {
         let names = [];
         dirs.forEach(function (item, i) {
           names.push(item);
-          //console.log('\n' + i + '. ' + item);
+          console.log('\n' + i + '. ' + item);
           if (names.length === dirs.length) {
             if (res) {
               res.end(names.join(','));
             } else
-              cb(names);
-            //console.log('project names: ' + list);
+              cb && cb(names);
+            console.log('project names: ' + list);
           }
         });
       }
@@ -188,6 +188,7 @@ function server() {
   }
   function sendFile_(p, res) {
     source = path.join(__dirname, p);
+    console.log('source: ', source);
     stream = fs.createReadStream(source);
     res.writeHead(200, { 'Content-Type': mimeTypes[path.extname(p)] || 'text/html' });
     stream.pipe(res);
@@ -310,9 +311,9 @@ function server() {
               return;
             }
             if (any && any.isFile()) {
-              let streamRead = fs.createReadStream(templ + SLASH + item);
-              let streamWrite = fs.createWriteStream(__dirname + SLASH + project + SLASH + item);
-              streamRead.pipe(streamWrite);
+              // let streamRead = fs.createReadStream(templ + SLASH + item);
+              // let streamWrite = fs.createWriteStream(__dirname + SLASH + project + SLASH + item);
+              fs.createReadStream(templ + SLASH + item).pipe(fs.createWriteStream(__dirname + SLASH + project + SLASH + item));
             } else {
               createNewProject(project + SLASH + item, templ + SLASH + item, res);
             }
@@ -327,15 +328,17 @@ function server() {
     let client;
     if (__dirname.split(':')[0] === 'C') {//???
       client = redis.createClient();
+      console.log('client: ', __dirname.split(':')[0]);
     } else {
       client = redis.createClient(process.env.REDIS_URL);
+      console.log('process.env.REDIS_URL: ', process.env.REDIS_URL);
     }
     client.on('error', function (err) {
       console.log('Error: ' + err);
     });
-    //client.on('connect', function () {
-    //  console.log('connected to redis');
-    //});
+    client.on('connect', function () {
+     console.log('connected to redis');
+    });
     return client;
   }
 
@@ -578,13 +581,12 @@ function server() {
       if (accept(req, res)) return;
       //****************************************** */      
 
-      pathName = url.pathname;
-      if (pathName === SLASH) {
+      url_pathname = url.pathname;
+      if (url_pathname === SLASH) {
         projectName = ORIGINAL;
         file = INDEX;
-      }
-      else {
-        p = pathName.split(SLASH);
+      } else {
+        p = url_pathname.split(SLASH);
         file = p[p.length - 1];
         // console.log('file: ' + file + ', p1: ' + p[1] + ', p2: ' + p[2] + ', p3: ' + p[3])
         if (p[1] && p[1] === 'projects') {
@@ -594,11 +596,12 @@ function server() {
         }
         if (files[file]) {
           p[p.length - 1] = files[file] + HTML;
-          pathName = p.join(SLASH);
+          url_pathname = p.join(SLASH);
         }
-        pathname = pathName.substring(1, pathName.length);
+        // pathname = url_pathname.substring(1, url_pathname.length);
       }
-      // console.log('--- Получен запрос - __dirname: ' + __dirname + '; req.url: ' + req.url + '; url.pathname: ' + url.pathname + '; file: ' + file + ' method: ' + req.method + '; ');
+      pathname = url_pathname.substring(1, url_pathname.length);
+      console.log('--- Получен запрос - __dirname: ' + __dirname + '; req.url: ' + req.url + '; url.pathname: ' + url.pathname + '; file: ' + file + ' method: ' + req.method + '; ' + 'pathname: ' + pathname);
       // console.log('*** project: ' + projectName);
 
       switch (req.method) {
@@ -669,10 +672,9 @@ function server() {
             // console.log(temp);
             res.end(temp);
           } else if (p[3] === '') {   // get list main folder
-            //console.log('--- will get list files: ' + pathName.slice(0, -1));
-            getListDir(__dirname + pathName.slice(0, -1), res);
-          }
-          //create new page
+            //console.log('--- will get list files: ' + url_pathname.slice(0, -1));
+            getListDir(__dirname + url_pathname.slice(0, -1), res);
+          } //create new page
           else if (arr[1] === 'new') {
             pathname = pathname.split('_new_').join('');
             console.log('--- will create new page: ' + pathname);
@@ -684,8 +686,7 @@ function server() {
             streamRead.pipe(streamWrite);
             console.log('post_path: ' + __dirname + SLASH + pathname);
             // getListDir(__dirname + SLASH + path, res);
-          }
-          else {
+          } else {
             //console.log('file POST: ' + file)
             if (file === 'l') {
               fs.readFile(pathname, 'utf8',
@@ -725,17 +726,20 @@ function server() {
             res.end(); return;
           }
           if (projectName !== ORIGINAL && (file === 'index.js' || file === 'map_list' || file === 'files_list')) return;
+          if(pathname === 'iframe.html'){
+            pathname = 'projects/' + projectName + '/' + pathname
+          }
           temp = fs.createWriteStream(pathname);
           temp.on('error', (err) => {
             if ('ENOENT' == err.code) {
               arr = pathname.split('/');
-              console.log('arr:*** ' + arr);
+              console.log('===========arr:*** ' + arr);
               el = arr.pop();
               arr = arr.join('/')
-              console.log('arr:***2 ' + arr);
-              fs.mkdirSync(arr);
+              console.log('============arr:***2 ' + arr);
+              // fs.mkdirSync(arr);
               arr += '/' + el;
-              console.log('arr:***3 ' + arr);
+              console.log('=============arr:***3 ' + arr);
               temp = fs.createWriteStream(arr);
               temp.on('error', (err) => {
                 res.statusCode = 500;
@@ -776,7 +780,10 @@ function server() {
                   }
                   let client = redisConnect();
                   let user = JSON.parse(data);
-                  fs.unlink(pathname);
+                  fs.unlink(pathname, (err) => {
+                    if (err) console.log(err);
+                    // console.log(pathname + ' was deleted');
+                  });
                   //console.log(user);
                   client.hget(user.key, 'project',
                     (err, value) => {
@@ -813,10 +820,10 @@ function server() {
                           () => {
                             createNewProject(PR + project, templ, res);
                           }));
-                        // console.log('*** PUT: maybe create project: ' + project);
-                        setTimeout(saveUserToRedis, 200);
+                        console.log('*** PUT: maybe create project: ' + project);
+                        setTimeout(saveUserToRedis, 300);
                         function saveUserToRedis() {
-                          fs.access(__dirname + '/projects/' + project + '/main/Introduction/Modern_JS_tutorial.html',
+                          fs.access(__dirname + '/projects/' + project + '/main/Common/Modern_JS_tutorial.html', fs.constants.F_OK,
                             (err) => {
                               if (!err) {
                                 client.set(project, user.key);
@@ -826,17 +833,19 @@ function server() {
                                   //console.log('redis_save: ' + user.key + ': ' + k + ': ' + user[k]);
                                   client.hset(user.key, k, user[k], (err) => {
                                     if (err) {
-                                      console.log(err);
-                                      client.quit();
-                                      res.statusCode = 500;
-                                      res.end();
-                                      return;
+                                      console.log('client_hset_err: ' + err);
+                                      // client.quit();
+                                      // res.statusCode = 500;
+                                      // res.end();
+                                      // return;
                                     }
                                   });
                                 }
-                                //console.log('save user to redis: ' + project);
-                                client.quit();
-                                res.end(project + ',true');
+                                setTimeout(() => {
+                                  console.log('save user to redis: ' + project);
+                                  client.quit();
+                                  res.end(project + ',true');
+                                  }, 200)
                               } else {
                                 console.log(err);
                                 client.quit();
@@ -852,13 +861,13 @@ function server() {
                       } else {
                         console.log('Already exist: ' + value);
                         client.quit();
-                        res.end(value);
+                        res.end(0);
                       }
                     });
                 });
             } else
-              setTimeout(() => { res.end() }, 300);
-            res.end();
+              setTimeout(() => { res.end() }, 1000);
+            // res.end();
           })
           break;
         case 'DELETE':
@@ -867,7 +876,10 @@ function server() {
             res.end(); return;
           }
           if (pathname.split('.')[1] === 'html') {
-            fs.unlink(pathname);
+            fs.unlink(pathname, (err) => {
+              if (err) console.log('err: ', err);
+              // console.log(pathname + ' was deleted');
+            });
             res.end();
             break;
           }
@@ -909,11 +921,13 @@ function server() {
             fs.readdir(pathname,
               function (err, files) {
                 if (err) {
-                  console.log('--- delete_err ---' + err);
+                  // console.log('--- delete_err ---' + err);
                   res.end();
-                }
-                else if (files.length === 0) {
-                  fs.rmdir(pathname);
+                } else if (files.length === 0) {
+                  fs.rmdir(pathname, (err) => {
+                    if (err) console.log(err);
+                    // console.log(pathname + ' was deleted');
+                  });
                   if (end) {
                     client.get(projectName,
                       function (err, value) {
@@ -921,17 +935,16 @@ function server() {
                           client.del([value, projectName],
                             function () {
                               client.quit();
-                              //console.log('redis_del quit');
+                              console.log('redis_del quit');
                               res.end();
                             });
                         } else {
                           client.quit();
-                          //console.log('redis_del_not_exist quit');
+                          console.log('redis_del_not_exist quit');
                           res.end();
                         }
                       });
-                    //console.log('*** DELETED project: ' + pathName);
-
+                    console.log('*** DELETED project: ' + projectName);
                   }
                 }
                 else {
@@ -946,7 +959,10 @@ function server() {
                 res.end(path + ' not exist');
                 //console.log('not exist: ' + path);
               } else if (files.length === 0) {
-                fs.rmdir(path);
+                fs.rmdir(path, (err) => {
+                  if (err) console.log(err);
+                  // console.log(path + ' was deleted');
+                });
                 res.end();
               } else {
                 var len = files.length;
@@ -957,9 +973,12 @@ function server() {
                       res.end(file + 'not found');
                       //console.log('not found: ' + file);
                     } else if (state && state.isFile()) {
-                      fs.unlink(file);
+                      fs.unlink(file, (err) => {
+                        if (err) console.log(err);
+                        // console.log(file + ' was deleted');
+                      });
                       len--;
-                      //console.log('len: ' + file);
+                      // console.log('len: ' + file);
                       if (len === 0) {
                         setTimeout(watch, 100, path);
                       }

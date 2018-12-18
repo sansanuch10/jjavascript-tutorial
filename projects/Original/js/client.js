@@ -1,5 +1,4 @@
 let mapList,host;client();function client() {
-  console.log('Original client.js');
   host = window.location.href.split('#')[0];
   let getBy = (function getByTagOrID() {
     let t;
@@ -145,7 +144,6 @@ let mapList,host;client();function client() {
     arr = document.getElementsByClassName('image');
     for (let i = arr.length - 1; i > -1; i--) {
       el1 = arr[i].children[1];
-      console.log('tag: ' + el1.tagName);
       temp = el1.getAttribute('src').split('/');
       el1.setAttribute('src', temp[temp.length - 1]);
       el1.removeAttribute('class');
@@ -157,7 +155,6 @@ let mapList,host;client();function client() {
     temp = getBy('main').getElementsByTagName('script');
     for (let i = 0, l = temp.length; i < l; i++) {
       temp[i].outerHTML = temp[i].outerHTML.split('<script>"').join("<script>`").split('"</script>').join('`</script>').split("<script>'").join('<script>`').split("'</script>").join('`</script>');
-      console.log('temp[i].outerHTML: ', temp[i].outerHTML);
     }
     arr = document.getElementsByTagName('code-toolbar');
     for (let i = arr.length - 1; i > -1; i--) {
@@ -177,19 +174,13 @@ let mapList,host;client();function client() {
       temp = arr[i].innerHTML;
       if (temp.indexOf('`') === 0)
         arr[i].innerHTML = temp.split('\n').join('\\n');
-      // console.log('arr[i].innerHTML: ', arr[i].innerHTML);
     }
   }
   // ======= end
   let path = location.pathname === '/' ? '/projects/Original/index.html'.split('/') : location.pathname.split('/');
-  //console.log(path);
   let projectName = path[2];
+  console.log(projectName + ' client.js');
   pageNumber = localStorage.getItem(projectName) || '0';
-  console.log('current page: ' + pageNumber);
-
-  // document.getElementsByTagName("BODY")[0].onpageshow = function () {
-  //   console.log('href: ' + location.href);
-  // };
 
   window.frameAddScript = function (id, func, inner, style, frame) {
     frame = document.getElementById(id);
@@ -208,7 +199,6 @@ let mapList,host;client();function client() {
         el1.body.appendChild(el2);
       }
     };
-    // console.log('frame: ', frame.innerHTML);
   }
 
   // --------------- HANDLERS ----------------
@@ -233,13 +223,11 @@ let mapList,host;client();function client() {
       t = t || parent.outerHTML;
     else
       t = t || parent.innerHTML;
-      // console.log('parent.innerHTML: ', parent.innerHTML);
     if (el.id === 'row_red_task' || el.id === 'row_red_answer') {
       t = t.split('style="background: red;"').join('');
     }
     t = t.split(':url(').join(':url(' + host).split(' url(').join(' url(' + host);
     textarea.value = html_beautify(DOCTYPE_FULL + t.split('<code-toolbar->')[0] + t.split('</code-toolbar->')[1] + HTML_END);
-    // console.log('textarea.value: ', textarea.value);
   }
 
   function styleAndScript(parent, res, i_) {
@@ -247,7 +235,6 @@ let mapList,host;client();function client() {
     if (temp[1]) {
       style = '<style>' + temp[0].innerHTML + temp[1].innerHTML + '</style>';
       res = res.split('<style>')[0] + res.split('</style>')[1];
-      console.log('res: ', res);
     } else {
       if (i_) {
         t1 = getBy(0, i_.split('.')[0] + '_style');
@@ -290,14 +277,12 @@ let mapList,host;client();function client() {
     if (res) {
       if (res.indexOf('<div>') === 0) {
         res = res.slice(6, -6);
-        // console.log('res: ', res);
       }
       textarea.value = html_beautify(DOCTYPE_FULL + style + res + script + HTML_END);
     } else {
       t1 = parent.firstElementChild.outerHTML;
       if (t1.indexOf('<div>') === 0) {
         t1 = t1.slice(5, -6);
-        // console.log('t1: ', t1);
       }
       textarea.value = html_beautify(DOCTYPE_FULL + style + t1 + script + HTML_END);
     }
@@ -307,8 +292,7 @@ let mapList,host;client();function client() {
   function for_Frame_(parent, res, i_) {
     styleAndScript(parent, res, i_);
     temp = html_beautify(DOCTYPE_FULL + style + res + script + HTML_END);
-    el2 = host + 'iframe.html';
-    console.log('el2:======= ', el2);
+    el2 = 'iframe.html';
     httpSend('PUT', el2, temp);
     window.open('iframe.html');
   }
@@ -397,7 +381,6 @@ let _data_ = function (el, attr, v) {
     if (!el) return;
     val = v || el.getAttribute(attr);
     attr = attr.split('-')[1];
-    console.log('attr: ', attr);
 switch (attr) {
       case 'beautify': {
         // getBy('main').innerHTML = html_beautify(getBy('main').innerHTML);
@@ -456,18 +439,15 @@ switch (attr) {
         document.body.appendChild(form);
         el1 = document.createElement('input');
         el1.value = "Fork from " + host;
-        // console.log(' window.location edit: ',  host);
         el1.name = 'description';
         form.appendChild(el1);
         textarea = document.createElement('textarea');
         textarea.name = "files[index.html]";
         el2 = el.parentElement.parentElement.querySelector('iframe');
-        // console.log('el2: ', el2.tagName);
         parent = el.parentElement.parentElement;
 
         if (parent.tagName === 'IFRAME-') {
           setHost(parent);
-          console.log('el-w: ', el.tagName);
           if (parent.hasAttribute('changeable'))
             loadFrame(parent, forFrame_, 0);
           else
@@ -480,7 +460,6 @@ switch (attr) {
             else
               t1 = parent.innerHTML.split('<script>')[0] + '<script>\n// .. ваш код ..\n</script>' + parent.innerHTML.split('</script>')[1];
             setValue(t1);
-            // console.log('t1:****** ', t1);
             submit();
           } else {
             setValue();
@@ -506,7 +485,6 @@ switch (attr) {
               temp = el2.contentWindow.document.documentElement.outerHTML;
               temp = temp.split('<script>');
               textarea.value = html_beautify(DOCTYPE + '\n' + temp[0] + '<script>\n// .. ваш код ..\n</script>' + temp[1].split('</script>')[1]);
-              // console.log('textarea.value: ', textarea.value);
               submit();
             }
           } else {
@@ -531,7 +509,6 @@ switch (attr) {
         } else if (el2 && (el2.tagName === 'FIGURE')) {
           setHost(el2);
           textarea.value = DOCTYPE_FULL + html_beautify(el2.outerHTML) + HTML_END;
-          // console.log('el2.outerHTML: ', el2.outerHTML);
           submit();
         } else if (val) {
           if (val === '?') {
@@ -545,7 +522,6 @@ switch (attr) {
               if (xhttp.readyState != 4)
                 return;
               if (xhttp.status == 200) {
-                // console.log('load OK val: ' + projectName + '/' + val[0]);
                 if (val[1] === '?') {
                   temp = xhttp.responseText.split('<script>')[0] + '<script>\n  //  .. ваш код ..\n  </script>' + xhttp.responseText.split('</script>')[1];
                   textarea.value = html_beautify(temp);
@@ -570,18 +546,15 @@ switch (attr) {
       case 'code_edit_run': {
         el.parentElement.firstElementChild.click();
         setTimeout(() => {
-          // console.log('val3: ', el.getAttribute('data-code_edit_run'));
           _data_(el, 'data-code_edit', el.getAttribute('data-code_edit_run'));
           window.scrollBy(0, 5);
-        }, 250);
+        }, 350);
         break;
       }
       case 'code_run': {
-        // console.log('el.tag: ', el.parentElement.nextElementSibling);
         t1 = el.parentElement.nextElementSibling;
         if (!isNaN(val) && t1)
           t1.style.height = val + 'px';
-          // console.log('t1.style.height: ', t1.style.height);
         parent = el.parentElement.parentElement;
         if (temp = parent.querySelector('iframe')) temp.remove();
         el1 = document.createElement('iframe');
@@ -593,11 +566,9 @@ switch (attr) {
           try {
             window.eval.call(window, temp);
             // eval(temp);// eval скрывает глобальные переменные.Не работает 1 пример в разделе: '[[Scope]] для new Function'
-            // console.log('temp==2: ', temp);
         } catch (e) {
             alert("Error: " + e.message);
         }
-        // console.log('temp==3: ', temp);
         } else {
           temp1 = el.parentElement.getAttribute('iframe');
           if (!temp1)
@@ -606,7 +577,7 @@ switch (attr) {
             el1.style.height = temp1 + 'px';
           el1.id = 'removable';
           parent.appendChild(el1);
-          el2 = host + 'iframe.html';
+          el2 =  'iframe.html';
           httpSend('PUT', el2, getHTML(parent, val));
           el1.contentWindow.document.location.href = el2;
           // if (val === 'edit') {
@@ -651,12 +622,19 @@ switch (attr) {
         createFile();
         break;
       }
+      case 'create_project':{
+        createProject();
+        break;
+      }
+      case 'delete_file':{
+        deleteProject();
+        break;
+      }
       case 'files_names': {
         showFilesNamesConsole();
         break;
       }
       case 'load_page': {
-        // console.log('data-load_page: ' + val);
         if (el.tagName === 'SELECT') {
           el.bool = !el.bool;
           if (el.bool)
@@ -737,8 +715,7 @@ switch (attr) {
           } else
             temp = DOCTYPE_FULL + html_beautify(parent.innerHTML.split('/code-toolbar->')[1]) + HTML_END;
         }
-        el2 = host + 'iframe.html';
-        console.log('el2******** : ', el2 );
+        el2 = 'iframe.html';
         httpSend('PUT', el2, temp);
         window.open('iframe.html');
         break;
@@ -787,27 +764,23 @@ switch (attr) {
       case 'save_css': {
         sheets = document.styleSheets;
         temp1 = outerCSS[pageNumber];
-        //console.log('save_css: ' + temp1);
         //el1 = projectName === 'Original' ? '' : '/projects/' + projectName;
         for (let i = 0, l = sheets.length; i < l; i++) {
           temp = sheets[i].href;
-          console.log(temp);
           if (!temp) continue;
           temp = temp.split('/');
           temp = temp[temp.length - 1];
-          console.log('href: ' + temp.split('.')[0]);
           if (temp === 'style.css')
             httpSend('PUT', '/projects/' + projectName + '/css/style.css', createOuterCSS(sheets[i].cssRules), 'text/css;charset=UTF-8');
           else
             if (temp.split('.')[0] === temp1) {
-              console.log('len: ' + sheets[i].cssRules.length);
+              // console.log('len: ' + sheets[i].cssRules.length);
               httpSend('PUT', '/projects/' + projectName + '/css/' + temp1 + '.css', createOuterCSS(sheets[i].cssRules), 'text/css;charset=UTF-8');
             }
         }
         break;
       }
       case 'save_js': {
-        console.log('save js: ');
         temp = 'let mapList,host;client();' + client.toString();
         //temp1 = minifyJS(temp1);
         httpSend('PUT', '/projects/' + projectName + '/js/client.js', temp);
@@ -873,9 +846,7 @@ switch (attr) {
         //   el2 = el1.parentElement;
         //   console.log('el2: ', el2.tagName);
         //   if (el2)
-        console.log('el:**** ', el.tagName);
         el.parentElement.firstElementChild.firstElementChild.setAttribute('toggle', '');
-        // console.log('el2.parentElement: ', el.parentElement.tagName);
         // }
         break;
       }
@@ -946,7 +917,6 @@ switch (attr) {
         getBy('slides-').firstElementChild.style.transform = 'translateX(-' + counterSlide + '00%)';
         el1 = getBy('arrow-left').style;
         el2 = getBy('arrow-right').style;
-        //console.log('counter: ' + counterSlide);
         if (counterSlide === 0) {
           el1.display = 'none';
         } else {
@@ -994,7 +964,6 @@ switch (attr) {
       case 'slide_1_left': {
         if (counterSlide1 > 0) {
           //temp = Math.round(+getComputedStyle(getBy('slides')).width.slice(0, -2));
-          //console.log('width: ' + temp);
           //temp1 = 4250 / (temp * 0.8);
           counterSlide1--;
           document.getElementsByTagName('slides-')[1].firstElementChild.style.transform = 'translateX(-' + counterSlide1 * 8 + '0%)';
@@ -1010,7 +979,6 @@ switch (attr) {
       case 'slide_1_right': {
         temp = +getComputedStyle(getBy('courses-participants')).width.slice(0, -2);
         temp1 = Math.round(4250 / (temp * 0.6));
-        //console.log('count: ' + temp1);
         if (counterSlide1 < temp1) {
           counterSlide1++;
           document.getElementsByTagName('slides-')[1].firstElementChild.style.transform = 'translateX(-' + counterSlide1 * 8 + '0%)';
@@ -1025,7 +993,6 @@ switch (attr) {
       }
       case 'tabbed': {
         temp = el.parentElement.getElementsByTagName('li');
-        //console.log('counter: ' + counterTabbed + ' len: ' + temp.length);
         temp1 = document.getElementsByTagName('tabbed-pane');
         temp[selected].removeAttribute('style');
         temp1[selected].removeAttribute('style');
@@ -1037,7 +1004,6 @@ switch (attr) {
       case 'toggle_star': {
         el1 = el.parentElement.parentElement;
         arr = el1.getAttribute('rating').split('/');
-        console.log('star: ' + arr);
         if (el.getAttribute('class') === 'star_on') {
           el.setAttribute('class', 'star_off');
           el1.setAttribute('rating', --arr[0] + '/' + arr[1]);
@@ -1106,7 +1072,6 @@ switch (attr) {
           arr[1].innerHTML = arr[0].innerHTML;
         } else
           getBy('toolbar-content').remove();
-        //console.log('toolbar ok')
         break;
       }
       case 'toggle_answer': {
@@ -1189,8 +1154,8 @@ switch (attr) {
       case '': {}
     }
   };
-  var _h_; +
-  function setHandlers() {
+  let _h_;
+  +function setHandlers() {
     _h_ = new HandlersPage();
     document.addEventListener('click', _h_.h);
     document.addEventListener('mouseover', _h_.h);
@@ -1224,7 +1189,6 @@ switch (attr) {
             ch.style.border = '';
           if (t.toggle) {
             if (temp) {
-              //console.log('toggle on: ' + ch.tagName);
               if (ch.parentElement.getAttribute('name') === 'star')
                 ch.setAttribute('toggle-style', ch.hover_cssText);
               else
@@ -1236,11 +1200,9 @@ switch (attr) {
               else
                 ch.toggle_cssText = ch.style.cssText;
               ch.style.cssText += ';' + swapStyle;
-              //console.log('target3: ' + ch.style.cssText);
             }
           } else {
             if (temp) {
-              //console.log('toggle off: ' + ch.tagName);
               if (ch.parentElement.getAttribute('name') === 'star') {
                 ch.style.cssText = ch.getAttribute('toggle-style');
                 ch.setAttribute('toggle-style', ch.hover_cssText);
@@ -1255,7 +1217,6 @@ switch (attr) {
                 // ch.style.cssText = ch.toggle_cssText;
                 if (!(ch.style.cssText = ch.toggle_cssText)) ch.removeAttribute('style');
               }
-              //console.log('target4: ' + ch.style.cssText);
             }
             ch.toggle_cssText = '';
           }
@@ -1290,17 +1251,14 @@ switch (attr) {
           if (ch.style.border === '1px solid rgb(26, 54, 236)')
             ch.style.border = '';
           if (t.hover) {
-            //console.log('hover before: ' + ch.tagName);
             ch.hover_cssText = ch.style.cssText;
             ch.style.cssText += ';' + swapStyle;
-            //console.log('target3: ' + ch.style.cssText);
           } else {
             if(!ch.hover_cssText)
               ch.removeAttribute('style');
             else
               ch.style.cssText = ch.hover_cssText;
             ch.hover_cssText = '';
-            //console.log('hover after: ' + ch.tagName);
           }
         }
         if (spin) {
@@ -1323,7 +1281,6 @@ switch (attr) {
           for (let i = 0, l = element.children.length; i < l; i++) {
             ch = element.children[i];
             if (type === 'click') {
-              //console.log('tagName: ' + ch.tagName)
               toggleEl(ch);
               //-------- input focus -------------
               if (ch.tagName === 'INPUT' && t.toggle) {
@@ -1343,13 +1300,11 @@ switch (attr) {
       function findTarget(tg) {
         tg && (parent = tg.parentElement);
         if (parent) {
-          //console.log('tg0: ' + parent.tagName)
           attrs = parent.attributes;
           if (attrs.length)
             for (let i = 0, l = attrs.length; i < l; i++) {
               if (attrs[i]) temp = attrs[i].name;
               if (temp.split('-')[0] === 'data' && type === 'click') {
-                //console.log('tag :' + parent.tagName)
                 _data_(parent, temp);
               } else {
                 temp = temp.split('-')[0];
@@ -1364,40 +1319,30 @@ switch (attr) {
             }
           findTarget(parent);
         } else if (t) {
-          //console.log('tag: ' + t.tagName);
           for (let i = 0, l = t.attributes.length; i < l; i++) {
             temp = t.attributes[i].name.split('-')[0];
-            //console.log('split:  ' + temp + ' name: ' + t.tagName)
             if (temp === 'toggle' || temp === 'hover' || temp === 'spin') {
-              //console.log('split1:  ' + temp);
               return;
             }
           }
           t = 0;
-          //if (type === 'click') {
-          //  console.log('tg1: ' + t)
-          //}
         }
       }
 
       this.h = function (event, that, tp) {
-        //console.log('event: ' + event.target.tagName + ' type: ' + event.type)
         if (t) {
           if (event && event.type === 'mouseover' && t.hover || (event && event.type === 'mouseout' && !t.hover)) {
             t.hover = !t.hover;
-            //console.log('gljuk'); //svg hover gljuk
           }
           if (event && event.type !== 'click' && type === event.type)
             return;
         }
-        //console.log('event_1: ' + event.target.tagName + ' type: ' + event.type)
         t = that ? that : event.target;
         if (!t.tagName) return;
         if (!t.attributes) return;
         type = tp ? tp : event.type;
         tName = t.tagName;
         rltName = event && event.relatedTarget ? event.relatedTarget.tagName : '';
-        //console.log('event_2: ' + event.target.tagName + ' type: ' + event.type)
         //if (type !== 'click') {
         //  //hoverJS(t, temp);
         //  temp = t.getAttribute('js-hover');
@@ -1412,9 +1357,7 @@ switch (attr) {
         for (let i = 0, l = t.attributes.length; i < l; i++) {
           if (t && t.attributes[i])
             temp = t.attributes[i].name;
-          //console.log('attr:  ' + temp + ' tag: ' + t.tagName)
           if (type === 'click' && temp.split('-')[0] === 'data') {
-            //console.log('data id:' + t.id)
             _data_(t, temp);
           } else {
             if (temp === 'js-hover') _hoverJS_(t);
@@ -1423,12 +1366,9 @@ switch (attr) {
         }
         t && findTarget(t);
         if (t) {
-          //console.log('tg: ' + t.tagName)
           if (type === 'click' && (t.hasAttribute('toggle-style') || t.hasAttribute('toggle-inner'))) {
             //============= TOGGLE ===========
-            //console.log('tg1: ' + t.tagName)
             t.toggle = !t.toggle;
-            //console.log('t: ' + t.name)
             if (!t.hasAttribute('data-save_toggle')) {
               if (t.toggle) {
                 t.setAttribute('toggle', '');
@@ -1464,7 +1404,6 @@ switch (attr) {
     }
   }();
   function click(el) {
-    //console.log('click_script: ' + el.tagName);
     _h_.h(event, el, 'mouseover');
     el.click();
     //_h_.h(event, el, 'click');
@@ -1498,26 +1437,17 @@ switch (attr) {
   }
   function reloadScripts(el) {
     el = el || document.body;
-    // el = getBy(el);
-    //console.log('reload script' + el.tagName)
     temp = el.getElementsByTagName('script');
     for (let i = 0, l = temp.length; i < l; i++) {
       if (temp[i].innerHTML.indexOf('`') !== 0) {
-        // console.log('temp[i].innerHTML: ', temp[i].innerHTML);
         el1 = document.createElement('script');
         el1.innerHTML = js_beautify(temp[i].innerHTML);
         attrs = temp[i].attributes;
         for (let i = 0, l = attrs.length; i < l; i++) {
           el1.setAttribute(attrs[i].name, attrs[i].value);
-          console.log('attrs[i].value: ', attrs[i].value);
-          console.log('attrs[i].name: ', attrs[i].name);
         }
         temp[i].parentElement.replaceChild(el1, temp[i]);
       }
-      // if(temp[i].src) {
-      //   // console.log('temp[i].src: ', temp[i].getAttribute('src'));
-      //   temp[i].src = temp[i].getAttribute('src');
-      // }
     }
   }
   let ifLogin, ifMap, nav, footer, screencast, blink, sidebarHeight, once = true;
@@ -1572,7 +1502,6 @@ switch (attr) {
     el.setAttribute('data-tooltip', attr);
     el.onmouseenter = function () {
       temp = this.getAttribute('data-tooltip');
-      //console.log('title over: ' + temp);
       tooltipElem = document.createElement('title-');
       tooltipElem.innerHTML = temp;
       getBy('main').appendChild(tooltipElem);
@@ -1581,11 +1510,9 @@ switch (attr) {
       style = tooltipElem.style;
     }
     el.onmouseleave = function () {
-      //console.log('title out: ' + temp);
       tooltipElem.remove();
     }
     el.onmousemove = function (temp) {
-      //console.log('x: ' + event.pageX + ' y: ' + event.pageY);
       temp = event.pageX;
       if (temp > difference - 3) {
         style.left = temp - offsetWidth - 5 + 'px';
@@ -1604,7 +1531,6 @@ switch (attr) {
       coordsH2[i] = Math.round(arr[i].getBoundingClientRect().top + pageYOffset) - 10;
     }
     coordsH2[arr.length] = coordsH2[arr.length - 1] + 1000;
-    //console.log('coords: ' + coordsH2);
   }
   function getCoordComments() {
     temp = getBy('comments-');
@@ -1612,16 +1538,13 @@ switch (attr) {
       coordComments = Math.round(temp.getBoundingClientRect().top + pageYOffset - window.innerHeight + 150);
     else
       coordComments = '';
-    //     console.log('coordComments: ' + coordComments + ' innerHeight: ' + window.innerHeight + ' top: ' + temp.getBoundingClientRect().top);
   }
   function setSideBar(t) {
     if (pageCommon || !+pageNumber || pageNumber.split('-').length > 1) return;
-    //console.log('sidebar:' + pageNumber);
     removeLinks();
     t = getBy('sidebar-inner');
     el2 = t.getElementsByTagName('p');
     el1 = getBy('page-content').getElementsByTagName('h1')[0].innerHTML;
-    //console.log('el2: ' + el2[1].outerHTML);
     if (!getBy(0, 'removable')) {
       el2[0].innerHTML = 'Раздел';
       el2[1].removeAttribute('style');
@@ -1658,7 +1581,6 @@ switch (attr) {
             arr[i].style.color = COLOR;
           }
         }
-        //console.log('side');
       }
       sideBarList = null;
       fillTable();
@@ -1686,7 +1608,6 @@ switch (attr) {
     tableList = null;
   };
   function addStars() {
-    //console.log('starON')
     arr = document.getElementsByTagName('stars-');
     for (let i = 0, l = arr.length; i < l; i++) {
       el = arr[i].getAttribute('rating').split('/');
@@ -1754,7 +1675,6 @@ switch (attr) {
       nav = getBy('nav').children;
       footer = getBy('footer-left').children;
       screencast = getBy('screencast-').children;
-      //console.log('arr: ' + arr[0])
       for (let i = 0, l = nav.length; i < l; i++) {
         nav[i].removeAttribute('style');
         if (i === 6) {
@@ -1923,7 +1843,6 @@ switch (attr) {
     deleteClone('banner-bottom');
     deleteClone('code-download');
     //deleteClone('close-', 0);
-    //console.log('remove clone: ' + temp);
     switch (pageNumber) {
       case 'a':
         {
@@ -1950,7 +1869,6 @@ switch (attr) {
         if (xhttp.readyState != 4)
           return;
         if (xhttp.status == 200) {
-          console.log('load OK _frame: ' + projectName + '/' + parent.getAttribute('src'));
           // el.innerHTML = css_beautify(xhttp.responseText + el.innerHTML);
           if (cb) cb(parent, html_beautify(xhttp.responseText), i_);
         }
@@ -1965,7 +1883,6 @@ switch (attr) {
             if (xhttp.readyState != 4)
               return;
             if (xhttp.status == 200) {
-              console.log('load _frames_ OK: ' + projectName + '/' + p.getAttribute('src'));
               p.innerHTML = html_beautify(xhttp.responseText + p.innerHTML);
               temp = p.querySelector('script');
               if (temp && temp.innerHTML)
@@ -1982,7 +1899,6 @@ switch (attr) {
   function loadPage(n, cb) {
     if (getBy('div-menu')) return;
     location.href = '#' + n;
-    console.log('n: ' + location.href + '; outercss: ' + outerCSS[n] + '.css');
     if (n !== 'g' && n !== 'h' && n !== 'l') {
       temp = '';
       outerCSS[n] && (temp = outerCSS[n] + '.css');
@@ -2006,7 +1922,6 @@ switch (attr) {
       if (xhttp.readyState != 4)
         return;
       if (xhttp.status == 200) {
-        console.log('load OK: ' + projectName + '/' + n);
         window.removeEventListener('scroll', media.mediaMax);  
         res = xhttp.responseText;
         if (n === 'l') {
@@ -2036,7 +1951,6 @@ switch (attr) {
           // window.scrollTo(0, localStorage.getItem('pageYOffset_' + projectName + '_' + pageNumber));
           localStorage.setItem('if_map', pageNumber);
           temp.oninput = function () {
-            //console.log('input filter:' + this.value)
             if (this.value)
               this.nextElementSibling.style.display = 'flex';
             else
@@ -2044,14 +1958,12 @@ switch (attr) {
             map.filter(this.value);
           }
           if (localStorage.getItem('task_on')) {
-            console.log('task storage');
             getBy(0, 'show-tasks').click();
           }
           highlightMaplink(el2.h1);
           // document.body.style.overflow = 'hidden';
         } else
         if (n === 'g' || n === 'h') {
-          console.log('pageNumber: ' + n)
           temp = getBy('log-');
           if (temp) {
             temp.remove();
@@ -2074,7 +1986,6 @@ switch (attr) {
             temp && temp.remove();
           }
           if (getBy('menu-development')) {
-            //console.log('r5: ' + page)
             doReload(res);
             // reloadScripts();
           } else {
@@ -2086,19 +1997,15 @@ switch (attr) {
           if (n === '0')
             fillLinksMainPage();
         }
-        console.log('n pre: ' + pageNumber + '; type: ' + typeof n);
         initPageData(n.toString());
         // setSideBar();
         addEl_setStyle();
         setSideBar();
-        //console.log('HTML: ' + temp);
         if (path[2] === projectName) {
-          //console.log('site: ' + projectName);
           localStorage.setItem(path[2] + '_' + path[3], projectName);
           localStorage.setItem(projectName, n.toString());
         }
         if (n !== 'g' && n !== 'h' && n !== 'l') {
-          //console.log('pageY: ' + localStorage.getItem('pageYOffset_' + projectName + '_' + pageNumber));
           // createCodeExample();
           temp = getBy('h1');
           if (temp)
@@ -2111,7 +2018,6 @@ switch (attr) {
             el1 = getBy('share-');
             el2 = +getComputedStyle(el1).bottom.split('.')[0];
             sidebarHeight = window.innerHeight - el2 + 40;
-            //console.log('bottom: ' + +getComputedStyle(el1).bottom.split('.')[0] + ' height: ' + sidebarHeight + ' window height: ' + window.innerHeight)
             el1.style.position = 'static';
             window.scrollTo(0, localStorage.getItem('pageYOffset_' + projectName + '_' + pageNumber));
             getCoordComments();
@@ -2161,7 +2067,6 @@ switch (attr) {
       if (xhttp.readyState != 4)
         return;
       if (xhttp.status == 200) {
-        console.log('load OK: ' + projectName + '/' + n);
         res = xhttp.responseText;
         getBy('main').outerHTML = res;
       }
@@ -2169,7 +2074,6 @@ switch (attr) {
   }
   function highlightMaplink(t) {
     arr = getBy('map-content').getElementsByTagName('ul');
-    console.log('arr:**** ', arr.tagName);
     for (let i = 0, l = arr.length; i < l; i++) {
       el1 = arr[i].getElementsByTagName('a');
       for (let j = 0, ll = el1.length; j < ll; j++) {
@@ -2213,15 +2117,9 @@ switch (attr) {
         temp.setAttribute('max', 243 - 152);
       }
     }
-    //console.log('pageNumber: ' + pageNumber + ' pageCommon: ' + pageCommon + ' progress: ' + progress);
   }
   function cancelMap() {
     loadPage(pageNumberPre);
-    // temp = getBy('map-');
-    // temp && temp.remove();
-    // document.body.style.overflow = '';
-    // initPageData(localStorage.getItem('if_map'));
-    // localStorage.setItem(projectName, pageNumber);
   }
   function cancelLogin() {
     temp = getBy('log-');
@@ -2299,10 +2197,8 @@ switch (attr) {
       l = arr.length;
       if (l > 0) {
         for (let i = l - 1; i >= 0; i--) {
-          //console.log('№: ' + i + ' tag: ' + arr[i].tagName);
           if (arr[i].nodeType === 3) {
             if (arr[i - 1] && arr[i - 1].tagName === 'BLOCKQUOTE' && arr[i - 1].tagName === 'PRE') {
-              console.log('arr[i].innerHTML: continue***: ', arr[i].innerHTML);
               continue;
             }
             // if (arr[i].data.startsWith('\n') && arr[i].data.endsWith('  ') && arr[i].data.indexOf(':') === -1)
@@ -2312,12 +2208,9 @@ switch (attr) {
               arr[i].data = arr[i].data.split('\n').join('').split('            ').join(' ').split('          ').join(' ').split('        ').join(' ').split('      ').join(' ').split('    ').join(' ').split('  ').join(' ')
               // .split(' = ').join('&nbsp;=&nbsp;').split(' { ').join('&nbsp;{&nbsp;').split(' + ').join('&nbsp;+&nbsp;').split(' - ').join('&nbsp;-&nbsp;').split(' } ').join('&nbsp;}&nbsp;').split(' }').join('&nbsp;}').split('{ ').join('{&nbsp;').split(' / ').join('&nbsp;/&nbsp;')
               // .split('; ').join(';*@#')
-              // console.log('arr[i].data : *******', arr[i].data );
-              // console.log('TYPE = 3******' + arr[i].data);
             }
           } else if (arr[i].nodeType === 1 && arr[i].tagName !== 'BLOCKQUOTE' && arr[i].tagName !== 'PRE') {
             if (arr[i].tagName === 'SCRIPT' && arr[i].innerHTML.indexOf('`') < 3 && arr[i].innerHTML.indexOf('`') !== -1) {
-              // console.log('arr[i].inner: CODE***** ', arr[i].innerHTML);
               continue;
             }
             if (arr[i].tagName === 'STYLE' || arr[i].tagName === 'SCRIPT') {
@@ -2333,20 +2226,16 @@ switch (attr) {
                 } else {
                   temp[i] = temp[i].split(' { ').join('{').split(' + ').join('+').split(' - ').join('-').split(' } ').join('}').split(' }').join('}').split('{ ').join('{').split(' / ').join('/').split(' < ').join('<').split(' > ').join('>').split(' ! ').join('!').split(' && ').join('&&').split(' || ').join('||').split(' === ').join('===').split(', ').join(',').split('; ').join(';').split(': ').join(':').split(' = ').join('=');
                 }
-                // console.log('temp[i]: ', temp[i]);
               }
               arr[i].innerHTML = temp.join("'");
-              // console.log('afterCODE*****: ', arr[i].innerHTML);
               continue;
             }
-            // console.log('arr[i].tagName: after*********** ', arr[i].innerHTML);
             minifyElem(arr[i]);
           }
         }
       }
     }(el);
     el.innerHTML = el.innerHTML.split('> <').join('><').split(':*@#<').join(': <');
-    // console.log(' el.innerHTML: ',  el.innerHTML);
   }
   function minifyJS(text) {
     text = text.split(';\r\n').join(';').split(';\r\n').join(';').split(';        ').join(';').split(';    ').join(';').split(';  ').join(';').split(';  ').join(';').split('; ').join(';') .split(',\r\n  ').join(',').split(',    ').join(',').split(',  ').join(',').split(' {\r\n').join('{').split('{      ').join('{').split('[\r\n  ').join('[').split('[    ').join('[').split('[  ').join('[').split('{    ').join('{').split('{  ').join('{').split(' = ').join('=').split(' < ').join('<').split(' && ').join('&&')      .split(' || ').join('||').split('}\r\n').join('}').split('}    ').join('}').split('}    ').join('}').split('}  ').join('}').split(' (').join('(').split(')\r\n').join(')').split(')        ').join(')').split(')    ').join(')').split(')  ').join(') ').split(') ').join(') ').split(':\r\n  ').join(':').split(':        ').join(':').split(':    ').join(':').split(': ').join(':').split('else\r\n  ').join('else ').split('else      ').join('else ').split('else  ').join('else ').split(' ?\r\n  ').join('?').split('?  ').join('?').split(' ? ').join('?').split(' === ').join('===').split('case ').join('case').split(' + ').join('+').split(' if ').join('if').split(' for ').join('for');
@@ -2357,12 +2246,10 @@ switch (attr) {
   }
   function getCode(code, str) {
     arr = code.getElementsByTagName('black-');
-    //console.log('arr.length: ' + arr.length);
     temp = '';
     for (let i = 0, l = arr.length; i < l; i++) {
       temp += arr[i].innerHTML + '\n';
     }
-    //console.log(temp);
     str = temp;
     if (str.search('>html<') === -1) {
       temp = '';
@@ -2374,14 +2261,12 @@ switch (attr) {
       }
     }
     temp = temp.split('<red->').join('').split('</red->').join('').split('<green->').join('').split('</green->').join('').split('<blue->').join('').split('</blue->').join('').split('<gray->').join('').split('</gray->').join('').split('<brown->').join('').split('</brown->').join('').split('<gold->').join('').split('</gold->').join('').split('<mark->').join('').split('</mark->').join('').split('<mark-w>').join('').split('</mark-w>').join('').split('&lt;').join('<').split('&gt;').join('>').split('&nbsp;').join(' ').split('amp;').join('');
-    // console.log('temp: ', temp);
     return temp;
   }
   const DOCTYPE_ = '<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n</head>\n\n';
   const HTML_END_ = '\n</html>';
   function getHTML(code, n, str) {
     temp = getCode(code);
-//     console.log('temp: ', temp);
     if (temp.search('<html') === -1 && temp.search('<body') === -1 && temp.search('<style') === -1 && temp.search('<input') === -1 && temp.search('<script') === -1 && temp.search('<ul') === -1 && temp.search('<div') === -1 && temp.search('<span') === -1 && temp.search('<a ') === -1 && temp.search('<button') === -1) {
       if (n === 'err') {
         temp = 'try{!function(){' + temp + '}()}catch(e){alert("Error: "+e.message)}';
@@ -2395,7 +2280,6 @@ switch (attr) {
     else {
       str = temp;
     }
-    // console.log(str);
     return str;
   }
   function createCodeExample(code) {
@@ -2466,8 +2350,6 @@ switch (attr) {
         .split('</red-><red->').join('').split('</blue-><blue->').join('').split(' ').join('&nbsp').split('Jan<red->02</red->_<red->1970</red->').join('Jan_1970')
         .split('f<red->1000</red->').join('f1000').split('f<red->1500</red->').join('f1500');
       arr = code.split('\n');
-      //console.log('code: ' + code);
-      //console.log('arr: ' + arr);
       for (let i = 0, l = arr.length; i < l; i++) {
         arr[i] = arr[i].split('<gray->//</gray->&nbsp').join('<gray->//&nbsp');
         if (arr[i].search('<gray->//&nbsp') !== -1) {
@@ -2520,7 +2402,6 @@ switch (attr) {
     arr = document.getElementsByTagName('green-');
     for (let i = arr.length - 1; i >= 0; i--) {
       arr[i].innerHTML = arr[i].innerHTML.split('<red->').join('').split('</red->').join('').split('<blue->').join('').split('</blue->').join('').split('<brown->').join('').split('</brown->').join('').split('<gray->').join('').split('</gray->').join('').split('<green->').join('').split('</green->').join('');
-      // console.log('arr[i].innerHTML: ', arr[i].innerHTML);
     }
     arr = document.getElementsByTagName('gray-');
     for (let i = arr.length - 1; i >= 0; i--) {
@@ -2574,7 +2455,6 @@ switch (attr) {
       temp = getBy('menu-button');
       click(temp);
     }
-    console.log('save page: ' + pageNumber);
     temp = getBy(0, 'task-show');
     if (temp)
       temp.firstElementChild.click();
@@ -2620,7 +2500,6 @@ switch (attr) {
         if (getBy(0, 'slider_css'))
           getBy(0, 'slider_css').remove();
         getBy('body').removeAttribute('waid71fa0d88-5390-4b5b-a2f4-e45fa93d85e2'); // REMOVE AFTER DEVELOPMENT
-        console.log('getBy(\'body\').attributes[0]: ', getBy('body').attributes[0]);
         getBy('progress').removeAttribute('style');
         temp = link.href;
         link.href = '';
@@ -2634,13 +2513,11 @@ switch (attr) {
         getBy('project-name').innerHTML = projectName;
         reloadScripts(document.documentElement);
       } else {
-        console.log('remove style');
         removeClones();
         removeCode();
         temp = getBy(0, 'disqus_thread');
         if (temp) temp.innerHTML = '';
         if (pageNumber === '0') {
-          console.log('save remove');
           removeLinksMain();
         }
         temp = getBy('tool-bar_main');
@@ -2675,7 +2552,6 @@ switch (attr) {
         }
         //temp = projectName === 'Original' ? '/main/' : '/projects/' + projectName + '/main/';
         xhttp = httpSend('PUT', '/projects/' + projectName + '/main/' + pageNumber, outerHTML);
-        //console.log('set Style')
         addEl_setStyle();
         if (el2) {
           temp = getBy('nav-book');
@@ -2689,7 +2565,6 @@ switch (attr) {
       if (xhttp.readyState !== 4)
         return;
       if (xhttp.status === 200) {
-        console.log('--- saved OK: ' + scr);
         if (pageNumber === 'l') {
           cancelMap();
           loadPage('l');
@@ -2710,17 +2585,9 @@ switch (attr) {
     }
   }
   function createProject() {
-    let email = getBy('register-email').value || "extension.chroma@gmail.com";
-    let name = getBy('register-name') ?
-      getBy('register-name')
-      .value
-      .split(' ')
-      .join('_') || "Steven" :
-      undefined;
-    let password = getBy('register-password')
-      .value
-      .split(' ')
-      .join('_') || '1955';
+    let email = getBy(0, 'register-email').value || "extension.chroma@gmail.com";
+    let name = getBy(0, 'register-name') ? getBy(0, 'register-name').value.split(' ').join('_') || "Steven" : undefined;
+    let password = getBy(0, 'register-password').value.split(' ').join('_') || '1955';
     let user = JSON.stringify({
       email: email,
       name: name,
@@ -2736,26 +2603,23 @@ switch (attr) {
       if (xhttp.readyState !== 4)
         return;
       if (xhttp.status === 200) {
-        list = xhttp
-          .responseText
-          .split(',');
+        list = xhttp.responseText.split(',');
         let length = list.length;
-
+        console.log('length: ', length);
         xhttp = httpSend('PUT', '/register.txt', user);
         xhttp.onreadystatechange = function () {
           if (xhttp.readyState != 4)
             return;
           if (xhttp.status === 200) {
-            let response = xhttp
-              .responseText
-              .split(',');
+            let response = xhttp.responseText.split(',');
+            console.log('response: ', response);
             if (response[0] === 'Common/logup.html') {
-              loadDoc(response[0]);
+              // loadDoc(response[0]);
               return;
             } else {
-              localStorage.setItem(projectName, preFile);
+              // localStorage.setItem(projectName, prePage);
               //console.log('\n***create OK: ' + response[0] + 'pre: ' + preFile + '***\n');
-              localStorage.setItem(response[0], 'Introduction/Modern_JavaScript_tutorial.html');
+              // localStorage.setItem(response[0], 'Common/Modern_JS_tutorial.html');
               //console.log('res: ' + response);
               if (response[1]) {
                 loadNew(response[0]);
@@ -2765,7 +2629,7 @@ switch (attr) {
                 // getBy('_button_start_');  path[3] = ''; } updateAllPages(list, length,
                 // dev, start, old); console.log('finish');
               } else {
-                loadNew(response[0]);
+                // loadNew(response[0]);
               }
             }
           } else if (xhttp.status == 404) {
@@ -2839,9 +2703,7 @@ switch (attr) {
         if (xhttp.readyState !== 4)
           return;
         if (xhttp.status === 200) {
-          let list = xhttp
-            .responseText
-            .split(',');
+          let list = xhttp.responseText.split(',');
           let length = list.length;
 
           xhttp = httpSend('DELETE', '/projects/' + projectName);
@@ -2849,13 +2711,14 @@ switch (attr) {
             if (xhttp.readyState != 4)
               return;
             if (xhttp.status == 200) {
+              window.close();
               for (let i = 0; i < length; i++) {
                 list[i] = 'pageYOffset_' + projectName + '_' + list[i];
               }
-              localStorage.removeItem(projectName + '_index.html');
+              localStorage.removeItem(projectName, prePage);
               localStorage.removeItem(projectName);
-              localStorage.removeItem(projectName + '_development.html');
-              //console.log('list: ' + list);
+              // localStorage.removeItem(projectName + '_development.html');
+              console.log('list: ' + list);
               for (let i = 0; i < length; i++) {
                 localStorage.removeItem(list[i]);
               }
@@ -2865,11 +2728,11 @@ switch (attr) {
             } else {
               alert('Server error. Folder \"' + projectName + '\" NOT DELETED');
             }
-            window.close();
+            // window.close();
           };
         } else {
-          //console.log(projectName + ' already IS DELETED.');
-          window.close();
+          console.log(projectName + ' already IS DELETED.');
+          // window.close();
         }
       };
     }
@@ -2922,8 +2785,6 @@ switch (attr) {
     }
   }
   function loadNew(file) {
-    console.log('load new: ' + file);
-    console.log('file.split(\'.\')[1]: ', file.split('.')[1]);
     let a = document.createElement('a');
     if (file === 'Original') {
       a.href = location.origin + '/projects/Original/index.html';
@@ -2935,7 +2796,7 @@ switch (attr) {
       a.href = 'http://' + location.host + '/projects/' + projectName + '/' + file;
       a.target = '_blank';
     } else {
-      a.href = 'http://' + location.host + '/projects/' + file + '/development.html';
+      a.href = 'http://' + location.host + '/projects/' + file + '/index.html';
       a.target = '_blank';
     }
     document.body.appendChild(a);
@@ -2944,7 +2805,7 @@ switch (attr) {
       document.body.lastElementChild.click();
       document.body.lastElementChild.remove();
     }
-    setTimeout(open, 100);
+    setTimeout(open, 1000);
   }
   //****====== content page load =======
   //   window.addEventListener('pageshow', function(event) {
@@ -2999,9 +2860,7 @@ switch (attr) {
         temp.remove();
       }
       el1 = Math.round(pageYOffset);
-      // console.log('coordComments: ' + coordComments + '; pageYOffset: ' + el1);
       if (comments) {
-        console.log('comments: ', comments);
         runDisqus();
         comments = false;
       } else
@@ -3010,11 +2869,8 @@ switch (attr) {
         setTimeout(reset, 400, disqus_identifier, disqus_url, disqus_title, 'ru');
       }
       if (!pageCommon && pageNumber !== '0') {
-        //console.log('len: ' + coordsH2.length)
         for (let i = 0, l = coordsH2.length; i < l; i++) {
-          //console.log('link: ' + i + ' 1: ' + coordsH2[i])
           if (coordsH2[i] >= el1 && el1 < coordsH2[i + 1]) {
-            //console.log('link1: ' + i)
             setActiveLink(i);
             break;
           } else
@@ -3035,14 +2891,11 @@ switch (attr) {
           sidebar.style.height = window.innerHeight + 'px';
         }
         //height = getComputedStyle(sidebar.getElementsByTagName('share-')[0]).bottom;
-        //console.log('height: ' + sidebarHeight + ' window: ' + window.innerHeight);
         temp = getBy('share-');
         arr = getBy('sidebar-inner');
         if (window.innerHeight < sidebarHeight) {
-          //console.log('1:' + once)
           arr.className = 'compact';
         } else {
-          //console.log('3:' + once1)
           arr.removeAttribute('class');
         }
         if (window.innerHeight < sidebarHeight - 50) {
@@ -3056,12 +2909,10 @@ switch (attr) {
           return;
         case 'g':
         case 'h':
-          //console.log('path: ' + pageNumber);
           document.body.style.overflow = 'hidden';
           el = getBy(0, 'log_content'),
             h3 = el.getElementsByTagName('h3')[0].style;
           if (width < 600) {
-            //console.log('< 600');
             getBy(pageNumber).style = '';
             el.style.width = '100%';
             el.style.height = '100%';
@@ -3071,7 +2922,6 @@ switch (attr) {
             //document.body.style.overflow = 'hidden';
             el.style.overflowY = 'auto';
           } else {
-            //console.log('> 600');
             getBy('log-').style = style_1;
             getBy(0, 'log_content').style = style_2;
             el.lastElementChild.style.display = 'block';
@@ -3083,7 +2933,6 @@ switch (attr) {
         default:
           {
             localStorage.setItem('pageYOffset_' + projectName + '_' + pageNumber, el1 || document.documentElement.scrollTop);
-            //console.log('localStorage.set');
           }
       }
       // ************* HEADER, MAIN ******************************************
@@ -3097,7 +2946,6 @@ switch (attr) {
         b_search = getBy('button-search'),
         s_popup = getBy('search-popup'),
         curtain = getBy('curtain-');
-      //console.log(width);
       if (width < 830) {
         if (pageNumber === 'g' || pageNumber === 'h' || pageNumber === 'l') return;
         // =========== HEADER ==========
@@ -3158,7 +3006,6 @@ switch (attr) {
   }
   var popup;
   function popup_comments_show() {
-    //console.log('show')
     var t = event.target;
     t.ulBool = !t.ulBool;
     if (!popup && t.ulBool) {
@@ -3187,7 +3034,6 @@ switch (attr) {
       return;
     } else
       t.ulBool = !t.ulBool;
-    //console.log('t.ul: ' + t.ulBool + 'tag: ' + t.tagName)
     if ((popup && !t.ulBool && event.relatedTarget.tagName !== 'UL' && event.relatedTarget.tagName !== 'LI' && event.relatedTarget.tagName !== 'SPAN')) {
       popup.style.opacity = 0;
       setTimeout(() => {
