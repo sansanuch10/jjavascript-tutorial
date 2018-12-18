@@ -801,11 +801,11 @@ switch (attr) {
           //temp = minifyJS(temp);
           httpSend('PUT', '/map_list.js', temp);
         }
-        //if (getBy(0, 'server')) {
-        //  temp = server.toString() + ' server();';
-        //  //temp = minifyJS(temp);
-        //  httpSend('PUT', '/index.js', temp);
-        //}
+        if (getBy(0, 'server')) {
+         temp = server.toString() + ' server();';
+         //temp = minifyJS(temp);
+         httpSend('PUT', '/index.js', temp);
+        }
         break;
       }
       case 'save_toggle': {
@@ -2605,7 +2605,7 @@ switch (attr) {
       if (xhttp.status === 200) {
         list = xhttp.responseText.split(',');
         let length = list.length;
-        console.log('length: ', length);
+        // console.log('length: ', length);
         xhttp = httpSend('PUT', '/register.txt', user);
         xhttp.onreadystatechange = function () {
           if (xhttp.readyState != 4)
