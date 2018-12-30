@@ -1,4 +1,4 @@
-let mapList,host;client();function client() {
+let mapList, host; client(); function client() {
   host = window.location.href.split('#')[0];
   let getBy = (function getByTagOrID() {
     let t;
@@ -12,7 +12,7 @@ let mapList,host;client();function client() {
       return t;
     }
   }());
-  let temp, page, pageRef, res, check, css, sheets, el, el1, el2, parent, xhttp, http1,arr = [], arrStyle = [];
+  let temp, page, pageRef, res, check, css, sheets, el, el1, el2, parent, xhttp, http1, arr = [], arrStyle = [];
   let inner, media, tooltipElem, pageArr, pageNumber, pageNumberPre, pageCommon, progress;
   let outerCSS = {
     '0': 'Modern_JS_tutorial',
@@ -207,7 +207,7 @@ let mapList,host;client();function client() {
     counterSlide1 = 0,
     selected = 0,
     val = '',
-    temp1, t, t1, form, textarea, attrs;
+    temp1, t, t1, form, textarea, attrs, menuDev;
   const DOCTYPE = '<!DOCTYPE html>';
   const DOCTYPE_FULL = '<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n</head>\n\n<body>\n\n';
   const HTML = "html";
@@ -256,7 +256,7 @@ let mapList,host;client();function client() {
       if (temp) {
         if (temp.innerHTML) {
           t = temp.innerHTML;
-          if(t.indexOf(' on() {') !== -1){
+          if (t.indexOf(' on() {') !== -1) {
             t = t.slice((t.indexOf('{') + 1), t.lastIndexOf('}'));
           }
           if (parent.id)
@@ -377,19 +377,19 @@ let mapList,host;client();function client() {
       }
     }
   }
-let _data_ = function (el, attr, v) {
+  let _data_ = function (el, attr, v) {
     if (!el) return;
     val = v || el.getAttribute(attr);
     attr = attr.split('-')[1];
-switch (attr) {
+    switch (attr) {
       case 'beautify': {
         // getBy('main').innerHTML = html_beautify(getBy('main').innerHTML);
       }
-        // delete after development
+      // delete after development
       case 'change_html': {
-          changeHTML();
-        }
-        // ====  
+        changeHTML();
+      }
+      // ====  
       case "hello": {
         el.bool = !el.bool;
         let name = val || "Alex";
@@ -489,7 +489,7 @@ switch (attr) {
             }
           } else {
             temp = el2.contentWindow.document.querySelector('style');
-            if(temp)
+            if (temp)
               temp.innerHTML = temp.innerHTML.split(':url(').join(':url(' + host);
             temp = el2.contentWindow.document.body;
             if (temp && temp.attributes[0])
@@ -532,7 +532,7 @@ switch (attr) {
             }
           }
         } else {
-          temp = parent.querySelector('figure-');          
+          temp = parent.querySelector('figure-');
           !temp && (temp = parent.querySelector('iframe-'))
           if (temp) {
             textarea.value = html_beautify(DOCTYPE_FULL + temp.innerHTML + HTML_END);
@@ -566,9 +566,9 @@ switch (attr) {
           try {
             window.eval.call(window, temp);
             // eval(temp);// eval скрывает глобальные переменные.Не работает 1 пример в разделе: '[[Scope]] для new Function'
-        } catch (e) {
+          } catch (e) {
             alert("Error: " + e.message);
-        }
+          }
         } else {
           temp1 = el.parentElement.getAttribute('iframe');
           if (!temp1)
@@ -577,7 +577,7 @@ switch (attr) {
             el1.style.height = temp1 + 'px';
           el1.id = 'removable';
           parent.appendChild(el1);
-          el2 =  'iframe.html';
+          el2 = 'iframe.html';
           httpSend('PUT', el2, getHTML(parent, val));
           el1.contentWindow.document.location.href = el2;
           // if (val === 'edit') {
@@ -622,11 +622,11 @@ switch (attr) {
         createFile();
         break;
       }
-      case 'create_project':{
+      case 'create_project': {
         createProject();
         break;
       }
-      case 'delete_file':{
+      case 'delete_file': {
         deleteProject();
         break;
       }
@@ -720,6 +720,10 @@ switch (attr) {
         window.open('iframe.html');
         break;
       }
+      case 'open_project': {
+        openProject();
+        break;
+      }
       case 'order-form': {
         window.open('https://learn.javascript.ru/ebook', 'buy_tutorial', PARAMS);
         break;
@@ -802,9 +806,9 @@ switch (attr) {
           httpSend('PUT', '/map_list.js', temp);
         }
         if (getBy(0, 'server')) {
-         temp = server.toString() + ' server();';
-         //temp = minifyJS(temp);
-         httpSend('PUT', '/index.js', temp);
+          temp = server.toString() + ' server();';
+          //temp = minifyJS(temp);
+          httpSend('PUT', '/index.js', temp);
         }
         break;
       }
@@ -870,11 +874,11 @@ switch (attr) {
           t1.id = 'task-show';
           t1.onscroll = function name(t) {
             t = document.body.querySelector('#removable');
-            if(t){
+            if (t) {
               temp = t.previousElementSibling;
               temp && temp.tagName === 'CODE-' && temp.removeAttribute('style');
               t.remove();
-              t1.scrollTo(0,5);
+              t1.scrollTo(0, 5);
             }
           }
           temp = t1.getElementsByTagName('button-answer')[0];
@@ -1074,6 +1078,21 @@ switch (attr) {
           getBy('toolbar-content').remove();
         break;
       }
+      case 'toggle_tools': {
+        el.b = !el.b;
+        if (el.b) {
+          removeComments();
+          menuDev = document.createElement('menu-development');
+          menuDev.innerHTML = '<button-save js-hover="create_button_save">save</button-save><button-file js-hover="create_button_file">file</button-file>'
+          document.body.appendChild(menuDev);
+          document.body.appendChild(document.createElement('bottom-dev'));
+        } else {
+          menuDev.remove();
+          menuDev = 0;
+          getBy('bottom-dev').remove();
+        }
+        break;
+      }
       case 'toggle_answer': {
         t1 = el.nextElementSibling;
         el.toggle = !el.toggle;
@@ -1111,9 +1130,9 @@ switch (attr) {
         }
         break;
       }
-      case 'reset':{
+      case 'reset': {
         t1 = el.parentElement.nextElementSibling;
-        if(t1.tagName === 'IFRAME'){
+        if (t1.tagName === 'IFRAME') {
           t1.src = t1.getAttribute('src');
         }
         break;
@@ -1127,31 +1146,39 @@ switch (attr) {
   let _hoverJS_ = function (el, attr, temp) {
     attr = el.getAttribute('js-hover');
     switch (attr) {
+      case 'create_button_file': {
+        create_button_file(el);
+        break;
+      }
+      case 'create_button_save': {
+        create_button_save(el);
+        break;
+      }
       case 'popup_comments_show': {
-          popup_comments_show();
-          break;
-        }
+        popup_comments_show();
+        break;
+      }
       case 'popup_comments_remove': {
-          popup_comments_remove();
-          break;
-        }
+        popup_comments_remove();
+        break;
+      }
       case 'popup_svg_nodejs': {
-          popup_svg_nodejs();
-          break;
-        }
+        popup_svg_nodejs();
+        break;
+      }
       case 'removePopupNodejs': {
-          removePopupNodejs();
-          break;
-        }
+        removePopupNodejs();
+        break;
+      }
       case 'track_outbound': {
-          track_outbound();
-          break;
-        }
+        track_outbound();
+        break;
+      }
       case 'track_outbound_low': {
-          track_outbound_low();
-          break;
-        }
-      case '': {}
+        track_outbound_low();
+        break;
+      }
+      case '': { }
     }
   };
   let _h_;
@@ -1254,7 +1281,7 @@ switch (attr) {
             ch.hover_cssText = ch.style.cssText;
             ch.style.cssText += ';' + swapStyle;
           } else {
-            if(!ch.hover_cssText)
+            if (!ch.hover_cssText)
               ch.removeAttribute('style');
             else
               ch.style.cssText = ch.hover_cssText;
@@ -1403,6 +1430,19 @@ switch (attr) {
       }
     }
   }();
+  function removeComments() {
+    temp = document.body.lastElementChild;
+    if (temp) {
+      while (temp.tagName === 'IFRAME') {
+        temp.remove();
+        temp = document.body.lastElementChild;
+      }
+    }
+    temp = document.getElementById('disqus_thread');
+    if (temp) {
+      temp.innerHTML = '';
+    }
+  }
   function click(el) {
     _h_.h(event, el, 'mouseover');
     el.click();
@@ -1922,7 +1962,7 @@ switch (attr) {
       if (xhttp.readyState != 4)
         return;
       if (xhttp.status == 200) {
-        window.removeEventListener('scroll', media.mediaMax);  
+        window.removeEventListener('scroll', media.mediaMax);
         res = xhttp.responseText;
         if (n === 'l') {
           //xhttp1 = httpSend("POST", '/projects/' + projectName + '/js/map.js');
@@ -1963,40 +2003,43 @@ switch (attr) {
           highlightMaplink(el2.h1);
           // document.body.style.overflow = 'hidden';
         } else
-        if (n === 'g' || n === 'h') {
-          temp = getBy('log-');
-          if (temp) {
-            temp.remove();
-          }
-          temp = document.createElement('log-');
-          temp.id = n;
-          temp.innerHTML = res;
-          document.body.appendChild(temp);
-          if (n !== 'h' && (n === 'g' && pageNumber !== 'h'))
-            localStorage.setItem('if_login', pageNumber);
-          document.body.style.overflow = 'hidden';
-          media.setMediaForLogin();
-        } else {
-          if (pageNumber === 'j') {
-            temp = getBy('about-banner');
-            temp && temp.remove();
-          }
-          if (pageNumber === 'c') {
-            temp = getBy('nodejs-header');
-            temp && temp.remove();
-          }
-          if (getBy('menu-development')) {
-            doReload(res);
-            // reloadScripts();
+          if (n === 'g' || n === 'h') {
+            temp = getBy('log-');
+            if (temp) {
+              temp.remove();
+            }
+            temp = document.createElement('log-');
+            temp.id = n;
+            temp.innerHTML = res;
+            document.body.appendChild(temp);
+            if (n !== 'h' && (n === 'g' && pageNumber !== 'h'))
+              localStorage.setItem('if_login', pageNumber);
+            document.body.style.overflow = 'hidden';
+            media.setMediaForLogin();
           } else {
-            getBy('main').outerHTML = res;
-            // reloadScripts();
+            if (pageNumber === 'j') {
+              temp = getBy('about-banner');
+              temp && temp.remove();
+            }
+            if (pageNumber === 'c') {
+              temp = getBy('nodejs-header');
+              temp && temp.remove();
+            }
+            if (getBy('menu-development')) {
+              doReload(res);
+              // reloadScripts();
+            } else {
+              getBy('main').outerHTML = res;
+              // reloadScripts();
+            }
+            loadFrame();
+            reloadScripts();
+            if (n === '0') fillLinksMainPage();
+            temp = getBy('menu-development');
+            if (temp) {
+              setTimeout(() => { removeComments() }, 1500);
+            }
           }
-          loadFrame();
-          reloadScripts();
-          if (n === '0')
-            fillLinksMainPage();
-        }
         initPageData(n.toString());
         // setSideBar();
         addEl_setStyle();
@@ -2021,10 +2064,10 @@ switch (attr) {
             el1.style.position = 'static';
             window.scrollTo(0, localStorage.getItem('pageYOffset_' + projectName + '_' + pageNumber));
             getCoordComments();
-              media.mediaMax();
-              window.addEventListener('scroll', media.mediaMax);  
+            media.mediaMax();
+            window.addEventListener('scroll', media.mediaMax);
             // setTimeout(() => {
-              // media.mediaMax();
+            // media.mediaMax();
             // }, 500);
           }, 500);
         }
@@ -2192,53 +2235,53 @@ switch (attr) {
     el.innerHTML = arr.join('<script>`');
     // el.innerHTML = el.innerHTML.split('>\n').join('>').split('>            <').join('><').split('>          <').join('><').split('>        <').join('><').split('>      <').join('><').split('>    <').join('><').split(':  <').join(':*@#<').split(': <').join(':*@#<');
     +
-    function minifyElem(el, arr, l, exx) {
-      arr = el.childNodes;
-      l = arr.length;
-      if (l > 0) {
-        for (let i = l - 1; i >= 0; i--) {
-          if (arr[i].nodeType === 3) {
-            if (arr[i - 1] && arr[i - 1].tagName === 'BLOCKQUOTE' && arr[i - 1].tagName === 'PRE') {
-              continue;
-            }
-            // if (arr[i].data.startsWith('\n') && arr[i].data.endsWith('  ') && arr[i].data.indexOf(':') === -1)
-            else if (arr[i].data.search(/./) === -1) {
-              arr[i].remove();
-            } else {
-              arr[i].data = arr[i].data.split('\n').join('').split('            ').join(' ').split('          ').join(' ').split('        ').join(' ').split('      ').join(' ').split('    ').join(' ').split('  ').join(' ')
-              // .split(' = ').join('&nbsp;=&nbsp;').split(' { ').join('&nbsp;{&nbsp;').split(' + ').join('&nbsp;+&nbsp;').split(' - ').join('&nbsp;-&nbsp;').split(' } ').join('&nbsp;}&nbsp;').split(' }').join('&nbsp;}').split('{ ').join('{&nbsp;').split(' / ').join('&nbsp;/&nbsp;')
-              // .split('; ').join(';*@#')
-            }
-          } else if (arr[i].nodeType === 1 && arr[i].tagName !== 'BLOCKQUOTE' && arr[i].tagName !== 'PRE') {
-            if (arr[i].tagName === 'SCRIPT' && arr[i].innerHTML.indexOf('`') < 3 && arr[i].innerHTML.indexOf('`') !== -1) {
-              continue;
-            }
-            if (arr[i].tagName === 'STYLE' || arr[i].tagName === 'SCRIPT') {
-              arr[i].innerHTML = arr[i].innerHTML.split('\n').join('').split('            ').join(' ').split('          ').join(' ').split('        ').join(' ').split('      ').join(' ').split('    ').join(' ').split('  ').join(' ');
-              temp = arr[i].innerHTML.split("'");
-              for (let i = 0, l = temp.length; i < l; i = i + 2) {
-                exx = temp[i].split('"');
-                if (exx.length) {
-                  for (let j = 0, ll = exx.length; j < ll; j = j + 2) {
-                    exx[j] = exx[j].split(' { ').join('{').split(' + ').join('+').split(' - ').join('-').split(' } ').join('}').split(' }').join('}').split('{ ').join('{').split(' / ').join('/').split(' < ').join('<').split(' > ').join('>').split(' ! ').join('!').split(' && ').join('&&').split(' || ').join('||').split(' === ').join('===').split(', ').join(',').split('; ').join(';').split(': ').join(':').split(' = ').join('=');
-                  }
-                  temp[i] = exx.join('"');
-                } else {
-                  temp[i] = temp[i].split(' { ').join('{').split(' + ').join('+').split(' - ').join('-').split(' } ').join('}').split(' }').join('}').split('{ ').join('{').split(' / ').join('/').split(' < ').join('<').split(' > ').join('>').split(' ! ').join('!').split(' && ').join('&&').split(' || ').join('||').split(' === ').join('===').split(', ').join(',').split('; ').join(';').split(': ').join(':').split(' = ').join('=');
-                }
+      function minifyElem(el, arr, l, exx) {
+        arr = el.childNodes;
+        l = arr.length;
+        if (l > 0) {
+          for (let i = l - 1; i >= 0; i--) {
+            if (arr[i].nodeType === 3) {
+              if (arr[i - 1] && arr[i - 1].tagName === 'BLOCKQUOTE' && arr[i - 1].tagName === 'PRE') {
+                continue;
               }
-              arr[i].innerHTML = temp.join("'");
-              continue;
+              // if (arr[i].data.startsWith('\n') && arr[i].data.endsWith('  ') && arr[i].data.indexOf(':') === -1)
+              else if (arr[i].data.search(/./) === -1) {
+                arr[i].remove();
+              } else {
+                arr[i].data = arr[i].data.split('\n').join('').split('            ').join(' ').split('          ').join(' ').split('        ').join(' ').split('      ').join(' ').split('    ').join(' ').split('  ').join(' ')
+                // .split(' = ').join('&nbsp;=&nbsp;').split(' { ').join('&nbsp;{&nbsp;').split(' + ').join('&nbsp;+&nbsp;').split(' - ').join('&nbsp;-&nbsp;').split(' } ').join('&nbsp;}&nbsp;').split(' }').join('&nbsp;}').split('{ ').join('{&nbsp;').split(' / ').join('&nbsp;/&nbsp;')
+                // .split('; ').join(';*@#')
+              }
+            } else if (arr[i].nodeType === 1 && arr[i].tagName !== 'BLOCKQUOTE' && arr[i].tagName !== 'PRE') {
+              if (arr[i].tagName === 'SCRIPT' && arr[i].innerHTML.indexOf('`') < 3 && arr[i].innerHTML.indexOf('`') !== -1) {
+                continue;
+              }
+              if (arr[i].tagName === 'STYLE' || arr[i].tagName === 'SCRIPT') {
+                arr[i].innerHTML = arr[i].innerHTML.split('\n').join('').split('            ').join(' ').split('          ').join(' ').split('        ').join(' ').split('      ').join(' ').split('    ').join(' ').split('  ').join(' ');
+                temp = arr[i].innerHTML.split("'");
+                for (let i = 0, l = temp.length; i < l; i = i + 2) {
+                  exx = temp[i].split('"');
+                  if (exx.length) {
+                    for (let j = 0, ll = exx.length; j < ll; j = j + 2) {
+                      exx[j] = exx[j].split(' { ').join('{').split(' + ').join('+').split(' - ').join('-').split(' } ').join('}').split(' }').join('}').split('{ ').join('{').split(' / ').join('/').split(' < ').join('<').split(' > ').join('>').split(' ! ').join('!').split(' && ').join('&&').split(' || ').join('||').split(' === ').join('===').split(', ').join(',').split('; ').join(';').split(': ').join(':').split(' = ').join('=');
+                    }
+                    temp[i] = exx.join('"');
+                  } else {
+                    temp[i] = temp[i].split(' { ').join('{').split(' + ').join('+').split(' - ').join('-').split(' } ').join('}').split(' }').join('}').split('{ ').join('{').split(' / ').join('/').split(' < ').join('<').split(' > ').join('>').split(' ! ').join('!').split(' && ').join('&&').split(' || ').join('||').split(' === ').join('===').split(', ').join(',').split('; ').join(';').split(': ').join(':').split(' = ').join('=');
+                  }
+                }
+                arr[i].innerHTML = temp.join("'");
+                continue;
+              }
+              minifyElem(arr[i]);
             }
-            minifyElem(arr[i]);
           }
         }
-      }
-    }(el);
+      }(el);
     el.innerHTML = el.innerHTML.split('> <').join('><').split(':*@#<').join(': <');
   }
   function minifyJS(text) {
-    text = text.split(';\r\n').join(';').split(';\r\n').join(';').split(';        ').join(';').split(';    ').join(';').split(';  ').join(';').split(';  ').join(';').split('; ').join(';') .split(',\r\n  ').join(',').split(',    ').join(',').split(',  ').join(',').split(' {\r\n').join('{').split('{      ').join('{').split('[\r\n  ').join('[').split('[    ').join('[').split('[  ').join('[').split('{    ').join('{').split('{  ').join('{').split(' = ').join('=').split(' < ').join('<').split(' && ').join('&&')      .split(' || ').join('||').split('}\r\n').join('}').split('}    ').join('}').split('}    ').join('}').split('}  ').join('}').split(' (').join('(').split(')\r\n').join(')').split(')        ').join(')').split(')    ').join(')').split(')  ').join(') ').split(') ').join(') ').split(':\r\n  ').join(':').split(':        ').join(':').split(':    ').join(':').split(': ').join(':').split('else\r\n  ').join('else ').split('else      ').join('else ').split('else  ').join('else ').split(' ?\r\n  ').join('?').split('?  ').join('?').split(' ? ').join('?').split(' === ').join('===').split('case ').join('case').split(' + ').join('+').split(' if ').join('if').split(' for ').join('for');
+    text = text.split(';\r\n').join(';').split(';\r\n').join(';').split(';        ').join(';').split(';    ').join(';').split(';  ').join(';').split(';  ').join(';').split('; ').join(';').split(',\r\n  ').join(',').split(',    ').join(',').split(',  ').join(',').split(' {\r\n').join('{').split('{      ').join('{').split('[\r\n  ').join('[').split('[    ').join('[').split('[  ').join('[').split('{    ').join('{').split('{  ').join('{').split(' = ').join('=').split(' < ').join('<').split(' && ').join('&&').split(' || ').join('||').split('}\r\n').join('}').split('}    ').join('}').split('}    ').join('}').split('}  ').join('}').split(' (').join('(').split(')\r\n').join(')').split(')        ').join(')').split(')    ').join(')').split(')  ').join(') ').split(') ').join(') ').split(':\r\n  ').join(':').split(':        ').join(':').split(':    ').join(':').split(': ').join(':').split('else\r\n  ').join('else ').split('else      ').join('else ').split('else  ').join('else ').split(' ?\r\n  ').join('?').split('?  ').join('?').split(' ? ').join('?').split(' === ').join('===').split('case ').join('case').split(' + ').join('+').split(' if ').join('if').split(' for ').join('for');
     return text;
   }
   function butifyHTML(text) {
@@ -2570,9 +2613,9 @@ switch (attr) {
           loadPage('l');
         } else if (pageNumber === '0')
           loadPage('0');
-          loadFrame();
-          reloadScripts();
-          //if (cb)  cb();
+        loadFrame();
+        reloadScripts();
+        //if (cb)  cb();
       } else if (xhttp.status == 404) {
         alert(projectName + ' NOT EXIST.');
       }
@@ -2585,18 +2628,18 @@ switch (attr) {
     }
   }
   function createProject() {
-    let email = getBy(0, 'register-email').value || "extension.chroma@gmail.com";
-    let name = getBy(0, 'register-name') ? getBy(0, 'register-name').value.split(' ').join('_') || "Steven" : undefined;
-    let password = getBy(0, 'register-password').value.split(' ').join('_') || '1955';
+    el1 = getBy(0, 'register-email').value || "extension.chroma@gmail.com";
+    el2 = getBy(0, 'register-password').value.split(' ').join('_') || '1955';
+    t1 = getBy(0, 'register-name').value.split(' ').join('_') || "Steven";
     let user = JSON.stringify({
-      email: email,
-      name: name,
-      password: password,
-      key: email + '_' + password,
+      email: el1,
+      name: t1,
+      password: el2,
+      key: el1 + '_' + el2,
       project: '',
       parent: projectName
     });
-    //console.log(user);
+    // console.log(user);
     let list = [];
     let xhttp = httpSend('POST', '/projects/' + projectName + '/main/');
     xhttp.onreadystatechange = function () {
@@ -2604,9 +2647,9 @@ switch (attr) {
         return;
       if (xhttp.status === 200) {
         list = xhttp.responseText.split(',');
-        let length = list.length;
+        // let length = list.length;
         // console.log('length: ', length);
-        xhttp = httpSend('PUT', '/register.txt', user);
+        xhttp = httpSend('PUT', '/redis.txt', user);
         xhttp.onreadystatechange = function () {
           if (xhttp.readyState != 4)
             return;
@@ -2616,21 +2659,23 @@ switch (attr) {
             if (response[0] === 'Common/logup.html') {
               // loadDoc(response[0]);
               return;
-            } else {
+            } else if (response[1]) {
               // localStorage.setItem(projectName, prePage);
               //console.log('\n***create OK: ' + response[0] + 'pre: ' + preFile + '***\n');
               // localStorage.setItem(response[0], 'Common/Modern_JS_tutorial.html');
               //console.log('res: ' + response);
-              if (response[1]) {
                 loadNew(response[0]);
                 // let old = projectName; projectName = response[0]; let dev; let start = {}; if
                 // (path[3] === 'development.html') {  for (let i = 0; i < refs_CSS.length; i++)
                 // {    getBy(refs_CSS[i]).remove();  }  dev = getBy('_development_');  start =
                 // getBy('_button_start_');  path[3] = ''; } updateAllPages(list, length,
                 // dev, start, old); console.log('finish');
-              } else {
-                // loadNew(response[0]);
+            } else {
+              temp = confirm(t1 + ' уже зарегистрирован!'  + '\n Открыть сайт: ' + response[0] + '?');
+              if(temp){
+                loadNew(response[0]);
               }
+              // alert('Alredy exist: ' + response[0]);
             }
           } else if (xhttp.status == 404) {
             alert('File:  NOT EXIST!\n maybe wrong pathname.');
@@ -2642,6 +2687,33 @@ switch (attr) {
       }
     }
   }
+  function openProject() {
+    el1 = getBy(0, 'register-email').value || "extension.chroma@gmail.com";
+    el2 = getBy(0, 'register-password').value.split(' ').join('_') || '1955';
+    let user = JSON.stringify({
+      email: el1,
+      password: el2,
+      key: el1 + '_' + el2,
+      project: '',
+      parent: projectName
+    });
+    //console.log(user);
+    xhttp = httpSend('POST', '/redis.txt', user);
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4)
+        return;
+      if (xhttp.status === 200) {
+        temp = xhttp.responseText;
+        console.log('response: ', temp);
+        if (temp) {
+            loadNew(temp);
+        } 
+      } else if (xhttp.status == 404) {
+        alert('Не зарегистрирован. Проверте ввод.');
+      } else
+        alert('failed: Internal Server Error');
+    };
+}
   function updateAllPages(list, length, dev, start, name, button) {
     //console.log('--- length: ' + length + '--- old: ' + old + ' dev: ' + dev);
     if (length === 0) {
@@ -2838,7 +2910,7 @@ switch (attr) {
       getBy('tool-bar_main').click();
     //setHandlers();
     window.addEventListener('resize', media.mediaMax);
-    window.addEventListener('scroll', media.mediaMax);  
+    window.addEventListener('scroll', media.mediaMax);
   }
   //*****========= STYLE ============
   function Media() {
@@ -2864,10 +2936,10 @@ switch (attr) {
         runDisqus();
         comments = false;
       } else
-      if (coordComments && coordComments <= el1) {
-        coordComments = '';
-        setTimeout(reset, 400, disqus_identifier, disqus_url, disqus_title, 'ru');
-      }
+        if (coordComments && coordComments <= el1 && !menuDev) {
+          coordComments = '';
+          setTimeout(reset, 400, disqus_identifier, disqus_url, disqus_title, 'ru');
+        }
       if (!pageCommon && pageNumber !== '0') {
         for (let i = 0, l = coordsH2.length; i < l; i++) {
           if (coordsH2[i] >= el1 && el1 < coordsH2[i + 1]) {
@@ -2882,13 +2954,17 @@ switch (attr) {
       if (width > 830 && !pageCommon) {
         temp = getBy('progress').style;
         if (window.pageYOffset < 61) {
+          once = 1;
           temp.position = 'absolute';
           temp.bottom = '-4px';
           sidebar.style.height = window.innerHeight - 61 + window.pageYOffset + 'px';
-        } else {
+          getBy('project-').removeAttribute('style');
+        } else if(once) {
+          once = 0;
           temp.position = 'fixed';
           temp.bottom = '';
           sidebar.style.height = window.innerHeight + 'px';
+          getBy('project-').style.top = '0px';
         }
         //height = getComputedStyle(sidebar.getElementsByTagName('share-')[0]).bottom;
         temp = getBy('share-');
@@ -3004,7 +3080,7 @@ switch (attr) {
       }
     };
   }
-  var popup;
+  let popup;
   function popup_comments_show() {
     var t = event.target;
     t.ulBool = !t.ulBool;
@@ -3012,9 +3088,9 @@ switch (attr) {
       popup = popup_comments_render();
       event.target.parentElement.appendChild(popup);
       setTimeout(() => {
-        popup.style.opacity = 1
+        popup && (popup.style.opacity = 1)
       }, 100);
-    } else if (popup && !t.ulBool && event.relatedTarget.tagName !== 'COMMENTS-POPUP') {
+    } else if (popup && !t.ulBool && event.relatedTarget && event.relatedTarget.tagName !== 'COMMENTS-POPUP') {
       popup.style.opacity = 0;
       setTimeout(() => {
         popup && popup.remove();
@@ -3115,6 +3191,71 @@ switch (attr) {
   function track_outbound() {
     let t = event.target;
     t.href = hrefBase + mp4 + t.parentElement.parentElement.parentElement.getAttribute('mnemo') + _mp4;
+  }
+  //************ MENU_LEFT **************************
+
+  // let buttonSave = document.createElement('button-save');
+  // buttonSave.innerHTML = 'save';
+  // buttonSave.setAttribute('js-hover', 'create_button_save');
+  // menuLeft.appendChild(buttonSave);
+  const BUTTONS_SAVE_HTML = {
+    'main': 'data-save_main',
+    'CSS': 'data-save_css',
+    ' JS ': 'data-save_js',
+    'head_header_footer': 'data-save_html',
+    'see HTML': 'data-see_html',
+    'main as JS': 'dt-save_main_js',
+    'load JS': 'data-load_js',
+    'files': 'data-files_names'
+  };
+  function create_button_save(elem) {
+    t2 = elem.parentElement;
+    t3 = document.createElement('menu-left_popup');
+    t3.setAttribute('onmouseleave', 'this.remove()');
+    menuDev.appendChild(t3);
+    for (let i in BUTTONS_SAVE_HTML) {
+      t1 = document.createElement('button');
+      if (i === '') {
+        t1.style.display = 'none';
+        t1.id = 'main_js';
+      }
+      t1.innerHTML = i;
+      t1.setAttribute(BUTTONS_SAVE_HTML[i], '');
+      if (i === 'files' || i === 'load JS') t1.title = 'look console';
+      if (i === 'see HTML') t1.title = 'look elements';
+      t3.appendChild(t1);
+    }
+    t1 = document.createElement('button');
+    t3.appendChild(t1);
+    t1.innerHTML = 'reload scripts';
+    t1.onclick = function () {
+      reloadScripts();
+    }
+  }
+
+  // let buttonFile = document.createElement('button-file');
+  // buttonFile.innerHTML = 'file';
+  // buttonFile.setAttribute('js-hover', 'create_button_file');
+  // menuLeft.appendChild(buttonFile);
+  const BUTTONS_FILE_HTML = {
+    'change': 'data-change_html',
+    'minify Code': 'data-minify_code',
+    'create': 'data-create_file',
+    'delete': 'data-delete_file',
+    'rename': 'data-rename_file',
+    'beautify': 'data-beautify',
+  };
+  function create_button_file(elem) {
+    t2 = elem.parentElement;
+    t3 = document.createElement('menu-left_popup');
+    t3.setAttribute('onmouseleave', 'this.remove()');
+    menuDev.appendChild(t3);
+    for (let i in BUTTONS_FILE_HTML) {
+      t1 = document.createElement('button');
+      t1.innerHTML = i;
+      t1.setAttribute(BUTTONS_FILE_HTML[i], '')
+      t3.appendChild(t1);
+    }
   }
   // LZW-compress a string
   //function lzw_encode(s) {
