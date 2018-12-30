@@ -1,13 +1,1 @@
-<!doctype html><meta charset=utf-8><link href=style_left.css rel=stylesheet><script src=animate.js></script><div id=path><div id=brick></div></div><script>
-    brick.onclick = function() {
-      animate({
-        duration: 1000,
-        timing: function(timeFraction) {
-          return Math.pow(timeFraction, 5);
-        },
-        draw: function(progress) {
-          brick.style.left = progress * 500 + 'px';
-        }
-      });
-    };
-  </script>
+<!doctypehtml><meta charset=utf-8><link href=style_left.css rel=stylesheet><script src=animate.js></script><div id=path><div id=brick></div></div><script>brick.onclick=function(){animate({duration:1e3,timing:function(n){return Math.pow(n,5)},draw:function(n){brick.style.left=500*n+"px"}})}</script>
