@@ -1,4 +1,4 @@
-let hello, mapList, host; client(); function client() {
+let mapList, host; client(); function client() {
   host = window.location.href.split('#')[0];
   let getBy = (function getByTagOrID() {
     let t;
